@@ -57,14 +57,9 @@ async function IndexPage(props: IndexPageProps) {
     notFound();
   }
 
-  const storiesData = await backend.getProfileStories(locale.code, profileData.slug);
+  const storyData = await backend.getProfileStory(locale.code, profileData.slug, params.storyslug);
 
-  if (storiesData === null) {
-    notFound();
-  }
-
-  const storyData = storiesData.find((story) => story.slug === params.storyslug);
-  if (storyData === undefined) {
+  if (storyData === null) {
     notFound();
   }
 
