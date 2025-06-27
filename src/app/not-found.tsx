@@ -1,26 +1,20 @@
 import * as React from "react";
 
-// FIXME(@eser) adding layout there breaks the entire site
+import { getTranslations } from "@/shared/modules/i18n/get-translations.tsx";
 
-// import { PageLayout } from "@/shared/components/page-layouts/default/page-layout.tsx";
-
-export function NotFoundPage() {
-  // const placeholders: Record<string, string> = {
-  //   // locale: props.params.locale,
-  // };
+export async function NotFoundPage() {
+  const { t } = await getTranslations();
 
   return (
-    // <PageLayout placeholders={placeholders}>
     <section className="container px-4 py-8 mx-auto">
       <div className="content">
-        <h2>Sayfa bulunamadı</h2>
+        <h2>{t("Layout", "Page not found")}</h2>
 
         <p>
-          Bu sayfa mevcut değil. Yazım yanlışı varsa lütfen tekrar kontrol ediniz.
+          {t("Layout", "The page you are looking for does not exist. Please check your spelling and try again.")}
         </p>
       </div>
     </section>
-    // </PageLayout>
   );
 }
 

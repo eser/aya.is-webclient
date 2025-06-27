@@ -16,7 +16,11 @@
     "Change theme": "Thema wijzigen",
     "System": "Systeem",
     "Light": "Licht",
-    "Midnight": "Donker"
+    "Midnight": "Donker",
+    "Language": "Taal",
+    "An error occurred": "Er is een fout opgetreden",
+    "Page not found": "Pagina niet gevonden",
+    "The page you are looking for does not exist. Please check your spelling and try again.": "De pagina die u zoekt bestaat niet. Controleer uw spelling en probeer het opnieuw."
   },
   "Loading": {
     "Loading...": "Laden..."

@@ -51,11 +51,10 @@ export function Timeline(props: TimelineProps) {
             </div>
           )
           : (
-            <div className="text-center">
-              <p className="text-xl text-muted-foreground">
-                {t("Layout", "Content not yet available.")}
-              </p>
-            </div>
+            <article>
+              {/* TODO: Add a specific translation key e.g., t("NewsPage", "NoNewsFound") */}
+              {t("Layout", "Content not yet available.")}
+            </article>
           )}
       </div>
     </>

@@ -16,7 +16,11 @@
     "Change theme": "テーマを変更",
     "System": "システム",
     "Light": "ライト",
-    "Midnight": "ミッドナイト"
+    "Midnight": "ミッドナイト",
+    "Language": "言語",
+    "An error occurred": "エラーが発生しました",
+    "Page not found": "ページが見つかりません",
+    "The page you are looking for does not exist. Please check your spelling and try again.": "お探しのページは存在しません。ご確認の上、再度お試しください。"
   },
   "Loading": {
     "Loading...": "読み込み中..."

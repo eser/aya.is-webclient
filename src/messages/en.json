@@ -17,7 +17,10 @@
     "System": "System",
     "Light": "Light",
     "Midnight": "Midnight",
-    "Language": "Dil"
+    "Language": "Language",
+    "An error occurred": "An error occurred",
+    "Page not found": "Page not found",
+    "The page you are looking for does not exist. Please check your spelling and try again.": "The page you are looking for does not exist. Please check your spelling and try again."
   },
   "Loading": {
     "Loading...": "Loading..."

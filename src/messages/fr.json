@@ -16,7 +16,11 @@
     "Change theme": "Changer de thème",
     "System": "Système",
     "Light": "Clair",
-    "Midnight": "Sombre"
+    "Midnight": "Sombre",
+    "Language": "Langue",
+    "An error occurred": "Une erreur est survenue",
+    "Page not found": "Page non trouvée",
+    "The page you are looking for does not exist. Please check your spelling and try again.": "La page que vous recherchez n'existe pas. Veuillez vérifier votre orthographe et réessayer."
   },
   "Loading": {
     "Loading...": "Chargement..."

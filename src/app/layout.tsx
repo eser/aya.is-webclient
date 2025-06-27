@@ -7,6 +7,7 @@ import { NavigationProvider } from "@/shared/modules/navigation/navigation-provi
 import { TranslationsProvider } from "@/shared/modules/i18n/translations-provider.tsx";
 import { getNavigationState } from "@/shared/modules/navigation/get-navigation-state.ts";
 import { getTranslations } from "@/shared/modules/i18n/get-translations.tsx";
+import { PageLayout } from "@/shared/components/page-layouts/default/page-layout.tsx";
 import { RegisterGlobals } from "./register-globals.tsx";
 import { Analytics } from "./analytics.tsx";
 import "../shared/globals.css";
@@ -45,13 +46,19 @@ async function Layout(props: LayoutProps) {
     messages: translationsState.messages,
   };
 
+  const placeholders: Record<string, string> = {
+    locale: translationsState.locale.name,
+  };
+
   return (
     <html lang={translationsState.locale.code} dir={translationsState.locale.dir} suppressHydrationWarning>
       <head />
       <body>
         <TranslationsProvider state={translationsStateValues}>
           <NavigationProvider state={navigationState}>
-            {props.children}
+            <PageLayout placeholders={placeholders}>
+              {props.children}
+            </PageLayout>
           </NavigationProvider>
         </TranslationsProvider>
         <RegisterGlobals />

@@ -16,7 +16,11 @@
     "Change theme": "Сменить тему",
     "System": "Системная",
     "Light": "Светлая",
-    "Midnight": "Темная"
+    "Midnight": "Темная",
+    "Language": "Язык",
+    "An error occurred": "Произошла ошибка",
+    "Page not found": "Страница не найдена",
+    "The page you are looking for does not exist. Please check your spelling and try again.": "Страница, которую вы ищете, не существует. Пожалуйста, проверьте правильность написания и попробуйте снова."
   },
   "Loading": {
     "Loading...": "Загрузка..."

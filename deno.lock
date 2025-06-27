@@ -1,6 +1,7 @@
 {
   "version": "5",
   "specifiers": {
+    "npm:@biomejs/biome@2.0.0-beta.6": "2.0.0-beta.6",
     "npm:@biomejs/biome@^2.0.0-beta.6": "2.0.0-beta.6",
     "npm:@faker-js/faker@^9.8.0": "9.8.0",
     "npm:@hookform/resolvers@^5.1.1": "5.1.1_react-hook-form@7.57.0__react@19.1.0_react@19.1.0",

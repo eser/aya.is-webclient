@@ -32,7 +32,10 @@ export function useNavigationClient() {
       return href.slice(profileLink.length);
     }
 
-    return `//${siteConfig.host}${href}`;
+    const newUrl = new URL(href, `//${siteConfig.host}`);
+    newUrl.searchParams.set("locale", state.locale.code);
+
+    return newUrl.toString();
   };
 
   const push = (href: string) => {

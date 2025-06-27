@@ -17,7 +17,10 @@
     "System": "Sistem",
     "Light": "Açık",
     "Midnight": "Koyu",
-    "Language": "Dil"
+    "Language": "Dil",
+    "An error occurred": "Bir hata oluştu",
+    "Page not found": "Sayfa bulunamadı",
+    "The page you are looking for does not exist. Please check your spelling and try again.": "Aradığınız sayfa mevcut değil. Lütfen yazımınızı kontrol ediniz ve tekrar deneyiniz."
   },
   "Loading": {
     "Loading...": "Yükleniyor..."

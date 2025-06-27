@@ -18,7 +18,10 @@
     "Light": "فاتح",
     "Midnight": "داكن",
     "NoProfilesFound": "لم يتم العثور على ملفات شخصية.",
-    "Language": "لغة"
+    "Language": "لغة",
+    "An error occurred": "حدث خطأ",
+    "Page not found": "الصفحة غير موجودة",
+    "The page you are looking for does not exist. Please check your spelling and try again.": "الصفحة التي تبحث عنها غير موجودة. يرجى التحقق من صحة الكتابة وإعادة المحاولة."
   },
   "Loading": {
     "Loading...": "جاري التحميل..."

@@ -15,6 +15,10 @@ export async function fetcher<T>(relativePath: string): Promise<T | null> {
     return null;
   }
 
+  if (request.status >= 500) {
+    throw new Error(`Internal server error: ${request.status}`);
+  }
+
   const result = (await request.json()) as Result<T>;
 
   if (result.error !== undefined && result.error !== null) {

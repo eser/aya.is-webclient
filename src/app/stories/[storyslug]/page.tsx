@@ -5,7 +5,6 @@ import { notFound } from "next/navigation";
 import { mdx } from "@/shared/lib/mdx.tsx";
 import { backend } from "@/shared/modules/backend/backend.ts";
 import { getTranslations } from "@/shared/modules/i18n/get-translations.tsx";
-import { PageLayout } from "@/shared/components/page-layouts/default/page-layout.tsx";
 import { components } from "@/shared/components/userland/userland.ts";
 import { StoryFooter } from "./_components/story-footer.tsx";
 
@@ -40,10 +39,6 @@ async function IndexPage(props: IndexPageProps) {
 
   const { locale } = await getTranslations();
 
-  const placeholders: Record<string, string> = {
-    locale: locale.name,
-  };
-
   const storyData = await backend.getStory(locale.code, params.storyslug);
 
   if (storyData === null) {
@@ -55,17 +50,15 @@ async function IndexPage(props: IndexPageProps) {
   const mdxSource = await mdx(contentText, components);
 
   return (
-    <PageLayout placeholders={placeholders}>
-      <section className="container px-4 py-8 mx-auto">
-        <div className="content">
-          <h2>{storyData.title}</h2>
+    <section className="container px-4 py-8 mx-auto">
+      <div className="content">
+        <h2>{storyData.title}</h2>
 
-          <article>{mdxSource?.content}</article>
+        <article>{mdxSource?.content}</article>
 
-          <StoryFooter story={storyData} />
-        </div>
-      </section>
-    </PageLayout>
+        <StoryFooter story={storyData} />
+      </div>
+    </section>
   );
 }
 
