@@ -51,7 +51,9 @@
     "Announcement": "Duyuru",
     "Article": "Makale",
     "Content": "İçerik",
-    "Presentation": "Sunum"
+    "Presentation": "Sunum",
+    "Written by": "Yazan",
+    "Publications": "Yayınlar"
   },
   "Contributions": {
     "A collection of open source projects and organizations.": "Açık kaynak projelerin ve organizasyonların bir koleksiyonu.",
@@ -101,8 +103,5 @@
   "Products": {
     "SearchProductsPlaceholder": "Ürünleri isme veya açıklamaya göre ara...",
     "NoProductsFound": "Kriterlerinize uygun ürün bulunamadı."
-  },
-  "StoryPage": {
-    "Written by": "Written by"
   }
 }

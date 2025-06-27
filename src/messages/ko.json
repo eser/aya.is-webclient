@@ -51,7 +51,9 @@
     "Announcement": "공지",
     "Article": "기사",
     "Content": "콘텐츠",
-    "Presentation": "프레젠테이션"
+    "Presentation": "프레젠테이션",
+    "Written by": "작성자",
+    "Publications": "출판물"
   },
   "Contributions": {
     "A collection of open source projects and organizations.": "오픈 소스 프로젝트 및 조직 모음입니다.",

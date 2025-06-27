@@ -2,6 +2,8 @@ import type { Profile } from "@/shared/modules/backend/profiles/types.ts";
 
 export type StoryKind = "status" | "announcement" | "article" | "content" | "presentation";
 
+export type Publication = Profile;
+
 export type Story = {
   id: string;
   kind: StoryKind;
@@ -15,7 +17,6 @@ export type Story = {
   is_featured: boolean;
   author_profile_id: string | null;
   author_profile: Profile | null;
-  published_at: string | null;
 
   created_at: string;
   updated_at: string | null;
@@ -29,4 +30,5 @@ export type StoryEx = Omit<Story, "author_profile_id"> & {
     title: string;
     profile_picture_uri: string | null;
   };
+  publications: Publication[];
 };

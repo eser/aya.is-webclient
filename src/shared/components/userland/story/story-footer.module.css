@@ -1,28 +1,46 @@
 @reference "../../../../shared/globals.css";
 
 .story-footer {
-  @apply flex items-center gap-4 pt-20 pb-10;
+  @apply w-full flex items-start gap-12 pt-20 pb-10;
 
-  & > .author-avatar-container {
-    @apply p-0.5 bg-card rounded-full shadow-md;
+  & > .author-details {
+    @apply w-4/6 flex flex-row gap-4 items-center;
 
-    & > .author-avatar-image {
-      @apply block w-[96px] h-[96px] rounded-full object-cover border-2 border-background;
+    & > .author-avatar-container {
+      @apply flex-none p-0.5 bg-card rounded-full shadow-md;
+
+      & > .author-avatar-image {
+        @apply block w-[96px] h-[96px] rounded-full object-cover border-2 border-background;
+      }
     }
-  }
 
-  & > .story-details {
-    @apply flex flex-col items-center;
-
-    & > .author-details {
-      @apply flex flex-col;
-
+    & > .author-text-container {
       & > .written-by-text {
         @apply text-sm text-muted-foreground;
       }
 
       & > .author-name {
         @apply text-lg font-semibold text-foreground;
+      }
+
+      & > .author-description {
+        @apply text-sm text-muted-foreground;
+      }
+    }
+  }
+
+  & > .publications-details {
+    @apply w-2/6 flex flex-col;
+
+    & > .publications-label {
+      @apply text-sm text-muted-foreground;
+    }
+
+    & > .publications-list {
+      @apply flex flex-row gap-2 flex-wrap;
+
+      & > .publication-item {
+        @apply text-sm text-foreground;
       }
     }
   }

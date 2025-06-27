@@ -4,9 +4,8 @@ import type { StoryEx } from "../stories/types.ts";
 
 export type GetProfileStoryData = StoryEx;
 
-export async function getProfileStory(locale: string, _slug: string, storyslug: string) {
-  // const response = await fetcher<GetProfileStoryData>(`/${locale}/profiles/${slug}/stories/${storyslug}`);
-  const response = await fetcher<GetProfileStoryData>(`/${locale}/stories/${storyslug}`);
+export async function getProfileStory(locale: string, slug: string, storySlug: string) {
+  const response = await fetcher<GetProfileStoryData>(`/${locale}/profiles/${slug}/stories/${storySlug}`);
 
   return response;
 }

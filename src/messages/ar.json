@@ -52,7 +52,9 @@
     "Announcement": "إعلان",
     "Article": "مقالة",
     "Content": "محتوى",
-    "Presentation": "عرض تقديمي"
+    "Presentation": "عرض تقديمي",
+    "Written by": "من طرف",
+    "Publications": "المنشورات"
   },
   "Contributions": {
     "A collection of open source projects and organizations.": "مجموعة من مشاريع ومنظمات المصدر المفتوح.",
@@ -99,8 +101,5 @@
   "Members": {
     "Individuals and organizations that are members of this profile.": "الأفراد والمنظمات الأعضاء في هذا الملف الشخصي.",
     "No members found.": "لم يتم العثور على أعضاء."
-  },
-  "StoryPage": {
-    "Written by": "Written by"
   }
 }

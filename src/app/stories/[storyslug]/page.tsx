@@ -12,7 +12,6 @@ import { StoryFooter } from "@/shared/components/userland/story/story-footer.tsx
 
 type IndexPageProps = {
   params: Promise<{
-    slug: string;
     storyslug: string;
   }>;
 };
@@ -23,7 +22,7 @@ export async function generateMetadata(props: IndexPageProps, _parent: Resolving
 
   const { locale } = await getTranslations();
 
-  const storyData = await backend.getProfileStory(locale.code, params.slug, params.storyslug);
+  const storyData = await backend.getStory(locale.code, params.storyslug);
 
   if (storyData === null) {
     notFound();
@@ -40,7 +39,7 @@ async function IndexPage(props: IndexPageProps) {
 
   const { locale } = await getTranslations();
 
-  const storyData = await backend.getProfileStory(locale.code, params.slug, params.storyslug);
+  const storyData = await backend.getStory(locale.code, params.storyslug);
 
   if (storyData === null) {
     notFound();

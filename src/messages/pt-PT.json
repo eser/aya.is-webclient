@@ -51,7 +51,9 @@
     "Announcement": "Anúncio",
     "Article": "Artigo",
     "Content": "Conteúdo",
-    "Presentation": "Apresentação"
+    "Presentation": "Apresentação",
+    "Written by": "Escrito por",
+    "Publications": "Publicações"
   },
   "Contributions": {
     "A collection of open source projects and organizations.": "Uma coleção de projetos e organizações de código aberto.",

@@ -51,7 +51,9 @@
     "Announcement": "Announcement",
     "Article": "Article",
     "Content": "Content",
-    "Presentation": "Presentation"
+    "Presentation": "Presentation",
+    "Written by": "Written by",
+    "Publications": "Publications"
   },
   "Contributions": {
     "A collection of open source projects and organizations.": "A collection of open source projects and organizations.",
@@ -101,8 +103,5 @@
   "Products": {
     "SearchProductsPlaceholder": "Search products by name or description...",
     "NoProductsFound": "No products found matching your criteria."
-  },
-  "StoryPage": {
-    "Written by": "Written by"
   }
 }

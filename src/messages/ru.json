@@ -51,7 +51,9 @@
     "Announcement": "Объявление",
     "Article": "Статья",
     "Content": "Контент",
-    "Presentation": "Презентация"
+    "Presentation": "Презентация",
+    "Written by": "Написано",
+    "Publications": "Публикации"
   },
   "Contributions": {
     "A collection of open source projects and organizations.": "Коллекция проектов и организаций с открытым исходным кодом.",

@@ -63,9 +63,9 @@ export function Story(props: StoryProps) {
           <h3 className={styles.title}>{props.story.title}</h3>
           <p className={styles.summary}>{props.story.summary}</p>
           <div className={styles.meta}>
-            {props.story.published_at !== null && (
-              <time dateTime={props.story.published_at} className={styles.date}>
-                {formatDateString(props.story.published_at, locale.code)}
+            {props.story.created_at !== null && (
+              <time dateTime={props.story.created_at} className={styles.date}>
+                {formatDateString(props.story.created_at, locale.code)}
               </time>
             )}
             {props.story.author_profile !== null && (

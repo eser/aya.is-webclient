@@ -17,29 +17,50 @@ export async function StoryFooter(props: StoryFooterProps) {
 
   const { t } = await getTranslations();
 
+
+  // Filter out publications where the id matches the author profile id
+  const filteredPublications = props.story.publications.filter(
+    (publication) => publication.id !== props.story.author_profile.id
+  );
+
   return (
     <div className={styles["story-footer"]}>
-      {props.story.author_profile.profile_picture_uri && (
-        <div className={styles["author-avatar-container"]}>
-          <img
-            src={props.story.author_profile.profile_picture_uri}
-            alt={props.story.author_profile.title ?? "Author image"}
-            width={72}
-            height={72}
-            className={styles["author-avatar-image"]}
-          />
-        </div>
-      )}
-      <div className={styles["story-details"]}>
-        <div className={styles["author-details"]}>
-          <div className={styles["written-by-text"]}>{t("StoryPage", "Written by")}</div>
+      <div className={styles["author-details"]}>
+        {props.story.author_profile.profile_picture_uri && (
+          <div className={styles["author-avatar-container"]}>
+            <img
+              src={props.story.author_profile.profile_picture_uri}
+              alt={props.story.author_profile.title ?? "Author image"}
+              width={72}
+              height={72}
+              className={styles["author-avatar-image"]}
+            />
+          </div>
+        )}
+        <div className={styles["author-text-container"]}>
+          <div className={styles["written-by-text"]}>{t("Stories", "Written by")}</div>
           <div className={styles["author-name"]}>
             <SiteLink href={`/${props.story.author_profile.slug}`}>
               {props.story.author_profile.title}
             </SiteLink>
           </div>
+          <div className={styles["author-description"]}>{props.story.author_profile.description}</div>
         </div>
       </div>
+      {filteredPublications.length > 0 && (
+        <div className={styles["publications-details"]}>
+          <div className={styles["publications-label"]}>{t("Stories", "Publications")}</div>
+          <div className={styles["publications-list"]}>
+            {filteredPublications.map((publication) => (
+              <div key={publication.id} className={styles["publication-item"]}>
+                <SiteLink href={`/${publication.slug}`}>
+                  {publication.title}
+                </SiteLink>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

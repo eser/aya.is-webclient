@@ -51,7 +51,9 @@
     "Announcement": "公告",
     "Article": "文章",
     "Content": "内容",
-    "Presentation": "演示"
+    "Presentation": "演示",
+    "Written by": "作者",
+    "Publications": "出版物"
   },
   "Contributions": {
     "A collection of open source projects and organizations.": "开源项目和组织的集合。",

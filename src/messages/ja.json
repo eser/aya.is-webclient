@@ -51,7 +51,9 @@
     "Announcement": "お知らせ",
     "Article": "記事",
     "Content": "コンテンツ",
-    "Presentation": "プレゼンテーション"
+    "Presentation": "プレゼンテーション",
+    "Written by": "作成者",
+    "Publications": "出版物"
   },
   "Contributions": {
     "A collection of open source projects and organizations.": "オープンソースプロジェクトと組織のコレクションです。",

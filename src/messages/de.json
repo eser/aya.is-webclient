@@ -51,7 +51,9 @@
     "Announcement": "Ankündigung",
     "Article": "Artikel",
     "Content": "Inhalt",
-    "Presentation": "Präsentation"
+    "Presentation": "Präsentation",
+    "Written by": "Geschrieben von",
+    "Publications": "Veröffentlichungen"
   },
   "Contributions": {
     "A collection of open source projects and organizations.": "Eine Sammlung von Open-Source-Projekten und -Organisationen.",
@@ -101,8 +103,5 @@
   "Members": {
     "Individuals and organizations that are members of this profile.": "Einzelpersonen und Organisationen, die Mitglieder dieses Profils sind.",
     "No members found.": "Keine Mitglieder gefunden."
-  },
-  "StoryPage": {
-    "Written by": "Written by"
   }
 }
