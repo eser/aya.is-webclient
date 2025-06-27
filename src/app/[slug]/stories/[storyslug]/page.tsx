@@ -6,6 +6,9 @@ import { mdx } from "@/shared/lib/mdx.tsx";
 import { backend } from "@/shared/modules/backend/backend.ts";
 import { getTranslations } from "@/shared/modules/i18n/get-translations.tsx";
 import { components } from "@/shared/components/userland/userland.ts";
+import { StoryFooter } from "@/shared/components/userland/story/story-footer.tsx";
+
+// export const revalidate = 300;
 
 type IndexPageProps = {
   params: Promise<{
@@ -21,6 +24,7 @@ export async function generateMetadata(props: IndexPageProps, _parent: Resolving
   const { locale } = await getTranslations();
 
   const profileData = await backend.getProfile(locale.code, params.slug);
+
   if (profileData === null) {
     notFound();
   }
@@ -71,6 +75,8 @@ async function IndexPage(props: IndexPageProps) {
   return (
     <div className="flex max-w-[980px] flex-col items-start">
       <article className="content">{mdxSource?.content}</article>
+
+      <StoryFooter story={storyData} />
     </div>
   );
 }

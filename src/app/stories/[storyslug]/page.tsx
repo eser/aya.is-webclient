@@ -6,12 +6,13 @@ import { mdx } from "@/shared/lib/mdx.tsx";
 import { backend } from "@/shared/modules/backend/backend.ts";
 import { getTranslations } from "@/shared/modules/i18n/get-translations.tsx";
 import { components } from "@/shared/components/userland/userland.ts";
-import { StoryFooter } from "./_components/story-footer.tsx";
+import { StoryFooter } from "@/shared/components/userland/story/story-footer.tsx";
 
-export const revalidate = 300;
+// export const revalidate = 300;
 
 type IndexPageProps = {
   params: Promise<{
+    slug: string;
     storyslug: string;
   }>;
 };
@@ -22,7 +23,7 @@ export async function generateMetadata(props: IndexPageProps, _parent: Resolving
 
   const { locale } = await getTranslations();
 
-  const storyData = await backend.getStory(locale.code, params.storyslug);
+  const storyData = await backend.getProfileStory(locale.code, params.slug, params.storyslug);
 
   if (storyData === null) {
     notFound();
@@ -39,7 +40,7 @@ async function IndexPage(props: IndexPageProps) {
 
   const { locale } = await getTranslations();
 
-  const storyData = await backend.getStory(locale.code, params.storyslug);
+  const storyData = await backend.getProfileStory(locale.code, params.slug, params.storyslug);
 
   if (storyData === null) {
     notFound();

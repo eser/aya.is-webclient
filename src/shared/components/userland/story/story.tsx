@@ -14,14 +14,22 @@ import styles from "./story.module.css";
 const Image = NextImage;
 
 export type StoryProps = {
+  profileSlug?: string;
   story: Story | StoryEx;
 };
 
 export function Story(props: StoryProps) {
   const { t, locale } = useTranslations();
 
+  let href: string;
+  if (props.profileSlug !== undefined) {
+    href = `/${props.profileSlug}/stories/${props.story.slug}`;
+  } else {
+    href = `/stories/${props.story.slug}`;
+  }
+
   return (
-    <SiteLink role="card" href={`/stories/${props.story.slug}`}>
+    <SiteLink role="card" href={href}>
       <article className={styles.story}>
         <div className={cn(styles["image-container"], "w-[250px] h-[150px]")}>
           {props.story.cover_picture_uri

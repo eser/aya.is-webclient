@@ -44,7 +44,7 @@ async function IndexPage(props: IndexPageProps) {
 
   return (
     <div className={styles["timeline-container"]}>
-      <Timeline stories={storiesData} />
+      <Timeline profileSlug={params.slug} stories={storiesData} />
     </div>
   );
 }

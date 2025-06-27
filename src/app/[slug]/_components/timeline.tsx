@@ -15,6 +15,7 @@ import { FilterBar, type FilterKeyType } from "./filter-bar.tsx"; // Import the 
 // const Image = NextImage; // Simple reassignment, will add @ts-expect-error at usage
 
 export type TimelineProps = {
+  profileSlug?: string;
   stories: (Story | StoryEx)[];
 };
 
@@ -45,6 +46,7 @@ export function Timeline(props: TimelineProps) {
               {filteredStories.map((story) => (
                 <StoryComponent
                   key={story.id}
+                  profileSlug={props.profileSlug}
                   story={story}
                 />
               ))}
