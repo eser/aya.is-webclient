@@ -23,7 +23,8 @@
     "The page you are looking for does not exist. Please check your spelling and try again.": "The page you are looking for does not exist. Please check your spelling and try again."
   },
   "Loading": {
-    "Loading...": "Loading..."
+    "Loading...": "Loading...",
+    "Loading share options...": "Loading share options..."
   },
   "Search": {
     "General search": "General search",
@@ -103,5 +104,19 @@
   "Products": {
     "SearchProductsPlaceholder": "Search products by name or description...",
     "NoProductsFound": "No products found matching your criteria."
+  },
+  "StoryPage": {
+    "Written by": "Written by",
+    "Reading time": "Reading time",
+    "min read": "min read",
+    "Published on": "Published on",
+    "Share": "Share",
+    "Copy link": "Copy link",
+    "Share on WhatsApp": "Share on WhatsApp",
+    "Share on Telegram": "Share on Telegram",
+    "Share on LinkedIn": "Share on LinkedIn",
+    "Share on Reddit": "Share on Reddit",
+    "Share on X": "Share on X",
+    "Download Markdown": "Download Markdown"
   }
 }

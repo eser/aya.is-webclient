@@ -23,7 +23,8 @@
     "The page you are looking for does not exist. Please check your spelling and try again.": "お探しのページは存在しません。ご確認の上、再度お試しください。"
   },
   "Loading": {
-    "Loading...": "読み込み中..."
+    "Loading...": "読み込み中...",
+    "Loading share options...": "共有オプションを読み込み中..."
   },
   "Search": {
     "General search": "一般検索",
@@ -103,5 +104,19 @@
   "Members": {
     "Individuals and organizations that are members of this profile.": "このプロフィールのメンバーである個人および組織。",
     "No members found.": "メンバーが見つかりませんでした。"
+  },
+  "StoryPage": {
+    "Written by": "著者",
+    "Reading time": "読書時間",
+    "min read": "分で読める",
+    "Published on": "公開日",
+    "Share": "シェア",
+    "Copy link": "リンクをコピー",
+    "Share on WhatsApp": "WhatsAppでシェア",
+    "Share on Telegram": "Telegramでシェア",
+    "Share on LinkedIn": "LinkedInでシェア",
+    "Share on Reddit": "Redditでシェア",
+    "Share on X": "Xでシェア",
+    "Download Markdown": "Markdownをダウンロード"
   }
 }
