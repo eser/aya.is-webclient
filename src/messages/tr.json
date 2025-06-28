@@ -103,5 +103,19 @@
   "Products": {
     "SearchProductsPlaceholder": "Ürünleri isme veya açıklamaya göre ara...",
     "NoProductsFound": "Kriterlerinize uygun ürün bulunamadı."
+  },
+  "StoryPage": {
+    "Written by": "Yazan",
+    "Reading time": "Okuma süresi",
+    "min read": "dk okuma",
+    "Published on": "Yayınlama tarihi",
+    "Share": "Paylaş",
+    "Copy link": "Linki kopyala",
+    "Share on WhatsApp": "WhatsApp'ta paylaş",
+    "Share on Telegram": "Telegram'da paylaş",
+    "Share on LinkedIn": "LinkedIn'de paylaş",
+    "Share on Reddit": "Reddit'te paylaş",
+    "Share on X": "X'te paylaş",
+    "Download Markdown": "Markdown İndir"
   }
 }

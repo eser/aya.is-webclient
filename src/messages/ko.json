@@ -103,5 +103,19 @@
   "Members": {
     "Individuals and organizations that are members of this profile.": "이 프로필의 멤버인 개인 및 조직.",
     "No members found.": "멤버를 찾을 수 없습니다."
+  },
+  "StoryPage": {
+    "Written by": "작성자",
+    "Reading time": "읽기 시간",
+    "min read": "분 소요",
+    "Published on": "게시일",
+    "Share": "공유",
+    "Copy link": "링크 복사",
+    "Share on WhatsApp": "WhatsApp에서 공유",
+    "Share on Telegram": "Telegram에서 공유",
+    "Share on LinkedIn": "LinkedIn에서 공유",
+    "Share on Reddit": "Reddit에서 공유",
+    "Share on X": "X에서 공유",
+    "Download Markdown": "Markdown 다운로드"
   }
 }

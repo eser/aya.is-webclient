@@ -103,5 +103,19 @@
   "Products": {
     "SearchProductsPlaceholder": "Search products by name or description...",
     "NoProductsFound": "No products found matching your criteria."
+  },
+  "StoryPage": {
+    "Written by": "Written by",
+    "Reading time": "Reading time",
+    "min read": "min read",
+    "Published on": "Published on",
+    "Share": "Share",
+    "Copy link": "Copy link",
+    "Share on WhatsApp": "Share on WhatsApp",
+    "Share on Telegram": "Share on Telegram",
+    "Share on LinkedIn": "Share on LinkedIn",
+    "Share on Reddit": "Share on Reddit",
+    "Share on X": "Share on X",
+    "Download Markdown": "Download Markdown"
   }
 }

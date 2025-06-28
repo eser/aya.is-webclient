@@ -103,5 +103,19 @@
   "Members": {
     "Individuals and organizations that are members of this profile.": "Частные лица и организации, являющиеся участниками этого профиля.",
     "No members found.": "Участники не найдены."
+  },
+  "StoryPage": {
+    "Written by": "Автор",
+    "Reading time": "Время чтения",
+    "min read": "мин чтения",
+    "Published on": "Опубликовано",
+    "Share": "Поделиться",
+    "Copy link": "Скопировать ссылку",
+    "Share on WhatsApp": "Поделиться в WhatsApp",
+    "Share on Telegram": "Поделиться в Telegram",
+    "Share on LinkedIn": "Поделиться в LinkedIn",
+    "Share on Reddit": "Поделиться в Reddit",
+    "Share on X": "Поделиться в X",
+    "Download Markdown": "Скачать Markdown"
   }
 }

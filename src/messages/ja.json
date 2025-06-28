@@ -103,5 +103,19 @@
   "Members": {
     "Individuals and organizations that are members of this profile.": "このプロフィールのメンバーである個人および組織。",
     "No members found.": "メンバーが見つかりませんでした。"
+  },
+  "StoryPage": {
+    "Written by": "著者",
+    "Reading time": "読書時間",
+    "min read": "分で読める",
+    "Published on": "公開日",
+    "Share": "シェア",
+    "Copy link": "リンクをコピー",
+    "Share on WhatsApp": "WhatsAppでシェア",
+    "Share on Telegram": "Telegramでシェア",
+    "Share on LinkedIn": "LinkedInでシェア",
+    "Share on Reddit": "Redditでシェア",
+    "Share on X": "Xでシェア",
+    "Download Markdown": "Markdownをダウンロード"
   }
 }

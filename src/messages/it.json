@@ -103,5 +103,19 @@
   "Members": {
     "Individuals and organizations that are members of this profile.": "Individui e organizzazioni membri di questo profilo.",
     "No members found.": "Nessun membro trovato."
+  },
+  "StoryPage": {
+    "Written by": "Scritto da",
+    "Reading time": "Tempo di lettura",
+    "min read": "min di lettura",
+    "Published on": "Pubblicato il",
+    "Share": "Condividi",
+    "Copy link": "Copia link",
+    "Share on WhatsApp": "Condividi su WhatsApp",
+    "Share on Telegram": "Condividi su Telegram",
+    "Share on LinkedIn": "Condividi su LinkedIn",
+    "Share on Reddit": "Condividi su Reddit",
+    "Share on X": "Condividi su X",
+    "Download Markdown": "Scarica Markdown"
   }
 }
