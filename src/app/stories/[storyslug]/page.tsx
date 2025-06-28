@@ -1,7 +1,6 @@
 import * as React from "react";
 import type { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
-import { headers } from "next/headers";
 
 import { mdx } from "@/shared/lib/mdx.tsx";
 import { backend } from "@/shared/modules/backend/backend.ts";
@@ -54,10 +53,9 @@ async function IndexPage(props: IndexPageProps) {
   const mdxSource = await mdx(contentText, components);
 
   // Get current URL for sharing
-  const headersList = await headers();
-  const host = headersList.get("host") || "aya.is";
-  const protocol = host.includes("localhost") ? "http" : "https";
-  const currentUrl = `${protocol}://${host}/stories/${params.storyslug}`;
+  const baseUrl =
+    process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "https://aya.is";
+  const currentUrl = `${baseUrl}/stories/${storyslug}`;
 
   return (
     <section className="container px-4 py-8 mx-auto">
