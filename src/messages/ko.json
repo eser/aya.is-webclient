@@ -23,7 +23,8 @@
     "The page you are looking for does not exist. Please check your spelling and try again.": "찾고있는 페이지가 존재하지 않습니다. 철자를 확인하고 다시 시도해주세요."
   },
   "Loading": {
-    "Loading...": "로드 중..."
+    "Loading...": "로드 중...",
+    "Loading share options...": "공유 옵션 로딩 중..."
   },
   "Search": {
     "General search": "일반 검색",

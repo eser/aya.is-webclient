@@ -23,7 +23,8 @@
     "The page you are looking for does not exist. Please check your spelling and try again.": "お探しのページは存在しません。ご確認の上、再度お試しください。"
   },
   "Loading": {
-    "Loading...": "読み込み中..."
+    "Loading...": "読み込み中...",
+    "Loading share options...": "共有オプションを読み込み中..."
   },
   "Search": {
     "General search": "一般検索",

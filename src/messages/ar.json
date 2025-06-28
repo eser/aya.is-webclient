@@ -24,7 +24,8 @@
     "The page you are looking for does not exist. Please check your spelling and try again.": "الصفحة التي تبحث عنها غير موجودة. يرجى التحقق من صحة الكتابة وإعادة المحاولة."
   },
   "Loading": {
-    "Loading...": "جاري التحميل..."
+    "Loading...": "جاري التحميل...",
+    "Loading share options...": "جار تحميل خيارات المشاركة..."
   },
   "Search": {
     "General search": "بحث عام",

@@ -23,7 +23,8 @@
     "The page you are looking for does not exist. Please check your spelling and try again.": "Die gesuchte Seite existiert nicht. Bitte überprüfen Sie Ihre Schreibweise und versuchen Sie es erneut."
   },
   "Loading": {
-    "Loading...": "Wird geladen..."
+    "Loading...": "Wird geladen...",
+    "Loading share options...": "Lade Freigabeoptionen..."
   },
   "Search": {
     "General search": "Allgemeine Suche",

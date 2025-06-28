@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { FaRegCopy, FaWhatsapp, FaTelegram, FaLinkedin, FaReddit, FaTwitter, FaCheck } from "react-icons/fa6";
+import { FaCheck, FaLinkedin, FaReddit, FaRegCopy, FaTelegram, FaTwitter, FaWhatsapp } from "react-icons/fa6";
 import { FiDownload } from "react-icons/fi";
 
 import type { StoryEx } from "@/shared/modules/backend/stories/types.ts";
@@ -46,13 +46,17 @@ export function StoryShare(props: StoryShareProps) {
   };
 
   const handleRedditShare = () => {
-    const url = `https://reddit.com/submit?url=${encodeURIComponent(props.currentUrl)}&title=${encodeURIComponent(props.story.title || "")}`;
+    const url = `https://reddit.com/submit?url=${encodeURIComponent(props.currentUrl)}&title=${
+      encodeURIComponent(props.story.title || "")
+    }`;
     window.open(url, "_blank", "noopener,noreferrer");
   };
 
   const handleXShare = () => {
     const text = `${props.story.title} - ${props.story.summary}`;
-    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(props.currentUrl)}`;
+    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${
+      encodeURIComponent(props.currentUrl)
+    }`;
     window.open(url, "_blank", "noopener,noreferrer");
   };
 
@@ -75,31 +79,66 @@ export function StoryShare(props: StoryShareProps) {
         <h3 className={styles["share-title"]}>{t("StoryPage", "Share")}:</h3>
 
         <div className={styles["share-buttons"]}>
-          <button type="button" onClick={handleCopyLink} className={cn(styles["share-button"], copied && styles.copied)} aria-label={t("StoryPage", "Copy link")}>
+          <button
+            type="button"
+            onClick={handleCopyLink}
+            className={cn(styles["share-button"], copied && styles.copied)}
+            aria-label={t("StoryPage", "Copy link")}
+          >
             {copied ? <FaCheck className={styles["share-icon"]} /> : <FaRegCopy className={styles["share-icon"]} />}
           </button>
 
-          <button type="button" onClick={handleWhatsAppShare} className={styles["share-button"]} aria-label={t("StoryPage", "Share on WhatsApp")}>
+          <button
+            type="button"
+            onClick={handleWhatsAppShare}
+            className={styles["share-button"]}
+            aria-label={t("StoryPage", "Share on WhatsApp")}
+          >
             <FaWhatsapp className={styles["share-icon"]} />
           </button>
 
-          <button type="button" onClick={handleTelegramShare} className={styles["share-button"]} aria-label={t("StoryPage", "Share on Telegram")}>
+          <button
+            type="button"
+            onClick={handleTelegramShare}
+            className={styles["share-button"]}
+            aria-label={t("StoryPage", "Share on Telegram")}
+          >
             <FaTelegram className={styles["share-icon"]} />
           </button>
 
-          <button type="button" onClick={handleLinkedInShare} className={styles["share-button"]} aria-label={t("StoryPage", "Share on LinkedIn")}>
+          <button
+            type="button"
+            onClick={handleLinkedInShare}
+            className={styles["share-button"]}
+            aria-label={t("StoryPage", "Share on LinkedIn")}
+          >
             <FaLinkedin className={styles["share-icon"]} />
           </button>
 
-          <button type="button" onClick={handleRedditShare} className={styles["share-button"]} aria-label={t("StoryPage", "Share on Reddit")}>
+          <button
+            type="button"
+            onClick={handleRedditShare}
+            className={styles["share-button"]}
+            aria-label={t("StoryPage", "Share on Reddit")}
+          >
             <FaReddit className={styles["share-icon"]} />
           </button>
 
-          <button type="button" onClick={handleXShare} className={styles["share-button"]} aria-label={t("StoryPage", "Share on X")}>
+          <button
+            type="button"
+            onClick={handleXShare}
+            className={styles["share-button"]}
+            aria-label={t("StoryPage", "Share on X")}
+          >
             <FaTwitter className={styles["share-icon"]} />
           </button>
 
-          <button type="button" onClick={handleDownloadMarkdown} className={styles["share-button"]} aria-label={t("StoryPage", "Download Markdown")}>
+          <button
+            type="button"
+            onClick={handleDownloadMarkdown}
+            className={styles["share-button"]}
+            aria-label={t("StoryPage", "Download Markdown")}
+          >
             <FiDownload className={styles["share-icon"]} />
           </button>
         </div>
