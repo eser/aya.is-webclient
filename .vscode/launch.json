@@ -2,19 +2,19 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Next.js: debug server-side",
+      "name": "Webclient: debug server-side",
       "type": "node-terminal",
       "request": "launch",
       "command": "node --run dev"
     },
     {
-      "name": "Next.js: debug client-side",
+      "name": "Webclient: debug client-side",
       "type": "chrome",
       "request": "launch",
       "url": "http://localhost:3000"
     },
     {
-      "name": "Next.js: debug client-side (Firefox)",
+      "name": "Webclient: debug client-side (Firefox)",
       "type": "firefox",
       "request": "launch",
       "url": "http://localhost:3000",
@@ -27,10 +27,10 @@
       ]
     },
     {
-      "name": "Next.js: debug full stack",
+      "name": "Webclient: debug full stack",
       "type": "node",
       "request": "launch",
-      "program": "${workspaceFolder}/node_modules/next/dist/bin/next",
+      "program": "${workspaceFolder}/webclient/node_modules/next/dist/bin/next",
       "runtimeArgs": [
         "--inspect"
       ],
@@ -42,7 +42,7 @@
         "killOnServerStop": true,
         "pattern": "- Local:.+(https?://.+)",
         "uriFormat": "%s",
-        "webRoot": "${workspaceFolder}"
+        "webRoot": "${workspaceFolder}/webclient"
       }
     }
   ]

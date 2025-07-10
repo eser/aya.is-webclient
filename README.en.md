@@ -1,7 +1,7 @@
 # AYA - Open Source Network
 
 [![Discord](https://img.shields.io/discord/1072074800622739476?color=7289da&logo=discord&logoColor=white)](https://discord.gg/itdepremyardim)
-[![GitHub issues](https://img.shields.io/github/issues/eser/aya.is-webclient)](https://github.com/eser/aya.is-webclient/issues)
+[![GitHub issues](https://img.shields.io/github/issues/eser/aya.is)](https://github.com/eser/aya.is/issues)
 
 (For Turkish please click [here](README.md))
 
@@ -49,13 +49,13 @@ Prerequisites:
 Clone the GitHub repository:
 
 ```bash
-$ git clone git@github.com:eser/aya.is-webclient.git
+$ git clone git@github.com:eser/aya.is.git
 ```
 
 Navigate to the project directory:
 
 ```bash
-$ cd aya.is-webclient
+$ cd aya.is
 ```
 
 Install necessary packages:
@@ -92,7 +92,7 @@ await backend.getProfile("eser", "tr");
 ## How to Contribute
 
 We welcome contributions from everyone. To start please [read our contributing guide](CONTRIBUTING.en.md). If you want
-to help you can check out our [issues](https://github.com/eser/aya.is-webclient/issues). If you have any questions, feel
+to help you can check out our [issues](https://github.com/eser/aya.is/issues). If you have any questions, feel
 free to join our [Discord server](https://discord.gg/itdepremyardim). If you are stuck at any point, feel free to ask
 for help on GitHub Issues or Discord.
 

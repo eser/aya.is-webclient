@@ -1,7 +1,7 @@
 # AYA Web Sitesi
 
 [![Discord](https://img.shields.io/discord/1072074800622739476?color=7289da&logo=discord&logoColor=white)](https://discord.gg/itdepremyardim)
-[![GitHub issues](https://img.shields.io/github/issues/eser/aya.is-webclient)](https://github.com/eser/aya.is-webclient/issues)
+[![GitHub issues](https://img.shields.io/github/issues/eser/aya.is)](https://github.com/eser/aya.is/issues)
 
 (For English please click [here](README.en.md))
 
@@ -52,13 +52,13 @@ Frontend için:
 GitHub repository'sini klonlayın:
 
 ```bash
-$ git clone git@github.com:eser/aya.is-webclient.git
+$ git clone git@github.com:eser/aya.is.git
 ```
 
 Proje dizinine gidin:
 
 ```bash
-$ cd aya.is-webclient
+$ cd aya.is/webclient
 ```
 
 Gerekli paketleri yükleyin:
@@ -95,7 +95,7 @@ await backend.getProfile("tr", "eser");
 ## Nasıl Katkıda Bulunabilirsin?
 
 Herkesten katkı bekliyoruz. Başlamak için lütfen [katkıda bulunma kılavuzumuzu](CONTRIBUTING.md) okuyun. Yardım etmek
-isterseniz [issue'lara](https://github.com/eser/aya.is-webclient/issues) göz atabilirsiniz. Herhangi bir sorunuz varsa
+isterseniz [issue'lara](https://github.com/eser/aya.is/issues) göz atabilirsiniz. Herhangi bir sorunuz varsa
 [Discord sunucumuza](https://discord.gg/itdepremyardim) katılmaktan çekinmeyin. Herhangi bir noktada takılırsanız,
 GitHub Issues veya Discord üzerinden yardım istemekten çekinmeyin.
 

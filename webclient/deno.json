@@ -23,16 +23,5 @@
   },
   "fmt": {
     "lineWidth": 120
-  },
-  "tasks": {
-    "ok": "echo 'ok'"
-  },
-  "compilerOptions": {
-    "strict": true,
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ]
   }
 }

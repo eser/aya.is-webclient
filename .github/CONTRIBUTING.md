@@ -1,8 +1,8 @@
-# [aya.is-webclient](https://github.com/eser/aya.is-webclient)'a katkıda bulunma
+# [aya.is](https://github.com/eser/aya.is)'a katkıda bulunma
 
 👍🎉 Öncelikle, katkıda bulunmak için zaman ayırdığınız için teşekkürler! 🎉👍
 
-Aşağıda GitHub'da yer alan aya.is-webclient ve paketlerine katkıda bulunmaya bir dizi yönlendirme bulacaksınız. Bunlar
+Aşağıda GitHub'da yer alan aya.is ve paketlerine katkıda bulunmaya bir dizi yönlendirme bulacaksınız. Bunlar
 çoğunlukla yönlendirmelerdir, katı kurallar değil. Muhakeme yeteneğinizi kullanmaktan çekinmeyin ve bu belgedeki
 yönergelere dahi bir pull request ile değişiklik önermekten geri durmayın.
 

@@ -1,13 +1,12 @@
-name: deno-next-showcase
+name: aya-is
 
 services:
-  app:
+  webclient:
     tty: true
     stdin_open: true
     restart: unless-stopped
     build:
-      context: ../../
-      dockerfile: ./ops/docker/Dockerfile
+      context: ./webclient/
       target: runner
     environment:
       NODE_ENV: production

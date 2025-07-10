@@ -119,6 +119,19 @@ function ChartTooltipContent({
     indicator?: "line" | "dot" | "dashed";
     nameKey?: string;
     labelKey?: string;
+    label?: React.ReactNode;
+    labelFormatter?: (value: unknown, payload: unknown[]) => React.ReactNode;
+    labelClassName?: string;
+    formatter?: (value: unknown, name: string, item: unknown, index: number, payload: unknown) => React.ReactNode;
+    color?: string;
+    payload?: Array<{
+      dataKey?: string;
+      name?: string;
+      value?: number | string;
+      color?: string;
+      payload?: Record<string, unknown>;
+      fill?: string;
+    }>;
   }) {
   const { config } = useChart();
 
@@ -163,7 +176,7 @@ function ChartTooltipContent({
         {payload.map((item, index) => {
           const key = `${nameKey || item.name || item.dataKey || "value"}`;
           const itemConfig = getPayloadConfigFromPayload(config, item, key);
-          const indicatorColor = color || item.payload.fill || item.color;
+          const indicatorColor = color || item.payload?.fill || item.color;
 
           return (
             <div
@@ -207,7 +220,7 @@ function ChartTooltipContent({
                       </div>
                       {item.value && (
                         <span className="font-mono font-medium text-foreground tabular-nums">
-                          {item.value.toLocaleString()}
+                          {typeof item.value === "number" ? item.value.toLocaleString() : item.value}
                         </span>
                       )}
                     </div>
@@ -231,10 +244,15 @@ function ChartLegendContent({
   nameKey,
 }:
   & React.ComponentProps<"div">
-  & Pick<RechartsPrimitive.LegendProps, "payload" | "verticalAlign">
   & {
     hideIcon?: boolean;
     nameKey?: string;
+    payload?: Array<{
+      value?: string;
+      dataKey?: string;
+      color?: string;
+    }>;
+    verticalAlign?: "top" | "bottom" | "middle";
   }) {
   const { config } = useChart();
 

@@ -1,4 +1,4 @@
-# Contributing to [aya.is-webclient](https://github.com/eser/aya.is-webclient)
+# Contributing to [aya.is](https://github.com/eser/aya.is)
 
 👍🎉 First off, thanks for taking the time to contribute! 🎉👍
 

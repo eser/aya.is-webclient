@@ -1,5 +1,4 @@
 {
-  "biome.enabled": false,
   "coverage-gutters.coverageBaseDir": "./",
   "coverage-gutters.coverageFileNames": [
     "cov_profile.lcov"
@@ -40,11 +39,8 @@
   "files.exclude": {
     "**/tmp": true,
     ".vscode/extensions.json": false,
-    ".adr-dir": false,
-    ".air.toml": false,
     ".editorconfig": false,
     ".gitattributes": false,
-    "go.sum": false,
     "LICENSE": false
   },
   "yaml.schemas": {

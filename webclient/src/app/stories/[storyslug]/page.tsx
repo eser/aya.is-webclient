@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 import { mdx } from "@/shared/lib/mdx.tsx";
 import { backend } from "@/shared/modules/backend/backend.ts";
+import { siteConfig } from "@/shared/config.ts";
 import { getTranslations } from "@/shared/modules/i18n/get-translations.tsx";
 
 import { components } from "@/shared/components/userland/userland.ts";
@@ -53,9 +54,8 @@ async function IndexPage(props: IndexPageProps) {
   const mdxSource = await mdx(contentText, components);
 
   // Get current URL for sharing
-  const baseUrl =
-    process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "https://aya.is";
-  const currentUrl = `${baseUrl}/stories/${storyslug}`;
+  const baseUrl = siteConfig.host;
+  const currentUrl = `${baseUrl}/stories/${params.storyslug}`;
 
   return (
     <section className="container px-4 py-8 mx-auto">

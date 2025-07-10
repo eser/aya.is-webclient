@@ -31,25 +31,25 @@ export function StoryShare(props: StoryShareProps) {
   const handleWhatsAppShare = () => {
     const text = `${props.story.title} - ${props.story.summary}`;
     const url = `https://wa.me/?text=${encodeURIComponent(`${text} ${props.currentUrl}`)}`;
-    window.open(url, "_blank", "noopener,noreferrer");
+    globalThis.open(url, "_blank", "noopener,noreferrer");
   };
 
   const handleTelegramShare = () => {
     const text = `${props.story.title} - ${props.story.summary}`;
     const url = `https://t.me/share/url?url=${encodeURIComponent(props.currentUrl)}&text=${encodeURIComponent(text)}`;
-    window.open(url, "_blank", "noopener,noreferrer");
+    globalThis.open(url, "_blank", "noopener,noreferrer");
   };
 
   const handleLinkedInShare = () => {
     const url = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(props.currentUrl)}`;
-    window.open(url, "_blank", "noopener,noreferrer");
+    globalThis.open(url, "_blank", "noopener,noreferrer");
   };
 
   const handleRedditShare = () => {
     const url = `https://reddit.com/submit?url=${encodeURIComponent(props.currentUrl)}&title=${
       encodeURIComponent(props.story.title || "")
     }`;
-    window.open(url, "_blank", "noopener,noreferrer");
+    globalThis.open(url, "_blank", "noopener,noreferrer");
   };
 
   const handleXShare = () => {
@@ -57,7 +57,7 @@ export function StoryShare(props: StoryShareProps) {
     const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${
       encodeURIComponent(props.currentUrl)
     }`;
-    window.open(url, "_blank", "noopener,noreferrer");
+    globalThis.open(url, "_blank", "noopener,noreferrer");
   };
 
   const handleDownloadMarkdown = () => {

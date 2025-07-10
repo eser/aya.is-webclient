@@ -9,7 +9,7 @@ repos:
       - id: check-json
         exclude: |
           (?x)^(
-            tsconfig.json
+            webclient/tsconfig.json
           )$
       - id: check-merge-conflict
       - id: check-shebang-scripts-are-executable
@@ -29,7 +29,7 @@ repos:
         args: ["--autofix", "--no-ensure-ascii", "--no-sort-keys"]
         exclude: |
           (?x)^(
-            tsconfig.json
+            webclient/tsconfig.json
           )$
       - id: trailing-whitespace
   - repo: https://github.com/crate-ci/typos
@@ -42,7 +42,7 @@ repos:
           - ".github/typos.toml"
         exclude: |
           (?x)^(
-            src/messages/.*|
+            webclient/src/messages/.*|
             docs/.*
           )$
   - repo: https://github.com/compilerla/conventional-pre-commit
@@ -56,7 +56,8 @@ repos:
       - id: local-precommit
         name: local pre-commit tasks
         description: Check formatting, linting, license headers, types and run tests.
-        entry: bash -c 'deno task ok; git add -u' --
+        # TODO(@eser) add deno fmt --check
+        entry: bash -c 'deno lint; git add -u' --
         # types_or: [javascript, jsx, ts, tsx, json, markdown]
         always_run: true
         pass_filenames: false
@@ -68,16 +69,15 @@ repos:
         files: '(?!\.test\.[jt]sx?$)[^a-z0-9.\/\[\]@-]'
         exclude: |
           (?x)^(
-            _etc/.*|
             .github/.*|
             .git/COMMIT_EDITMSG|
             docs/.*|
-            ops/docker/Dockerfile|
-            src/messages/.*|
-            src/app/\[slug\]/_components/.*|
-            src/app/elements/_components/.*|
-            src/app/products/_components/.*|
-            src/app/stories/\[storyslug\]/_components/.*|
+            webclient/src/messages/.*|
+            webclient/src/app/\[slug\]/_components/.*|
+            webclient/src/app/elements/_components/.*|
+            webclient/src/app/products/_components/.*|
+            webclient/src/app/stories/\[storyslug\]/_components/.*|
+            webclient/Dockerfile|
             LICENSE|
             README.md|
             README.en.md
