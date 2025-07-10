@@ -1,4 +1,6 @@
-# versions
+# ------------------------------------------------------------
+# Versions
+# ------------------------------------------------------------
 
 FROM denoland/deno:2.4.1 AS upstream-builder
 FROM denoland/deno:distroless-2.4.1 AS upstream-runner
@@ -6,23 +8,47 @@ FROM denoland/deno:distroless-2.4.1 AS upstream-runner
 # Create a minimal image base-debian12 or static-debian12
 # (see: https://github.com/GoogleContainerTools/distroless#why-should-i-use-distroless-images)
 
-# Rebuild the source code only when needed
-FROM upstream-builder AS builder
+## ------------------------------------------------------------
+## Base stage for both development and production
+## ------------------------------------------------------------
+FROM upstream-builder AS base
 
-# Install node.js 23
+# Install node.js 24
 RUN apt-get update && apt-get -y install --no-install-recommends \
   curl \
   ca-certificates
 
-RUN curl -fsSL https://deb.nodesource.com/setup_23.x -o nodesource_setup.sh
+RUN curl -fsSL https://deb.nodesource.com/setup_24.x -o nodesource_setup.sh
 RUN sh nodesource_setup.sh
 RUN apt-get install -y nodejs
-
 
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV DENO_DIR=./.deno_cache
 
 WORKDIR /app
+
+## ------------------------------------------------------------
+## Development stages
+## ------------------------------------------------------------
+FROM base AS development-runner
+
+EXPOSE 3000
+
+ENV NODE_ENV=development
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV DENO_DIR=./.deno_cache
+
+ENV HOSTNAME="0.0.0.0"
+ENV PORT=3000
+
+WORKDIR /app
+
+CMD ["task", "dev"]
+
+## ------------------------------------------------------------
+## Production stages
+## ------------------------------------------------------------
+FROM base AS production-builder
 
 # Copy package.json and lockfile
 COPY package.json deno.lock ./
@@ -40,28 +66,28 @@ RUN mkdir -p .deno_cache
 RUN deno task build
 
 # Production image, copy all the files and run next
-FROM upstream-runner AS runner
+FROM upstream-runner AS production-runner
+
+EXPOSE 3000
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV DENO_DIR=./.deno_cache
 
+ENV HOSTNAME="0.0.0.0"
+ENV PORT=3000
+
 WORKDIR /app
 
 # # Automatically leverage output traces to reduce image size
 # # https://nextjs.org/docs/app/api-reference/next-config-js/output
-# COPY --from=builder --chown=deno:deno /app/.next/standalone ./
-# COPY --from=builder --chown=deno:deno /app/.next/static ./.next/static
-# COPY --from=builder --chown=deno:deno /app/public ./public
-COPY --from=builder /app/ ./
-
-EXPOSE 3000
-
-ENV HOSTNAME="0.0.0.0"
-ENV PORT=3000
+# COPY --from=production-builder --chown=deno:deno /app/.next/standalone ./
+# COPY --from=production-builder --chown=deno:deno /app/.next/static ./.next/static
+# COPY --from=production-builder --chown=deno:deno /app/public ./public
+COPY --from=production-builder /app/ ./
 
 # server.js is created by next build from the standalone output
 # https://nextjs.org/docs/pages/api-reference/next-config-js/output
-# CMD ["server.js"]
+# CMD ["run", "--allow-all", "server.js"]
 
 CMD ["task", "start"]

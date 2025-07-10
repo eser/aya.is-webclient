@@ -7,10 +7,8 @@ services:
     restart: unless-stopped
     build:
       context: ./webclient/
-      target: development-runner
+      target: production-runner
     # environment:
     #   NODE_ENV: production
     ports:
       - 3000:3000
-    volumes:
-      - ./webclient/:/app

@@ -1,3 +1,6 @@
+# Deno cache
+.deno_cache/
+
 # Next.js build cache
 /.next/
 .vercel
