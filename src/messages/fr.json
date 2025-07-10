@@ -23,7 +23,8 @@
     "The page you are looking for does not exist. Please check your spelling and try again.": "La page que vous recherchez n'existe pas. Veuillez vérifier votre orthographe et réessayer."
   },
   "Loading": {
-    "Loading...": "Chargement..."
+    "Loading...": "Chargement...",
+    "Loading share options...": "Chargement des options de partage..."
   },
   "Search": {
     "General search": "Recherche générale",
@@ -103,5 +104,19 @@
   "Members": {
     "Individuals and organizations that are members of this profile.": "Individus et organisations membres de ce profil.",
     "No members found.": "Aucun membre trouvé."
+  },
+  "StoryPage": {
+    "Written by": "Écrit par",
+    "Reading time": "Temps de lecture",
+    "min read": "min de lecture",
+    "Published on": "Publié le",
+    "Share": "Partager",
+    "Copy link": "Copier le lien",
+    "Share on WhatsApp": "Partager sur WhatsApp",
+    "Share on Telegram": "Partager sur Telegram",
+    "Share on LinkedIn": "Partager sur LinkedIn",
+    "Share on Reddit": "Partager sur Reddit",
+    "Share on X": "Partager sur X",
+    "Download Markdown": "Télécharger Markdown"
   }
 }

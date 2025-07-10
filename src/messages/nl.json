@@ -23,7 +23,8 @@
     "The page you are looking for does not exist. Please check your spelling and try again.": "De pagina die u zoekt bestaat niet. Controleer uw spelling en probeer het opnieuw."
   },
   "Loading": {
-    "Loading...": "Laden..."
+    "Loading...": "Laden...",
+    "Loading share options...": "Deel opties laden..."
   },
   "Search": {
     "General search": "Algemeen zoeken",
@@ -103,5 +104,19 @@
   "Members": {
     "Individuals and organizations that are members of this profile.": "Individuen en organisaties die lid zijn van dit profiel.",
     "No members found.": "Geen leden gevonden."
+  },
+  "StoryPage": {
+    "Written by": "Geschreven door",
+    "Reading time": "Leestijd",
+    "min read": "min lezen",
+    "Published on": "Gepubliceerd op",
+    "Share": "Delen",
+    "Copy link": "Link kopiëren",
+    "Share on WhatsApp": "Delen op WhatsApp",
+    "Share on Telegram": "Delen op Telegram",
+    "Share on LinkedIn": "Delen op LinkedIn",
+    "Share on Reddit": "Delen op Reddit",
+    "Share on X": "Delen op X",
+    "Download Markdown": "Download Markdown"
   }
 }

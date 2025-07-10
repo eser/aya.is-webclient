@@ -23,7 +23,8 @@
     "The page you are looking for does not exist. Please check your spelling and try again.": "Aradığınız sayfa mevcut değil. Lütfen yazımınızı kontrol ediniz ve tekrar deneyiniz."
   },
   "Loading": {
-    "Loading...": "Yükleniyor..."
+    "Loading...": "Yükleniyor...",
+    "Loading share options...": "Paylaşım seçenekleri yükleniyor..."
   },
   "Search": {
     "General search": "Genel arama",
@@ -103,5 +104,19 @@
   "Products": {
     "SearchProductsPlaceholder": "Ürünleri isme veya açıklamaya göre ara...",
     "NoProductsFound": "Kriterlerinize uygun ürün bulunamadı."
+  },
+  "StoryPage": {
+    "Written by": "Yazan",
+    "Reading time": "Okuma süresi",
+    "min read": "dk okuma",
+    "Published on": "Yayınlama tarihi",
+    "Share": "Paylaş",
+    "Copy link": "Linki kopyala",
+    "Share on WhatsApp": "WhatsApp'ta paylaş",
+    "Share on Telegram": "Telegram'da paylaş",
+    "Share on LinkedIn": "LinkedIn'de paylaş",
+    "Share on Reddit": "Reddit'te paylaş",
+    "Share on X": "X'te paylaş",
+    "Download Markdown": "Markdown İndir"
   }
 }

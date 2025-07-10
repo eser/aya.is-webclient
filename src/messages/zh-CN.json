@@ -23,7 +23,8 @@
     "The page you are looking for does not exist. Please check your spelling and try again.": "您查找的页面不存在。请检查您的拼写并重试。"
   },
   "Loading": {
-    "Loading...": "加载中..."
+    "Loading...": "加载中...",
+    "Loading share options...": "正在加载分享选项..."
   },
   "Search": {
     "General search": "常规搜索",
@@ -103,5 +104,19 @@
   "Members": {
     "Individuals and organizations that are members of this profile.": "此个人资料的成员（个人和组织）。",
     "No members found.": "未找到任何成员。"
+  },
+  "StoryPage": {
+    "Written by": "作者",
+    "Reading time": "阅读时间",
+    "min read": "分钟阅读",
+    "Published on": "发布于",
+    "Share": "分享",
+    "Copy link": "复制链接",
+    "Share on WhatsApp": "在 WhatsApp 上分享",
+    "Share on Telegram": "在 Telegram 上分享",
+    "Share on LinkedIn": "在 LinkedIn 上分享",
+    "Share on Reddit": "在 Reddit 上分享",
+    "Share on X": "在 X 上分享",
+    "Download Markdown": "下载 Markdown"
   }
 }
