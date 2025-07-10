@@ -1,8 +1,7 @@
 # versions
 
 FROM denoland/deno:2.4.1 AS upstream-builder
-# FROM denoland/deno:distroless-2.3.3 AS upstream-runner
-FROM denoland/deno:2.4.1 AS upstream-runner
+FROM denoland/deno:distroless-2.4.1 AS upstream-runner
 
 # Create a minimal image base-debian12 or static-debian12
 # (see: https://github.com/GoogleContainerTools/distroless#why-should-i-use-distroless-images)
@@ -34,7 +33,11 @@ RUN deno install --allow-scripts
 # Copy the rest of the application
 COPY . ./
 
-RUN deno run -A build
+# Create necessary directories and set permissions in builder stage
+RUN mkdir -p .next
+RUN mkdir -p .deno_cache
+
+RUN deno task build
 
 # Production image, copy all the files and run next
 FROM upstream-runner AS runner
@@ -45,18 +48,12 @@ ENV DENO_DIR=./.deno_cache
 
 WORKDIR /app
 
-# Set the correct permission for prerender cache
-RUN mkdir .next
-RUN chown deno:deno .next
-
 # # Automatically leverage output traces to reduce image size
 # # https://nextjs.org/docs/app/api-reference/next-config-js/output
 # COPY --from=builder --chown=deno:deno /app/.next/standalone ./
 # COPY --from=builder --chown=deno:deno /app/.next/static ./.next/static
 # COPY --from=builder --chown=deno:deno /app/public ./public
-COPY --from=builder --chown=deno:deno /app/ ./
-
-USER deno
+COPY --from=builder /app/ ./
 
 EXPOSE 3000
 
@@ -65,6 +62,6 @@ ENV PORT=3000
 
 # server.js is created by next build from the standalone output
 # https://nextjs.org/docs/pages/api-reference/next-config-js/output
-# CMD ["deno", "server.js"]
+# CMD ["server.js"]
 
-CMD ["deno", "run", "-A", "start"]
+CMD ["task", "start"]
