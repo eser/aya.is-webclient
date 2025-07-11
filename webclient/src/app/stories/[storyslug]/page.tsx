@@ -8,9 +8,9 @@ import { siteConfig } from "@/shared/config.ts";
 import { getTranslations } from "@/shared/modules/i18n/get-translations.tsx";
 
 import { components } from "@/shared/components/userland/userland.ts";
-import { StoryMetadata } from "./_components/story-metadata.tsx";
-import { StoryFooter } from "@/shared/components/userland/story/story-footer.tsx";
-import { StoryShareWrapper } from "./_components/story-share-wrapper.tsx";
+import { StoryMetadata } from "@/shared/components/widgets/story/story-metadata.tsx";
+import { StoryFooter } from "@/shared/components/widgets/story/story-footer.tsx";
+import { StoryShareWrapper } from "@/shared/components/widgets/story/story-share-wrapper.tsx";
 
 export const revalidate = 300;
 
@@ -49,9 +49,7 @@ async function IndexPage(props: IndexPageProps) {
     notFound();
   }
 
-  const contentText = `${storyData.content}`;
-
-  const mdxSource = await mdx(contentText, components);
+  const mdxSource = await mdx(storyData.content, components);
 
   // Get current URL for sharing
   const baseUrl = siteConfig.host;
