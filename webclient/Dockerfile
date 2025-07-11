@@ -26,7 +26,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV DENO_DIR=./.deno_cache
 
 # Set working directory
-WORKDIR /app
+WORKDIR /srv/app
 
 ## ------------------------------------------------------------
 ## Development stages
@@ -62,7 +62,8 @@ RUN deno task build
 # Production image, copy all the files and run next
 FROM upstream-runner AS production-runner
 
-EXPOSE 3000
+# Set working directory
+WORKDIR /srv/app
 
 ENV NODE_ENV=production
 ENV HOSTNAME="0.0.0.0"
@@ -70,10 +71,12 @@ ENV PORT=3000
 
 # # Automatically leverage output traces to reduce image size
 # # https://nextjs.org/docs/app/api-reference/next-config-js/output
-# COPY --from=production-builder --chown=deno:deno /app/.next/standalone ./
-# COPY --from=production-builder --chown=deno:deno /app/.next/static ./.next/static
-# COPY --from=production-builder --chown=deno:deno /app/public ./public
-COPY --from=production-builder /app/ ./
+# COPY --from=production-builder --chown=deno:deno /srv/app/.next/standalone ./
+# COPY --from=production-builder --chown=deno:deno /srv/app/.next/static ./.next/static
+# COPY --from=production-builder --chown=deno:deno /srv/app/public ./public
+COPY --from=production-builder /srv/app/ ./
+
+EXPOSE 3000
 
 # server.js is created by next build from the standalone output
 # https://nextjs.org/docs/pages/api-reference/next-config-js/output

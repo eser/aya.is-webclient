@@ -9,14 +9,15 @@ services:
       context: ./webclient/
       target: development-runner
     environment:
-      NEXT_PUBLIC_BACKEND_URI: http://services:8080
+      NEXT_PUBLIC_BACKEND_URI: http://localhost:8080
       NEXT_PUBLIC_HOST: http://localhost:3000
+      BACKEND_URI: http://services:8080
     networks:
       - aya-is-network
     ports:
       - 3000:3000
     volumes:
-      - ./webclient/:/app
+      - ./webclient/:/srv/app
 
   services:
     tty: true
@@ -38,7 +39,7 @@ services:
     ports:
       - 8080:8080
     volumes:
-      - ./services/:/app
+      - ./services/:/srv/app
     depends_on:
       postgres:
         condition: service_healthy

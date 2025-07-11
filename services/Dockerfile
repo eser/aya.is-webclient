@@ -33,7 +33,7 @@ ENV CGO_ENABLED=0
 ENV GOOS=linux
 
 # Set working directory
-WORKDIR /app
+WORKDIR /srv/app
 
 ## ------------------------------------------------------------
 ## Development stages
@@ -62,6 +62,9 @@ RUN go build ./cmd/serve/
 # Production image, copy all the files and run next
 FROM upstream-runner AS production-runner
 
+# Set working directory
+WORKDIR /srv/app
+
 RUN apt-get update && \
   apt-get -y install --no-install-recommends curl && \
   groupadd -r nonroot && \
@@ -70,13 +73,16 @@ RUN apt-get update && \
 # Copy the binary from the production-builder container
 # COPY --from=production-builder /bin/sh /bin/sh
 # COPY --from=production-builder /bin/cat /bin/cat
-COPY --from=production-builder --chown=nonroot:nonroot /app/serve /
-COPY --from=production-builder --chown=nonroot:nonroot /app/.env /
-COPY --from=production-builder --chown=nonroot:nonroot /app/config.json /
+COPY --from=production-builder --chown=nonroot:nonroot /srv/app/serve ./
+COPY --from=production-builder --chown=nonroot:nonroot /srv/app/.env ./
+COPY --from=production-builder --chown=nonroot:nonroot /srv/app/config.json ./
+
+COPY ./etc/data/default/migrations ./etc/data/default/migrations
+COPY ./etc/data/default/seed/seed.sql ./etc/data/default/seed/seed.sql
 
 # Run as a non-root user
 USER nonroot
 
 EXPOSE 8080
 
-ENTRYPOINT ["/serve"]
+ENTRYPOINT ["./serve"]

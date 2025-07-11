@@ -4,6 +4,18 @@ import type { Locale } from "@/shared/modules/i18n/locales.ts";
 
 import * as flags from "./fake-flags-sdk.ts";
 
+export const getBackendUri = () => {
+  if (globalThis.localStorage !== undefined) {
+    const backendUriFromLocalStorage = localStorage.getItem("backendUri");
+
+    if (backendUriFromLocalStorage !== null) {
+      return backendUriFromLocalStorage;
+    }
+  }
+
+  return siteConfig.backendUri;
+};
+
 export type SiteConfig = {
   name: string;
   fancyName: string;
@@ -45,9 +57,9 @@ export const siteConfig: SiteConfig = {
   // deno-lint-ignore no-process-global
   host: process.env.NEXT_PUBLIC_HOST ?? "https://aya.is",
   // deno-lint-ignore no-process-global
-  backendUriProduction: process.env.NEXT_PUBLIC_BACKEND_URI_PRODUCTION ?? "https://api.aya.is",
+  backendUriProduction: process.env.BACKEND_URI_PRODUCTION ?? process.env.NEXT_PUBLIC_BACKEND_URI_PRODUCTION ?? "https://api.aya.is",
   // deno-lint-ignore no-process-global
-  backendUri: process.env.NEXT_PUBLIC_BACKEND_URI ?? "https://api.aya.is",
+  backendUri: process.env.BACKEND_URI ?? process.env.NEXT_PUBLIC_BACKEND_URI ?? "https://api.aya.is",
 
   features: {
     login: flags.flag({
@@ -58,18 +70,6 @@ export const siteConfig: SiteConfig = {
       },
     }),
   },
-};
-
-export const getBackendUri = () => {
-  if (globalThis.localStorage !== undefined) {
-    const backendUriFromLocalStorage = localStorage.getItem("backendUri");
-
-    if (backendUriFromLocalStorage !== null) {
-      return backendUriFromLocalStorage;
-    }
-  }
-
-  return siteConfig.backendUri;
 };
 
 export const forbiddenSlugs: readonly string[] = [

@@ -28,7 +28,7 @@ type SearchBarProps = {
 
 export function SearchBar(props: SearchBarProps) {
   const [open, setOpen] = React.useState(false);
-  const [backendUri, setBackendUri] = React.useState<string | null>(getBackendUri());
+  const [backendUri, setBackendUri] = React.useState<string | null>(localStorage.getItem("backendUri"));
 
   const { t, supportedLocales, localeCode } = useTranslations();
 
@@ -38,13 +38,16 @@ export function SearchBar(props: SearchBarProps) {
 
   const navItems = getNavItems(t);
 
-  React.useEffect(() => {
-    if (backendUri !== null) {
-      localStorage.setItem("backendUri", backendUri);
-    } else {
+  const handleBackendUriChange = (newBackendUri: string | null) => {
+    setBackendUri(newBackendUri);
+
+    if (newBackendUri === null || newBackendUri === siteConfig.backendUri) {
       localStorage.removeItem("backendUri");
+      return;
     }
-  }, [backendUri]);
+
+    localStorage.setItem("backendUri", newBackendUri);
+  }
 
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -176,7 +179,7 @@ export function SearchBar(props: SearchBarProps) {
               <CommandGroup heading={t("Development", "Development")}>
                 <CommandItem
                   onSelect={() => {
-                    setBackendUri(null);
+                    handleBackendUriChange(null);
                     setOpen(false);
                   }}
                   disabled={backendUri === null || backendUri === siteConfig.backendUri}
@@ -186,7 +189,7 @@ export function SearchBar(props: SearchBarProps) {
                 </CommandItem>
                 <CommandItem
                   onSelect={() => {
-                    setBackendUri(siteConfig.backendUriProduction);
+                    handleBackendUriChange(siteConfig.backendUriProduction);
                     setOpen(false);
                   }}
                   disabled={backendUri === siteConfig.backendUriProduction}

@@ -8,9 +8,10 @@ services:
     build:
       context: ./webclient/
       target: production-runner
-    # environment:
-    #   NEXT_PUBLIC_BACKEND_URI: https://api.aya.is
-    #   NEXT_PUBLIC_HOST: https://aya.is
+    environment:
+      NEXT_PUBLIC_BACKEND_URI: http://localhost:8080
+      NEXT_PUBLIC_HOST: http://localhost:3000
+      BACKEND_URI: http://services:8080
     networks:
       - aya-is-network
     ports:

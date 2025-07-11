@@ -123,7 +123,7 @@ func (a *AppContext) Init(ctx context.Context) error { //nolint:funlen
 	}
 
 	// Run database migrations
-	migrationsDir := "etc/data/default/migrations"
+	migrationsDir := a.Config.Data.MigrationsPath
 
 	err = a.Repository.RunMigrations(ctx, migrationsDir)
 	if err != nil {
@@ -131,7 +131,7 @@ func (a *AppContext) Init(ctx context.Context) error { //nolint:funlen
 	}
 
 	// Seed data if database is empty
-	seedFilePath := "etc/data/default/seed/seed.sql"
+	seedFilePath := a.Config.Data.SeedFilePath
 
 	err = a.Repository.SeedData(ctx, seedFilePath)
 	if err != nil {
