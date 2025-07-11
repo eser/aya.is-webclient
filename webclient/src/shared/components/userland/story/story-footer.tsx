@@ -17,10 +17,9 @@ export async function StoryFooter(props: StoryFooterProps) {
 
   const { t } = await getTranslations();
 
-
   // Filter out publications where the id matches the author profile id
   const filteredPublications = props.story.publications.filter(
-    (publication) => publication.id !== props.story.author_profile.id
+    (publication) => publication.id !== props.story.author_profile.id,
   );
 
   return (

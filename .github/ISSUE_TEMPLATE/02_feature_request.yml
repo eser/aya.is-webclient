@@ -2,7 +2,7 @@ name: Feature Request
 description: Suggest an idea or voice a concern.
 title: "[Feature Request]: "
 labels: ["enhancement", "triage"]
-projects: ["eser/deno-next-showcase"]
+projects: ["eser/aya.is"]
 assignees:
   - eser
 body:

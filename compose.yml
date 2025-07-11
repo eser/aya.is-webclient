@@ -1,4 +1,4 @@
-name: aya-is
+name: aya-is-development
 
 services:
   webclient:
@@ -8,9 +8,62 @@ services:
     build:
       context: ./webclient/
       target: development-runner
-    # environment:
-    #   NODE_ENV: production
+    environment:
+      NEXT_PUBLIC_BACKEND_URI: http://services:8080
+      NEXT_PUBLIC_HOST: http://localhost:3000
+    networks:
+      - aya-is-network
     ports:
       - 3000:3000
     volumes:
       - ./webclient/:/app
+
+  services:
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
+    build:
+      context: ./services/
+      target: development-runner
+    environment:
+      ENV: development
+      PORT: 8080
+      LOG__LEVEL: INFO
+      LOG__PRETTY: false
+      # Database connection with both protocol and DSN
+      CONN__targets__default__protocol: postgres
+      CONN__targets__default__dsn: postgres://postgres:s3cr3t@postgres:5432/postgres?sslmode=disable
+    networks:
+      - aya-is-network
+    ports:
+      - 8080:8080
+    volumes:
+      - ./services/:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:16-bookworm
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: s3cr3t
+    healthcheck:
+      test: ["CMD-SHELL", "psql -U 'postgres' -c '\\q'"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      # - ./resources/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - aya-is-network
+    ports:
+      - 5432:5432
+
+volumes:
+  postgres-data:
+
+networks:
+  aya-is-network:
+    driver: bridge

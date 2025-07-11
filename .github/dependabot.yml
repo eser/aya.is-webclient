@@ -6,7 +6,6 @@ updates:
     schedule:
       interval: "monthly"
     commit-message:
-      prefix: "deps(docker): "
       include: "scope"
     labels:
       - "dependencies"
@@ -16,7 +15,6 @@ updates:
     schedule:
       interval: "monthly"
     commit-message:
-      prefix: "deps(gh-actions): "
       include: "scope"
     labels:
       - "dependencies"
@@ -26,7 +24,6 @@ updates:
     schedule:
       interval: "monthly"
     commit-message:
-      prefix: "deps(npm): "
       include: "scope"
     labels:
       - "dependencies"

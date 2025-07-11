@@ -25,6 +25,7 @@ RUN apt-get install -y nodejs
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV DENO_DIR=./.deno_cache
 
+# Set working directory
 WORKDIR /app
 
 ## ------------------------------------------------------------
@@ -35,13 +36,8 @@ FROM base AS development-runner
 EXPOSE 3000
 
 ENV NODE_ENV=development
-ENV NEXT_TELEMETRY_DISABLED=1
-ENV DENO_DIR=./.deno_cache
-
 ENV HOSTNAME="0.0.0.0"
 ENV PORT=3000
-
-WORKDIR /app
 
 CMD ["task", "dev"]
 
@@ -50,10 +46,8 @@ CMD ["task", "dev"]
 ## ------------------------------------------------------------
 FROM base AS production-builder
 
-# Copy package.json and lockfile
+# Install dependencies first to improve caching
 COPY package.json deno.lock ./
-
-# Install dependencies
 RUN deno install --allow-scripts
 
 # Copy the rest of the application
@@ -71,13 +65,8 @@ FROM upstream-runner AS production-runner
 EXPOSE 3000
 
 ENV NODE_ENV=production
-ENV NEXT_TELEMETRY_DISABLED=1
-ENV DENO_DIR=./.deno_cache
-
 ENV HOSTNAME="0.0.0.0"
 ENV PORT=3000
-
-WORKDIR /app
 
 # # Automatically leverage output traces to reduce image size
 # # https://nextjs.org/docs/app/api-reference/next-config-js/output

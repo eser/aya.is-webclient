@@ -2,7 +2,7 @@ import React from "react";
 
 import type { StoryEx } from "@/shared/modules/backend/stories/types.ts";
 import { getTranslations } from "@/shared/modules/i18n/get-translations.tsx";
-import { calculateReadingTime } from "@/shared/lib/reading-time";
+import { calculateReadingTime } from "@/shared/lib/reading-time.ts";
 import styles from "./story-metadata.module.css";
 
 export type StoryMetadataProps = {

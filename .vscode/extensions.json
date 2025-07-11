@@ -5,7 +5,10 @@
     "denoland.vscode-deno",
     "EditorConfig.EditorConfig",
     "github.vscode-github-actions",
+    "golang.go",
     "heybourn.headwind",
+    "lang2hong.rest-client-neo",
+    "ms-vscode.makefile-tools",
     "ryanluker.vscode-coverage-gutters"
   ]
 }

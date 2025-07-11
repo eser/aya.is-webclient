@@ -14,7 +14,8 @@
       @apply flex flex-wrap items-center gap-2;
 
       & > .share-button {
-        @apply flex items-center justify-center p-1.5 text-muted-foreground hover:text-foreground transition-colors rounded;
+        @apply flex items-center justify-center p-1.5 text-muted-foreground hover:text-foreground transition-colors
+          rounded;
         @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
 
         &.copied {

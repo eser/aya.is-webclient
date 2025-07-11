@@ -1,0 +1,91 @@
+version: "2"
+
+run:
+  timeout: 3m
+  issues-exit-code: 1
+  tests: true
+  allow-parallel-runners: true
+  concurrency: 4
+
+output:
+  formats:
+    tab:
+      print-linter-name: true
+      colors: true
+  sort-order:
+    - file
+    - severity
+    - linter
+
+linters:
+  default: all
+  disable:
+    - godox
+    - tagliatelle
+    - ireturn
+
+  settings:
+    depguard:
+      rules:
+        main:
+          deny:
+            - pkg: io/ioutil
+              desc: The io/ioutil package has been deprecated, see https://go.dev/doc/go1.16#ioutil
+          allow:
+            - $gostd
+            - github.com/eser/aya.is-services
+            - github.com/getkin/kin-openapi
+            - github.com/go-faker/faker/v4
+            - github.com/go-rod/rod
+            - github.com/golang-jwt/jwt/v5
+            - github.com/lib/pq
+            - github.com/oklog/ulid/v2
+            - github.com/pressly/goose/v3
+            - github.com/rabbitmq/amqp091-go
+            - github.com/redis/go-redis/v9
+            - github.com/spf13/cobra
+            - github.com/sqlc-dev/pqtype
+            - github.com/stretchr/testify
+            - go.opentelemetry.io/otel
+            - golang.org/x/net/http/httpguts
+            - modernc.org/sqlite
+    revive:
+      rules:
+        - name: "var-naming"
+          severity: warning
+          disabled: false
+          arguments:
+            - [] # AllowList
+            - [] # DenyList
+            - - upper-case-const: false
+                skip-package-name-checks: true
+    varnamelen:
+      check-receiver: false
+      ignore-names:
+        - err
+      ignore-decls:
+        - ctx context.Context
+        - t testing.T
+        - i int
+        - n int
+        - const C
+        - T any
+        - r *http.Request
+        - w http.ResponseWriter
+        - w io.Writer
+        - c *httpfx.Context
+  exclusions:
+    paths:
+      - ops
+      - tmp
+
+formatters:
+  enable:
+    - gci
+    - gofmt
+    - gofumpt
+    - goimports
+    - golines
+
+issues:
+  fix: true

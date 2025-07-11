@@ -51,7 +51,9 @@ jobs:
           # - windows-latest
           # - macOS-latest
         deno-version:
-          - 2.3.3
+          - 2.4.1
+        golang-version:
+          - 1.24.5
 
     steps:
       - name: Checkout repository
@@ -69,13 +71,24 @@ jobs:
         with:
           deno-version: ${{ matrix.deno-version }}
 
+      - name: Setup Golang ${{ matrix.golang-version }}
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ matrix.golang-version }}
+          cache: true
+          cache-dependency-path: ./services/go.sum
+
       - name: Run pre-commit
         uses: pre-commit/action@v3.0.1
 
-      # - name: Generate coverage report
+      - name: Build services
+        working-directory: ./services/
+        run: go build -v ./...
+
+      # - name: Generate webclient coverage report
       #   run: deno task test:coverage-gen
 
-      # - name: Upload coverage
+      # - name: Upload webclient coverage
       #   uses: codecov/codecov-action@v4
       #   env:
       #     CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

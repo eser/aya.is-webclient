@@ -32,8 +32,9 @@ repos:
             webclient/tsconfig.json
           )$
       - id: trailing-whitespace
+
   - repo: https://github.com/crate-ci/typos
-    rev: v1.31.1
+    rev: v1.34.0
     hooks:
       - id: typos
         verbose: true
@@ -43,42 +44,69 @@ repos:
         exclude: |
           (?x)^(
             webclient/src/messages/.*|
-            docs/.*
+            docs/.*|
+            go.mod
           )$
+
   - repo: https://github.com/compilerla/conventional-pre-commit
-    rev: v4.0.0
+    rev: v4.2.0
     hooks:
       - id: conventional-pre-commit
         stages: [commit-msg]
         args: []
+
   - repo: local
     hooks:
       - id: local-precommit
         name: local pre-commit tasks
         description: Check formatting, linting, license headers, types and run tests.
-        # TODO(@eser) add deno fmt --check
-        entry: bash -c 'deno lint; git add -u' --
+        entry: bash -c 'make ok; git add -u' --
         # types_or: [javascript, jsx, ts, tsx, json, markdown]
         always_run: true
         pass_filenames: false
         language: system
-      - id: kebab-case-files-only
+
+      - id: webclient-kebab-case-files-only
         name: kebab-case files only
         entry: filenames must be kebab-case only
         language: fail
-        files: '(?!\.test\.[jt]sx?$)[^a-z0-9.\/\[\]@-]'
+        files: 'webclient/(?!\.test\.[jt]sx?$)[^a-z0-9\-\.\/\[\]@]'
         exclude: |
           (?x)^(
-            .github/.*|
-            .git/COMMIT_EDITMSG|
-            docs/.*|
             webclient/src/messages/.*|
             webclient/src/app/\[slug\]/_components/.*|
             webclient/src/app/elements/_components/.*|
             webclient/src/app/products/_components/.*|
             webclient/src/app/stories/\[storyslug\]/_components/.*|
-            webclient/Dockerfile|
+            webclient/public/assets/.*|
+            webclient/Dockerfile
+          )$
+
+      - id: rest-snake-case-files-only
+        name: snake_case files only
+        entry: filenames must be snake_case only
+        language: fail
+        files: '(?!\.test\.[jt]sx?$)[^a-z0-9_\.\/\[\]@]'
+        exclude: |
+          (?x)^(
+            .github/.*|
+            .git/COMMIT_EDITMSG|
+            docs/.*|
+            webclient/.*|
+            services/pkg/ajan/configfx/README.md|
+            services/pkg/ajan/connfx/README.md|
+            services/pkg/ajan/httpclient/README.md|
+            services/pkg/ajan/httpfx/README.md|
+            services/pkg/ajan/lib/README.md|
+            services/pkg/ajan/logfx/README.md|
+            services/pkg/ajan/processfx/README.md|
+            services/pkg/ajan/results/README.md|
+            services/pkg/ajan/types/README.md|
+            services/Dockerfile|
+            services/Makefile|
+            .pre-commit-config.yaml|
             LICENSE|
-            README.md|
+            Makefile|
             README.en.md
+            README.md|
           )$

@@ -32,6 +32,31 @@
   "typescript.suggest.jsdoc.generateReturns": true,
   "typescript.suggest.paths": true,
   "editor.defaultFormatter": "denoland.vscode-deno",
+  "go.testFlags": [
+    "-failfast"
+  ],
+  "go.toolsManagement.autoUpdate": true,
+  "go.useLanguageServer": true,
+  "go.vetOnSave": "package",
+  "go.lintFlags": [
+    "--build-tags=integration,unit"
+  ],
+  "go.lintOnSave": "package",
+  "go.lintTool": "golangci-lint",
+  "go.inlayHints.parameterNames": true,
+  "go.inlayHints.rangeVariableTypes": true,
+  "go.inlayHints.constantValues": true,
+  "go.inlayHints.functionTypeParameters": true,
+  "go.inlayHints.compositeLiteralTypes": true,
+  "go.inlayHints.compositeLiteralFields": true,
+  "go.inlayHints.assignVariableTypes": true,
+  "gopls": {
+    "build.buildFlags": [
+      "-tags=integration,unit"
+    ],
+    "ui.semanticTokens": true
+  },
+  "makefile.configureOnOpen": false,
   "files.associations": {
     "*.mdoc": "markdown",
     "*.mdx": "markdown"
@@ -43,11 +68,15 @@
     ".gitattributes": false,
     "LICENSE": false
   },
+  "redhat.telemetry.enabled": false,
   "yaml.schemas": {
     "https://json.schemastore.org/github-workflow.json": "./.github/workflows/*.yml"
   },
   "[codeowners]": {
     "editor.defaultFormatter": "chdsbd.github-code-owners"
+  },
+  "[go]": {
+    "editor.defaultFormatter": "golang.go"
   },
   "[jsonc]": {
     "editor.defaultFormatter": "vscode.json-language-features"

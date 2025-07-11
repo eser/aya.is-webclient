@@ -22,7 +22,7 @@
       "pathMappings": [
         {
           "url": "webpack://_N_E",
-          "path": "${workspaceFolder}"
+          "path": "${workspaceFolder}/webclient/"
         }
       ]
     },
@@ -42,8 +42,16 @@
         "killOnServerStop": true,
         "pattern": "- Local:.+(https?://.+)",
         "uriFormat": "%s",
-        "webRoot": "${workspaceFolder}/webclient"
+        "webRoot": "${workspaceFolder}/webclient/"
       }
+    },
+    {
+      "name": "Services: Launch serve",
+      "type": "go",
+      "request": "launch",
+      "mode": "auto",
+      "cwd": "${workspaceFolder}/services/",
+      "program": "cmd/serve/"
     }
   ]
 }
