@@ -53,7 +53,7 @@ stop: ## Stops the containers.
 
 .PHONY: logs
 logs: ## Shows the logs of the containers.
-	docker compose logs $(ARGS)
+	docker compose logs --follow $(ARGS)
 
 .PHONY: cli
 cli: ## Opens a shell in the containers.

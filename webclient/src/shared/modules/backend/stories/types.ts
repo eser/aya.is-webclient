@@ -9,7 +9,7 @@ export type Story = {
   kind: StoryKind;
   slug: string | null;
 
-  cover_picture_uri: string | null;
+  story_picture_uri: string | null;
   title: string | null;
   summary: string | null;
   content: string;

@@ -27,6 +27,8 @@ export const Icons = {
   users: Lucide.Users,
   usersRound: Lucide.UsersRound,
   video: Lucide.Video,
+  arrowLeft: Lucide.ArrowLeft,
+  arrowRight: Lucide.ArrowRight,
   logo: (props: IconProps) => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 307 296" {...props}>
       <title>Logot</title>

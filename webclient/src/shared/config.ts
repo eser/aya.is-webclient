@@ -17,7 +17,9 @@ export type SiteConfig = {
     github: string;
   };
 
+  environment: string;
   host: string;
+  backendUriProduction: string;
   backendUri: string;
 
   features: {
@@ -39,7 +41,11 @@ export const siteConfig: SiteConfig = {
   },
 
   // deno-lint-ignore no-process-global
+  environment: process.env.NODE_ENV ?? "development",
+  // deno-lint-ignore no-process-global
   host: process.env.NEXT_PUBLIC_HOST ?? "https://aya.is",
+  // deno-lint-ignore no-process-global
+  backendUriProduction: process.env.NEXT_PUBLIC_BACKEND_URI_PRODUCTION ?? "https://api.aya.is",
   // deno-lint-ignore no-process-global
   backendUri: process.env.NEXT_PUBLIC_BACKEND_URI ?? "https://api.aya.is",
 
@@ -52,6 +58,18 @@ export const siteConfig: SiteConfig = {
       },
     }),
   },
+};
+
+export const getBackendUri = () => {
+  if (globalThis.localStorage !== undefined) {
+    const backendUriFromLocalStorage = localStorage.getItem("backendUri");
+
+    if (backendUriFromLocalStorage !== null) {
+      return backendUriFromLocalStorage;
+    }
+  }
+
+  return siteConfig.backendUri;
 };
 
 export const forbiddenSlugs: readonly string[] = [
@@ -101,6 +119,7 @@ export const forbiddenSlugs: readonly string[] = [
   "signout",
   "signup",
   "stories",
+  "story",
   "support",
   "tag",
   "tags",

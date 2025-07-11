@@ -1,7 +1,5 @@
 import * as React from "react";
 
-import { ArrowRightIcon } from "@radix-ui/react-icons";
-
 import { siteConfig } from "@/shared/config.ts";
 import { mdx } from "@/shared/lib/mdx.tsx";
 import { getTranslations } from "@/shared/modules/i18n/get-translations.tsx";
@@ -9,6 +7,7 @@ import { Button } from "@/shared/components/ui/button.tsx";
 import { Astronaut } from "@/shared/components/widgets/astronaut/astronaut.tsx";
 import { SiteLink } from "@/shared/components/userland/site-link/site-link.tsx";
 import { components } from "@/shared/components/userland/userland.ts";
+import { Icons } from "@/shared/components/icons.tsx";
 
 import styles from "./page.module.css";
 
@@ -38,7 +37,7 @@ async function IndexPage() {
         <Button variant="default" size="lg" asChild>
           <SiteLink href="/aya/about" rel="noreferrer">
             {t("Home", "Rest of the story")}
-            <ArrowRightIcon />
+            <Icons.arrowRight />
           </SiteLink>
         </Button>
         <Button variant="secondary" size="lg" asChild>

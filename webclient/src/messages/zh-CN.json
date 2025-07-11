@@ -118,5 +118,10 @@
     "Share on Reddit": "在 Reddit 上分享",
     "Share on X": "在 X 上分享",
     "Download Markdown": "下载 Markdown"
+  },
+  "Development": {
+    "Development": "开发",
+    "Use default data source": "使用默认数据源",
+    "Use production data source": "使用生产数据源"
   }
 }

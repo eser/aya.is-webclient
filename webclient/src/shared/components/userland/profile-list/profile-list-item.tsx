@@ -1,10 +1,9 @@
 import * as React from "react";
-import { ArrowRightIcon } from "@radix-ui/react-icons";
 
 import { SiteLink } from "@/shared/components/userland/site-link/site-link.tsx";
-import { Icons } from "@/shared/components/icons.tsx";
 import { Card } from "@/shared/components/ui/card.tsx";
 import { Button } from "@/shared/components/ui/button.tsx";
+import { Icons } from "@/shared/components/icons.tsx";
 import type { Profile, ProfileMembership } from "@/shared/modules/backend/profiles/types.ts";
 import { getTranslations } from "@/shared/modules/i18n/get-translations.tsx";
 
@@ -163,7 +162,7 @@ export async function ProfileListItem(props: ProfileListItemProps) {
             <Button variant="default">
               <Icons.star className={styles.icon} />
               {information.linkText}
-              <ArrowRightIcon />
+              <Icons.arrowRight />
             </Button>
           </SiteLink>
         </div>

@@ -118,5 +118,10 @@
     "Share on Reddit": "Reddit에서 공유",
     "Share on X": "X에서 공유",
     "Download Markdown": "Markdown 다운로드"
+  },
+  "Development": {
+    "Development": "개발",
+    "Use default data source": "기본 데이터 소스 사용",
+    "Use production data source": "생산 데이터 소스 사용"
   }
 }

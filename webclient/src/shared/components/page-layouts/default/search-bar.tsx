@@ -19,6 +19,7 @@ import {
   CommandSeparator,
   // CommandShortcut,
 } from "@/shared/components/ui/command.tsx";
+import { getBackendUri, siteConfig } from "@/shared/config.ts";
 import { getNavItems } from "@/app/site.ts";
 
 type SearchBarProps = {
@@ -27,6 +28,7 @@ type SearchBarProps = {
 
 export function SearchBar(props: SearchBarProps) {
   const [open, setOpen] = React.useState(false);
+  const [backendUri, setBackendUri] = React.useState<string | null>(getBackendUri());
 
   const { t, supportedLocales, localeCode } = useTranslations();
 
@@ -35,6 +37,14 @@ export function SearchBar(props: SearchBarProps) {
   const { theme, setTheme } = useTheme();
 
   const navItems = getNavItems(t);
+
+  React.useEffect(() => {
+    if (backendUri !== null) {
+      localStorage.setItem("backendUri", backendUri);
+    } else {
+      localStorage.removeItem("backendUri");
+    }
+  }, [backendUri]);
 
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -160,6 +170,33 @@ export function SearchBar(props: SearchBarProps) {
               </CommandItem>
             ))}
           </CommandGroup>
+          {siteConfig.environment === "development" && (
+            <>
+              <CommandSeparator />
+              <CommandGroup heading={t("Development", "Development")}>
+                <CommandItem
+                  onSelect={() => {
+                    setBackendUri(null);
+                    setOpen(false);
+                  }}
+                  disabled={backendUri === null || backendUri === siteConfig.backendUri}
+                >
+                  <Icons.settings className="w-4 h-4 mr-2" />
+                  <span>{t("Development", "Use default data source")}</span>
+                </CommandItem>
+                <CommandItem
+                  onSelect={() => {
+                    setBackendUri(siteConfig.backendUriProduction);
+                    setOpen(false);
+                  }}
+                  disabled={backendUri === siteConfig.backendUriProduction}
+                >
+                  <Icons.settings className="w-4 h-4 mr-2" />
+                  <span>{t("Development", "Use production data source")}</span>
+                </CommandItem>
+              </CommandGroup>
+            </>
+          )}
         </CommandList>
       </CommandDialog>
     </>

@@ -116,5 +116,10 @@
     "Share on Reddit": "مشاركة على ريديت",
     "Share on X": "مشاركة على إكس",
     "Download Markdown": "تحميل ماركداون"
+  },
+  "Development": {
+    "Development": "التطوير",
+    "Use default data source": "استخدام البيانات الافتراضية",
+    "Use production data source": "استخدام البيانات المنتجة"
   }
 }

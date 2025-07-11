@@ -43,8 +43,9 @@ repos:
           - ".github/typos.toml"
         exclude: |
           (?x)^(
-            webclient/src/messages/.*|
             docs/.*|
+            webclient/src/messages/.*|
+            services/etc/data/default/seed/seed.sql|
             go.mod
           )$
 

@@ -118,5 +118,10 @@
     "Share on Reddit": "Redditでシェア",
     "Share on X": "Xでシェア",
     "Download Markdown": "Markdownをダウンロード"
+  },
+  "Development": {
+    "Development": "開発",
+    "Use default data source": "デフォルトのデータソースを使用",
+    "Use production data source": "本番のデータソースを使用"
   }
 }

@@ -118,5 +118,10 @@
     "Share on Reddit": "Delen op Reddit",
     "Share on X": "Delen op X",
     "Download Markdown": "Download Markdown"
+  },
+  "Development": {
+    "Development": "Ontwikkeling",
+    "Use default data source": "Gebruik standaard databron",
+    "Use production data source": "Gebruik productiedatabron"
   }
 }

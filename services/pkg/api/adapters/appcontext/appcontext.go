@@ -44,7 +44,7 @@ func New() *AppContext {
 	return &AppContext{} //nolint:exhaustruct
 }
 
-func (a *AppContext) Init(ctx context.Context) error {
+func (a *AppContext) Init(ctx context.Context) error { //nolint:funlen
 	// ----------------------------------------------------
 	// Adapter: Config
 	// ----------------------------------------------------
@@ -120,6 +120,22 @@ func (a *AppContext) Init(ctx context.Context) error {
 	a.Repository, err = storage.NewRepositoryFromDefault(a.Logger, a.Connections)
 	if err != nil {
 		return fmt.Errorf("%w: %w", ErrInitFailed, err)
+	}
+
+	// Run database migrations
+	migrationsDir := "etc/data/default/migrations"
+
+	err = a.Repository.RunMigrations(ctx, migrationsDir)
+	if err != nil {
+		return fmt.Errorf("%w: failed to run migrations: %w", ErrInitFailed, err)
+	}
+
+	// Seed data if database is empty
+	seedFilePath := "etc/data/default/seed/seed.sql"
+
+	err = a.Repository.SeedData(ctx, seedFilePath)
+	if err != nil {
+		return fmt.Errorf("%w: failed to seed data: %w", ErrInitFailed, err)
 	}
 
 	// ----------------------------------------------------

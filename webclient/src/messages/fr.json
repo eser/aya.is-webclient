@@ -118,5 +118,10 @@
     "Share on Reddit": "Partager sur Reddit",
     "Share on X": "Partager sur X",
     "Download Markdown": "Télécharger Markdown"
+  },
+  "Development": {
+    "Development": "Développement",
+    "Use default data source": "Utiliser la source de données par défaut",
+    "Use production data source": "Utiliser la source de données de production"
   }
 }

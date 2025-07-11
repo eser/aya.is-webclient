@@ -118,5 +118,10 @@
     "Share on Reddit": "Reddit'te paylaş",
     "Share on X": "X'te paylaş",
     "Download Markdown": "Markdown İndir"
+  },
+  "Development": {
+    "Development": "Geliştirme",
+    "Use default data source": "Varsayılan veri kaynağını kullan",
+    "Use production data source": "Production veri kaynağını kullan"
   }
 }

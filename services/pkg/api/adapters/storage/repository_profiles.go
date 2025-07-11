@@ -137,7 +137,7 @@ func (r *Repository) ListProfiles(
 
 	wrappedResponse.Data = result
 
-	if len(result) == cursor.Limit {
+	if len(result) == cursor.Limit && len(result) > 0 {
 		wrappedResponse.CursorPtr = &result[len(result)-1].ID
 	}
 

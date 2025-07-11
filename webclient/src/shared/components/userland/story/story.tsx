@@ -32,10 +32,10 @@ export function Story(props: StoryProps) {
     <SiteLink role="card" href={href}>
       <article className={styles.story}>
         <div className={cn(styles["image-container"], "w-[250px] h-[150px]")}>
-          {props.story.cover_picture_uri
+          {props.story.story_picture_uri
             ? (
               <Image
-                src={props.story.cover_picture_uri}
+                src={props.story.story_picture_uri}
                 alt={props.story.title ?? t("News", "News item image")}
                 width={250}
                 height={150}

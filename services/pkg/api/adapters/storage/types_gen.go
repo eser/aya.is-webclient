@@ -189,9 +189,6 @@ type Story struct {
 	Status          string                `db:"status" json:"status"`
 	IsFeatured      bool                  `db:"is_featured" json:"is_featured"`
 	StoryPictureURI sql.NullString        `db:"story_picture_uri" json:"story_picture_uri"`
-	Title           string                `db:"title" json:"title"`
-	Summary         string                `db:"summary" json:"summary"`
-	Content         string                `db:"content" json:"content"`
 	Properties      pqtype.NullRawMessage `db:"properties" json:"properties"`
 	CreatedAt       time.Time             `db:"created_at" json:"created_at"`
 	UpdatedAt       sql.NullTime          `db:"updated_at" json:"updated_at"`
