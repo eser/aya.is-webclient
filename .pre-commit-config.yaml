@@ -107,6 +107,6 @@ repos:
             .pre-commit-config.yaml|
             LICENSE|
             Makefile|
-            README.en.md
-            README.md|
+            README.en.md|
+            README.md
           )$
