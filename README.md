@@ -34,63 +34,70 @@ amaçlıyoruz.
 
 ## Teknoloji
 
-Projelerimizi oluşturmak için kullandığımız teknolojiler şunlardır:
+Bu bir Docker Compose tabanlı monorepo projesidir. Aşağıdaki bileşenleri içerir:
 
-Frontend için:
+- **Frontend (webclient)**: Next.js ve Shadcn UI kullanır
+- **Backend (services)**: Go dilinde yazılmış REST API servisleri
+- **Veritabanı**: PostgreSQL
 
-- [Next.js](https://nextjs.org)
-- [Shadcn](https://shadcn/ui)
+Önceden kurulu olması gerekenler:
 
-Önceden kurulu olması gerekenler:
+- [Docker](https://docker.com) (Orbstack önerilir)
+- [Make](https://www.gnu.org/software/make/) (Unix/macOS sistemlerde genellikle yüklüdür)
+- [Git](https://git-scm.com/)
 
-- [Deno](https://deno.land) (önerilen v1.35.2)
-- [Node.js](https://nodejs.org) (önerilen v19.0.0)
-- [Git](https://git-scm.com/) (önerilen v2.41.0)
-
-## Projeyi Ayağa Kaldırma
+## Kurulum ve Başlangıç
 
 GitHub repository'sini klonlayın:
 
 ```bash
 $ git clone git@github.com:eser/aya.is.git
+$ cd aya.is
 ```
 
-Proje dizinine gidin:
+Projeyi başlatmak için Make komutlarını kullanın:
 
 ```bash
-$ cd aya.is/webclient
+# Tüm servisleri build et ve başlat
+$ make up
 ```
 
-Gerekli paketleri yükleyin:
+Diğer kullanışlı Make komutları:
 
 ```bash
-$ deno install --allow-scripts
+$ make help      # Tüm komutları göster
+$ make logs      # Container loglarını göster
+$ make stop      # Servisleri durdur
+$ make restart   # Servisleri yeniden başlat
+$ make down      # Containerları tamamen kaldır
 ```
 
-Son olarak, projeyi geliştirme modunda başlatın:
+## Proje Yönetimi ve CLI
+
+Servis container'ına bağlanmak için:
 
 ```bash
-$ node --run dev
+$ make cli
 ```
 
-## Proje Yönetimi
+Bu komut sizi backend servisinin bash shell'ine bağlar. Buradan veritabanı yönetimi ve diğer işlemleri yapabilirsiniz.
 
-Şu anda projeye ait bir yönetim panelimiz bulunmamakta. İşlemleri bu nedenle CLI üzerinden yapmaktayız. Sisteminizde
-`deno` kurulu ise, aşağıdaki komutlar aracılığı ile CLI'a erişebilirsiniz:
-
-```bash
-$ deno task cli
-```
-
-CLI üzerinden `backend` nesnesine erişebilirsiniz.
-
-### Örnekler:
+### Örnek
 
 Profil getirme:
 
 ```js
 await backend.getProfile("tr", "eser");
 ```
+
+
+### Veri Modeli
+
+Proje aşağıdaki ana veri yapılarını kullanır:
+
+- **Profile**: Kullanıcı profilleri (bireyler, organizasyonlar, topluluklar)
+- **Story**: İçerik ve yazılar (blog yazıları, haberler, etkinlikler)
+- **User**: Sistem kullanıcıları ve kimlik doğrulama bilgileri
 
 ## Nasıl Katkıda Bulunabilirsin?
 

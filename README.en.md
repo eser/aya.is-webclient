@@ -31,63 +31,70 @@ resources, we strive to make a positive impact and foster sustainable developmen
 
 ## Technology
 
-These are the technologies we use to build our projects:
+This is a Docker Compose-based monorepo project. It includes the following components:
 
-For Frontend:
-
-- [Next.js](https://nextjs.org)
-- [Shadcn](https://shadcn/ui)
+- **Frontend (webclient)**: Built with Next.js and Shadcn UI
+- **Backend (services)**: REST API services written in Go
+- **Database**: PostgreSQL
 
 Prerequisites:
 
-- [Deno](https://deno.land) (recommended v1.35.2)
-- [Node.js](https://nodejs.org) (recommended v19.0.0)
-- [Git](https://git-scm.com/) (recommended v2.41.0)
+- [Docker](https://docker.com) (Orbstack is recommended)
+- [Make](https://www.gnu.org/software/make/) (usually pre-installed on Unix/macOS systems)
+- [Git](https://git-scm.com/)
 
-## Setting Up the Project
+## Setup and Getting Started
 
 Clone the GitHub repository:
 
 ```bash
 $ git clone git@github.com:eser/aya.is.git
-```
-
-Navigate to the project directory:
-
-```bash
 $ cd aya.is
 ```
 
-Install necessary packages:
+Use Make commands to start the project:
 
 ```bash
-$ deno install --allow-scripts
+# Build and start all services
+$ make up
 ```
 
-Lastly, start project in development mode:
+Other useful Make commands:
 
 ```bash
-$ node --run dev
+$ make help      # Show all commands
+$ make logs      # Show container logs
+$ make stop      # Stop services
+$ make restart   # Restart services
+$ make down      # Remove containers completely
 ```
 
-## Project Management
+## Project Management and CLI
 
-Currently, we do not have a management panel for the project. For this reason, we perform operations through the CLI. If
-`deno` is installed on your system, you can access the CLI through the following commands:
+To connect to the service container:
 
 ```bash
-$ deno task cli
+$ make cli
 ```
 
-You can access `backend` object through the CLI.
+This command connects you to the backend service's bash shell. From here you can perform database management and other operations.
 
-### Examples:
+### Example
 
 Getting a profile:
 
 ```js
-await backend.getProfile("eser", "tr");
+await backend.getProfile("en", "eser");
 ```
+
+
+## Data Model
+
+The project uses the following main data structures:
+
+- **Profile**: User profiles (individuals, organizations, communities)
+- **Story**: Content and articles (blog posts, news, events)
+- **User**: System users and authentication information
 
 ## How to Contribute
 
