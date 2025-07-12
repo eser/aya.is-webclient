@@ -2,9 +2,10 @@ package httpfx
 
 import (
 	"encoding/json"
+	"log/slog"
 	"net/http"
 
-	"github.com/eser/aya.is-services/pkg/ajan/results"
+	"github.com/eser/aya.is/services/pkg/ajan/results"
 )
 
 var (
@@ -172,7 +173,11 @@ func (r *Results) PlainText(body []byte) Result {
 func (r *Results) JSON(body any) Result {
 	encoded, err := json.Marshal(body)
 	if err != nil {
-		// TODO(@eser) Log error
+		slog.Error("Failed to encode JSON response",
+			slog.String("scope_name", "httpfx_results"),
+			slog.Any("error", err),
+			slog.Any("body_type", body))
+
 		return Result{
 			Result: errResult.New(),
 
@@ -202,7 +207,9 @@ func (r *Results) Redirect(uri string) Result {
 }
 
 func (r *Results) Abort() Result {
-	// TODO(@eser) implement this
+	slog.Debug("Request aborted by handler",
+		slog.String("scope_name", "httpfx_results"))
+
 	return Result{
 		Result: errResult.New(),
 

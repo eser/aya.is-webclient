@@ -148,7 +148,8 @@ func (c *SQLConnection) HealthCheck(ctx context.Context) *HealthStatus {
 func (c *SQLConnection) Close(ctx context.Context) error {
 	atomic.StoreInt32(&c.state, int32(ConnectionStateDisconnected))
 
-	if err := c.db.Close(); err != nil {
+	err := c.db.Close()
+	if err != nil {
 		return fmt.Errorf("%w: %w", ErrFailedToCloseSQLDB, err)
 	}
 

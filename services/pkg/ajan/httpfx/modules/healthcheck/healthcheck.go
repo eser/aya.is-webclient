@@ -3,7 +3,7 @@ package healthcheck
 import (
 	"net/http"
 
-	"github.com/eser/aya.is-services/pkg/ajan/httpfx"
+	"github.com/eser/aya.is/services/pkg/ajan/httpfx"
 )
 
 func RegisterHTTPRoutes(routes *httpfx.Router, config *httpfx.Config) {

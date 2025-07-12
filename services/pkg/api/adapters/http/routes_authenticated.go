@@ -1,11 +1,11 @@
 package http
 
 import (
-	"github.com/eser/aya.is-services/pkg/ajan/httpfx"
-	"github.com/eser/aya.is-services/pkg/ajan/logfx"
-	"github.com/eser/aya.is-services/pkg/api/business/profiles"
-	"github.com/eser/aya.is-services/pkg/api/business/stories"
-	"github.com/eser/aya.is-services/pkg/api/business/users"
+	"github.com/eser/aya.is/services/pkg/ajan/httpfx"
+	"github.com/eser/aya.is/services/pkg/ajan/logfx"
+	"github.com/eser/aya.is/services/pkg/api/business/profiles"
+	"github.com/eser/aya.is/services/pkg/api/business/stories"
+	"github.com/eser/aya.is/services/pkg/api/business/users"
 )
 
 // RegisterAuthenticatedRoutes registers routes that require authentication.

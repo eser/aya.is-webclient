@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/eser/aya.is-services/pkg/lib/vars"
+	"github.com/eser/aya.is/services/pkg/lib/vars"
 )
 
 var (

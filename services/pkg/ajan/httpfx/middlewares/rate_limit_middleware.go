@@ -7,8 +7,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/eser/aya.is-services/pkg/ajan/httpfx"
-	"github.com/eser/aya.is-services/pkg/ajan/lib"
+	"github.com/eser/aya.is/services/pkg/ajan/httpfx"
+	"github.com/eser/aya.is/services/pkg/ajan/lib"
 )
 
 // Global rate limiter instances per configuration.
@@ -100,15 +100,19 @@ func (rl *rateLimiter) cleanup() {
 
 	for range ticker.C {
 		rl.mutex.Lock()
+
 		now := time.Now()
 
 		for key, entry := range rl.entries {
 			entry.mutex.Lock()
+
 			if now.After(entry.resetTime) {
 				delete(rl.entries, key)
 			}
+
 			entry.mutex.Unlock()
 		}
+
 		rl.mutex.Unlock()
 	}
 }
@@ -186,6 +190,7 @@ func RateLimitMiddleware(options ...RateLimitOption) httpfx.Handler {
 		rateLimiter = newRateLimiter(cfg)
 		globalRateLimiters[configKey] = rateLimiter
 	}
+
 	globalMutex.Unlock()
 
 	return func(ctx *httpfx.Context) httpfx.Result {

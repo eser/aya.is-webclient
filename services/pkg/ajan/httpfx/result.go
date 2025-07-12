@@ -1,7 +1,7 @@
 package httpfx
 
 import (
-	"github.com/eser/aya.is-services/pkg/ajan/results"
+	"github.com/eser/aya.is/services/pkg/ajan/results"
 )
 
 type Result struct { //nolint:errname

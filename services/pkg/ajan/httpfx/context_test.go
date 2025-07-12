@@ -6,7 +6,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/eser/aya.is-services/pkg/ajan/httpfx"
+	"github.com/eser/aya.is/services/pkg/ajan/httpfx"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

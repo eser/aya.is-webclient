@@ -29,7 +29,7 @@ const (
 	defaultPoolTimeout     = 4 * time.Second
 	defaultRedisPort       = 6379
 
-	ReadMessagesCount = 10
+	ReadMessagesCount = 50
 )
 
 var (
@@ -176,7 +176,8 @@ func (rc *RedisConnection) Close(ctx context.Context) error {
 	rc.isInitialized = false
 
 	if rc.adapter.client != nil {
-		if err := rc.adapter.client.Close(); err != nil {
+		err := rc.adapter.client.Close()
+		if err != nil {
 			return fmt.Errorf("%w: %w", ErrFailedToCloseRedisClient, err)
 		}
 
@@ -888,7 +889,7 @@ func (ra *RedisAdapter) consumeLoop(
 		case <-ctx.Done():
 			return
 		default:
-			if err := ra.processStreamMessages(
+			err := ra.processStreamMessages(
 				ctx,
 				queueName,
 				consumerGroup,
@@ -896,7 +897,8 @@ func (ra *RedisAdapter) consumeLoop(
 				config,
 				messages,
 				errors,
-			); err != nil {
+			)
+			if err != nil {
 				select {
 				case errors <- err:
 				case <-ctx.Done():
@@ -1221,7 +1223,8 @@ func (f *RedisConnectionFactory) CreateConnection( //nolint:ireturn
 	conn := NewRedisConnection(f.protocol, redisConfig)
 
 	// Perform initial connection and health check
-	if err := conn.ensureClient(); err != nil {
+	err := conn.ensureClient()
+	if err != nil {
 		return nil, fmt.Errorf("%w: %w", ErrFailedToCreateRedisClient, err)
 	}
 
@@ -1270,7 +1273,8 @@ func (f *RedisConnectionFactory) BuildRedisConfig(config *ConfigTarget) *RedisCo
 func (f *RedisConnectionFactory) configureAddress(redisConfig *RedisConfig, config *ConfigTarget) {
 	if config.DSN != "" {
 		// Parse Redis DSN/URL format
-		if err := f.parseRedisDSN(redisConfig, config.DSN); err != nil {
+		err := f.parseRedisDSN(redisConfig, config.DSN)
+		if err != nil {
 			// Fallback to treating DSN as plain address
 			redisConfig.Address = config.DSN
 		}
@@ -1499,7 +1503,8 @@ func (ra *RedisAdapter) ListItems( //nolint:cyclop
 
 		// Unmarshal JSON into the new element
 		if strValue, ok := value.(string); ok {
-			if err := json.Unmarshal([]byte(strValue), newElem); err != nil {
+			err := json.Unmarshal([]byte(strValue), newElem)
+			if err != nil {
 				return fmt.Errorf("failed to unmarshal JSON for table %q: %w", tableName, err)
 			}
 
@@ -1806,4 +1811,19 @@ func (ra *RedisAdapter) ReceiveMessages(
 	}
 
 	return messages, nil
+}
+
+// MemoryPurge runs Redis MEMORY PURGE command to optimize memory usage.
+func (ra *RedisAdapter) MemoryPurge(ctx context.Context) error {
+	if ra.client == nil {
+		return fmt.Errorf("%w", ErrRedisClientNotInitialized)
+	}
+
+	// Execute MEMORY PURGE command using Do
+	err := ra.client.Do(ctx, "MEMORY", "PURGE").Err()
+	if err != nil {
+		return fmt.Errorf("%w (operation=memory_purge): %w", ErrRedisOperation, err)
+	}
+
+	return nil
 }

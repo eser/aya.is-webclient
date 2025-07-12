@@ -25,8 +25,8 @@ import (
     "context"
     "time"
 
-    "github.com/eser/aya.is-services/pkg/ajan/connfx"
-    "github.com/eser/aya.is-services/pkg/ajan/logfx"
+    "github.com/eser/aya.is/services/pkg/ajan/connfx"
+    "github.com/eser/aya.is/services/pkg/ajan/logfx"
 )
 
 func main() {
@@ -71,10 +71,10 @@ import (
     "net/http"
     "time"
 
-    "github.com/eser/aya.is-services/pkg/ajan/connfx"
-    "github.com/eser/aya.is-services/pkg/ajan/httpfx"
-    "github.com/eser/aya.is-services/pkg/ajan/httpfx/middlewares"
-    "github.com/eser/aya.is-services/pkg/ajan/logfx"
+    "github.com/eser/aya.is/services/pkg/ajan/connfx"
+    "github.com/eser/aya.is/services/pkg/ajan/httpfx"
+    "github.com/eser/aya.is/services/pkg/ajan/httpfx/middlewares"
+    "github.com/eser/aya.is/services/pkg/ajan/logfx"
 )
 
 func main() {

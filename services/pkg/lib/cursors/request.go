@@ -43,7 +43,6 @@ func getLimitFromString(str string) int {
 	}
 
 	val, err := strconv.Atoi(str)
-
 	if err != nil || val <= 0 {
 		return defaultLimit
 	}

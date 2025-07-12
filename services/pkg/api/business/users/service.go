@@ -7,8 +7,8 @@ import (
 	"log/slog"
 	"time"
 
-	"github.com/eser/aya.is-services/pkg/ajan/logfx"
-	"github.com/eser/aya.is-services/pkg/lib/cursors"
+	"github.com/eser/aya.is/services/pkg/ajan/logfx"
+	"github.com/eser/aya.is/services/pkg/lib/cursors"
 )
 
 var (
@@ -214,7 +214,8 @@ func (s *Service) RefreshToken( //nolint:funlen
 	}
 
 	// Update session's last activity
-	if updateErr := s.UpdateSessionLoggedInAt(ctx, claims.SessionID, now); updateErr != nil {
+	updateErr := s.UpdateSessionLoggedInAt(ctx, claims.SessionID, now)
+	if updateErr != nil {
 		s.logger.WarnContext(ctx, "Failed to update session logged in time",
 			slog.String("session_id", claims.SessionID),
 			slog.String("error", updateErr.Error()))

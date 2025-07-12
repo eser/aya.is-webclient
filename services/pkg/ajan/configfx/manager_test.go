@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/eser/aya.is-services/pkg/ajan/configfx"
+	"github.com/eser/aya.is/services/pkg/ajan/configfx"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -19,6 +19,7 @@ type TestConfigNestedKV struct {
 
 type TestConfigNested struct {
 	TestConfig
+
 	Port     int    `conf:"port"      default:"8080"`
 	MaxRetry uint16 `conf:"max_retry" default:"10"`
 

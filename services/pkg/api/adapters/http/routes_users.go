@@ -5,10 +5,10 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/eser/aya.is-services/pkg/ajan/httpfx"
-	"github.com/eser/aya.is-services/pkg/ajan/logfx"
-	"github.com/eser/aya.is-services/pkg/api/business/users"
-	"github.com/eser/aya.is-services/pkg/lib/cursors"
+	"github.com/eser/aya.is/services/pkg/ajan/httpfx"
+	"github.com/eser/aya.is/services/pkg/ajan/logfx"
+	"github.com/eser/aya.is/services/pkg/api/business/users"
+	"github.com/eser/aya.is/services/pkg/lib/cursors"
 )
 
 func RegisterHTTPRoutesForUsers( //nolint:funlen,cyclop

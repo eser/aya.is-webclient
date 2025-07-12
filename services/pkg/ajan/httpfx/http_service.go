@@ -9,8 +9,8 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/eser/aya.is-services/pkg/ajan/lib"
-	"github.com/eser/aya.is-services/pkg/ajan/logfx"
+	"github.com/eser/aya.is/services/pkg/ajan/lib"
+	"github.com/eser/aya.is/services/pkg/ajan/logfx"
 )
 
 var (
@@ -101,12 +101,14 @@ func (hs *HTTPService) Start(ctx context.Context) (func(), error) {
 	hs.logger.InfoContext(ctx, "HTTPService is starting...", slog.String("addr", hs.Config.Addr))
 
 	if hs.InnerMetrics != nil {
-		if err := hs.InnerMetrics.Init(); err != nil {
+		err := hs.InnerMetrics.Init()
+		if err != nil {
 			return nil, fmt.Errorf("%w: %w", ErrFailedToCreateHTTPMetrics, err)
 		}
 	}
 
-	if err := hs.SetupTLS(ctx); err != nil {
+	err := hs.SetupTLS(ctx)
+	if err != nil {
 		return nil, err
 	}
 
@@ -135,7 +137,8 @@ func (hs *HTTPService) Start(ctx context.Context) (func(), error) {
 		newCtx, cancel := context.WithTimeout(ctx, hs.Config.GracefulShutdownTimeout)
 		defer cancel()
 
-		if err := hs.InnerServer.Shutdown(newCtx); err != nil &&
+		err := hs.InnerServer.Shutdown(newCtx)
+		if err != nil &&
 			!errors.Is(err, http.ErrServerClosed) {
 			hs.logger.ErrorContext(ctx, "HTTPService forced to shutdown", slog.Any("error", err))
 

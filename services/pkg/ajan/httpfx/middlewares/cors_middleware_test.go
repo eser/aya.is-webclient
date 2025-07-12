@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/eser/aya.is-services/pkg/ajan/httpfx"
-	"github.com/eser/aya.is-services/pkg/ajan/httpfx/middlewares"
+	"github.com/eser/aya.is/services/pkg/ajan/httpfx"
+	"github.com/eser/aya.is/services/pkg/ajan/httpfx/middlewares"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

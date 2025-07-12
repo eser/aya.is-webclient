@@ -13,8 +13,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/eser/aya.is-services/pkg/ajan/logfx"
-	"github.com/eser/aya.is-services/pkg/api/business/users"
+	"github.com/eser/aya.is/services/pkg/ajan/logfx"
+	"github.com/eser/aya.is/services/pkg/api/business/users"
 )
 
 const (
@@ -114,7 +114,8 @@ func (g *GitHubAuthProvider) HandleOAuthCallback( //nolint:funlen
 	}
 
 	defer func() {
-		if closeErr := tokenResp.Body.Close(); closeErr != nil {
+		closeErr := tokenResp.Body.Close()
+		if closeErr != nil {
 			g.logger.WarnContext(ctx, "Failed to close response body",
 				slog.String("error", closeErr.Error()))
 		}

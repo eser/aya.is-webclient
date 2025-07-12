@@ -1,10 +1,10 @@
 package ajan
 
 import (
-	"github.com/eser/aya.is-services/pkg/ajan/connfx"
-	"github.com/eser/aya.is-services/pkg/ajan/httpclient"
-	"github.com/eser/aya.is-services/pkg/ajan/httpfx"
-	"github.com/eser/aya.is-services/pkg/ajan/logfx"
+	"github.com/eser/aya.is/services/pkg/ajan/connfx"
+	"github.com/eser/aya.is/services/pkg/ajan/httpclient"
+	"github.com/eser/aya.is/services/pkg/ajan/httpfx"
+	"github.com/eser/aya.is/services/pkg/ajan/logfx"
 )
 
 type BaseConfig struct {

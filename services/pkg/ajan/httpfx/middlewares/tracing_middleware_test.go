@@ -7,9 +7,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/eser/aya.is-services/pkg/ajan/httpfx"
-	"github.com/eser/aya.is-services/pkg/ajan/httpfx/middlewares"
-	"github.com/eser/aya.is-services/pkg/ajan/logfx"
+	"github.com/eser/aya.is/services/pkg/ajan/httpfx"
+	"github.com/eser/aya.is/services/pkg/ajan/httpfx/middlewares"
+	"github.com/eser/aya.is/services/pkg/ajan/logfx"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel"

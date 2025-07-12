@@ -9,9 +9,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/eser/aya.is-services/pkg/ajan/httpfx"
-	"github.com/eser/aya.is-services/pkg/ajan/httpfx/middlewares"
-	"github.com/eser/aya.is-services/pkg/ajan/logfx"
+	"github.com/eser/aya.is/services/pkg/ajan/httpfx"
+	"github.com/eser/aya.is/services/pkg/ajan/httpfx/middlewares"
+	"github.com/eser/aya.is/services/pkg/ajan/logfx"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/otel"
@@ -197,6 +197,7 @@ func verifyTraceInLogs(
 		}
 
 		var logEntry map[string]any
+
 		err := json.Unmarshal([]byte(logLine), &logEntry)
 		require.NoError(t, err, "Failed to parse log line %d: %s", i, logLine)
 
@@ -234,6 +235,7 @@ func verifyLogEntries(t *testing.T, logLines []string) foundLogEntries {
 		}
 
 		var logEntry map[string]any
+
 		err := json.Unmarshal([]byte(logLine), &logEntry)
 		require.NoError(t, err)
 

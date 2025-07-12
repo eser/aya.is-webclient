@@ -6,7 +6,7 @@ import (
 	"log/slog"
 	"testing"
 
-	"github.com/eser/aya.is-services/pkg/ajan/results"
+	"github.com/eser/aya.is/services/pkg/ajan/results"
 	"github.com/stretchr/testify/assert"
 )
 

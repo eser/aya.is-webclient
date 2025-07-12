@@ -24,8 +24,8 @@ import (
     "fmt"
     "time"
 
-    "github.com/eser/aya.is-services/pkg/ajan/processfx"
-    "github.com/eser/aya.is-services/pkg/ajan/logfx"
+    "github.com/eser/aya.is/services/pkg/ajan/processfx"
+    "github.com/eser/aya.is/services/pkg/ajan/logfx"
 )
 
 func main() {
@@ -641,7 +641,7 @@ func main() {
 - `sync`: Standard library for wait groups
 - `syscall`: Standard library for system calls
 - `time`: Standard library for timeouts
-- `github.com/eser/aya.is-services/pkg/ajan/logfx`: Structured logging (optional)
+- `github.com/eser/aya.is/services/pkg/ajan/logfx`: Structured logging (optional)
 
 ## Thread Safety
 

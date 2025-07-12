@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/eser/aya.is-services/pkg/ajan/httpfx"
+	"github.com/eser/aya.is/services/pkg/ajan/httpfx"
 	"github.com/golang-jwt/jwt/v5"
 )
 
@@ -38,7 +38,6 @@ func AuthMiddleware() httpfx.Handler {
 
 			return []byte("secret"), nil
 		})
-
 		if err != nil || !token.Valid {
 			return ctx.Results.Unauthorized(httpfx.WithPlainText(err.Error()))
 		}

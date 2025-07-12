@@ -6,9 +6,9 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/eser/aya.is-services/pkg/api/business/profiles"
-	"github.com/eser/aya.is-services/pkg/lib/cursors"
-	"github.com/eser/aya.is-services/pkg/lib/vars"
+	"github.com/eser/aya.is/services/pkg/api/business/profiles"
+	"github.com/eser/aya.is/services/pkg/lib/cursors"
+	"github.com/eser/aya.is/services/pkg/lib/vars"
 )
 
 func (r *Repository) GetProfileIDBySlug(ctx context.Context, slug string) (string, error) {

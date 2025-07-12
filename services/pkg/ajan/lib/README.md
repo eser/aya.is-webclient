@@ -31,7 +31,7 @@ func SplitHostPort(addr string) (string, string, error)
 
 **Usage:**
 ```go
-import "github.com/eser/aya.is-services/pkg/ajan/lib"
+import "github.com/eser/aya.is/services/pkg/ajan/lib"
 
 // Split address with port
 host, port, err := lib.SplitHostPort("localhost:8080")

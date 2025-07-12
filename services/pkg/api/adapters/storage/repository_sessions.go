@@ -6,8 +6,8 @@ import (
 	"errors"
 	"time"
 
-	"github.com/eser/aya.is-services/pkg/api/business/users"
-	"github.com/eser/aya.is-services/pkg/lib/vars"
+	"github.com/eser/aya.is/services/pkg/api/business/users"
+	"github.com/eser/aya.is/services/pkg/lib/vars"
 )
 
 func (r *Repository) GetSessionByID(

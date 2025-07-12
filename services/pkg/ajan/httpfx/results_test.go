@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/eser/aya.is-services/pkg/ajan/httpfx"
+	"github.com/eser/aya.is/services/pkg/ajan/httpfx"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -61,6 +61,7 @@ func TestResults_JSON(t *testing.T) {
 
 	// Verify JSON encoding
 	var decoded testStruct
+
 	err := json.Unmarshal(result.Body(), &decoded)
 	require.NoError(t, err)
 	assert.Equal(t, data, decoded)

@@ -3,7 +3,7 @@ package users
 import (
 	"time"
 
-	"github.com/eser/aya.is-services/pkg/ajan/lib"
+	"github.com/eser/aya.is/services/pkg/ajan/lib"
 )
 
 type RecordID string

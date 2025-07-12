@@ -3,10 +3,10 @@ package http
 import (
 	"net/http"
 
-	"github.com/eser/aya.is-services/pkg/ajan/httpfx"
-	"github.com/eser/aya.is-services/pkg/ajan/logfx"
-	"github.com/eser/aya.is-services/pkg/api/business/stories"
-	"github.com/eser/aya.is-services/pkg/lib/cursors"
+	"github.com/eser/aya.is/services/pkg/ajan/httpfx"
+	"github.com/eser/aya.is/services/pkg/ajan/logfx"
+	"github.com/eser/aya.is/services/pkg/api/business/stories"
+	"github.com/eser/aya.is/services/pkg/lib/cursors"
 )
 
 func RegisterHTTPRoutesForStories(

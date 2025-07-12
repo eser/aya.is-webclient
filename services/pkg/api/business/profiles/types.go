@@ -3,7 +3,7 @@ package profiles
 import (
 	"time"
 
-	"github.com/eser/aya.is-services/pkg/ajan/lib"
+	"github.com/eser/aya.is/services/pkg/ajan/lib"
 )
 
 type RecordID string
@@ -31,6 +31,7 @@ type Profile struct {
 
 type ProfileWithChildren struct {
 	*Profile
+
 	Pages []*ProfilePageBrief `json:"pages"`
 	Links []*ProfileLinkBrief `json:"links"`
 }

@@ -3,7 +3,7 @@ package jsonparser_test
 import (
 	"testing"
 
-	"github.com/eser/aya.is-services/pkg/ajan/configfx/jsonparser"
+	"github.com/eser/aya.is/services/pkg/ajan/configfx/jsonparser"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

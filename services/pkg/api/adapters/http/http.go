@@ -3,15 +3,15 @@ package http
 import (
 	"context"
 
-	"github.com/eser/aya.is-services/pkg/ajan/httpfx"
-	"github.com/eser/aya.is-services/pkg/ajan/httpfx/middlewares"
-	"github.com/eser/aya.is-services/pkg/ajan/httpfx/modules/healthcheck"
-	"github.com/eser/aya.is-services/pkg/ajan/httpfx/modules/openapi"
-	"github.com/eser/aya.is-services/pkg/ajan/httpfx/modules/profiling"
-	"github.com/eser/aya.is-services/pkg/ajan/logfx"
-	"github.com/eser/aya.is-services/pkg/api/business/profiles"
-	"github.com/eser/aya.is-services/pkg/api/business/stories"
-	"github.com/eser/aya.is-services/pkg/api/business/users"
+	"github.com/eser/aya.is/services/pkg/ajan/httpfx"
+	"github.com/eser/aya.is/services/pkg/ajan/httpfx/middlewares"
+	"github.com/eser/aya.is/services/pkg/ajan/httpfx/modules/healthcheck"
+	"github.com/eser/aya.is/services/pkg/ajan/httpfx/modules/openapi"
+	"github.com/eser/aya.is/services/pkg/ajan/httpfx/modules/profiling"
+	"github.com/eser/aya.is/services/pkg/ajan/logfx"
+	"github.com/eser/aya.is/services/pkg/api/business/profiles"
+	"github.com/eser/aya.is/services/pkg/api/business/stories"
+	"github.com/eser/aya.is/services/pkg/api/business/users"
 )
 
 func Run(

@@ -3,7 +3,7 @@ package middlewares
 import (
 	"strings"
 
-	"github.com/eser/aya.is-services/pkg/ajan/httpfx"
+	"github.com/eser/aya.is/services/pkg/ajan/httpfx"
 )
 
 // Constants for CORS headers.

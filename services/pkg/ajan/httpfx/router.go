@@ -1,11 +1,11 @@
 package httpfx
 
 import (
-	"fmt"
+	"log/slog"
 	"net/http"
 
-	"github.com/eser/aya.is-services/pkg/ajan/httpfx/uris"
-	"github.com/eser/aya.is-services/pkg/ajan/lib"
+	"github.com/eser/aya.is/services/pkg/ajan/httpfx/uris"
+	"github.com/eser/aya.is/services/pkg/ajan/lib"
 )
 
 type Router struct {
@@ -81,12 +81,15 @@ func (r *Router) Route(pattern string, handlers ...Handler) *Route {
 
 		_, err := responseWriter.Write(result.Body())
 		if err != nil {
-			// TODO(@eser) replace it with logger
-			fmt.Println("error writing response body: %w", err) //nolint:forbidigo
+			slog.Error("Failed to write HTTP response body",
+				slog.String("scope_name", "httpfx_router"),
+				slog.Any("error", err))
 		}
 	}
 
-	// TODO(@eser) r.Path+route.Pattern
+	// TODO(@eser) Implement proper path combination for nested routers
+	// Note: HTTP patterns like "GET /path" already include method and path
+	// For nested routers, we need to modify the path part of the pattern
 	r.mux.HandleFunc(route.Pattern.Str, route.MuxHandlerFunc)
 
 	r.routes = append(r.routes, route)

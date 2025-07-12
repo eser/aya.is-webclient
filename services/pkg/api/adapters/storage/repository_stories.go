@@ -8,10 +8,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/eser/aya.is-services/pkg/api/business/profiles"
-	"github.com/eser/aya.is-services/pkg/api/business/stories"
-	"github.com/eser/aya.is-services/pkg/lib/cursors"
-	"github.com/eser/aya.is-services/pkg/lib/vars"
+	"github.com/eser/aya.is/services/pkg/api/business/profiles"
+	"github.com/eser/aya.is/services/pkg/api/business/stories"
+	"github.com/eser/aya.is/services/pkg/lib/cursors"
+	"github.com/eser/aya.is/services/pkg/lib/vars"
 )
 
 var ErrFailedToParseStoryWithChildren = errors.New("failed to parse story with children")

@@ -3,8 +3,8 @@ package stories
 import (
 	"time"
 
-	"github.com/eser/aya.is-services/pkg/ajan/lib"
-	"github.com/eser/aya.is-services/pkg/api/business/profiles"
+	"github.com/eser/aya.is/services/pkg/ajan/lib"
+	"github.com/eser/aya.is/services/pkg/api/business/profiles"
 )
 
 type RecordID string
@@ -34,6 +34,7 @@ type Story struct {
 
 type StoryWithChildren struct {
 	*Story
+
 	AuthorProfile *profiles.Profile   `json:"author_profile"`
 	Publications  []*profiles.Profile `json:"publications"`
 }

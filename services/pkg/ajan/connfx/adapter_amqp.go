@@ -116,8 +116,8 @@ func (ac *AMQPConnection) HealthCheck(ctx context.Context) *HealthStatus {
 		Message:   "",
 		Latency:   0,
 	}
-
-	if err := ac.adapter.ensureConnection(); err != nil {
+	err := ac.adapter.ensureConnection()
+	if err != nil {
 		status.State = ConnectionStateError
 		status.Error = err
 		status.Message = fmt.Sprintf("Failed to connect to AMQP: %v", err)
@@ -137,13 +137,15 @@ func (ac *AMQPConnection) Close(ctx context.Context) error {
 	atomic.StoreInt32(&ac.state, int32(ConnectionStateDisconnected))
 
 	if ac.adapter.channel != nil {
-		if err := ac.adapter.channel.Close(); err != nil {
+		err := ac.adapter.channel.Close()
+		if err != nil {
 			return fmt.Errorf("%w (channel): %w", ErrFailedToCloseAMQPClient, err)
 		}
 	}
 
 	if ac.adapter.connection != nil {
-		if err := ac.adapter.connection.Close(); err != nil {
+		err := ac.adapter.connection.Close()
+		if err != nil {
 			return fmt.Errorf("%w (connection): %w", ErrFailedToCloseAMQPClient, err)
 		}
 	}
@@ -349,7 +351,8 @@ func (aa *AMQPAdapter) ensureConnection() error {
 
 	channel, err := conn.Channel()
 	if err != nil {
-		if closeErr := conn.Close(); closeErr != nil {
+		closeErr := conn.Close()
+		if closeErr != nil {
 			return fmt.Errorf(
 				"%w (channel): %w, close error: %w",
 				ErrFailedToCreateAMQPClient,

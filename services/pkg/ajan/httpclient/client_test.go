@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/eser/aya.is-services/pkg/ajan/httpclient"
-	"github.com/eser/aya.is-services/pkg/ajan/lib"
+	"github.com/eser/aya.is/services/pkg/ajan/httpclient"
+	"github.com/eser/aya.is/services/pkg/ajan/lib"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -39,6 +39,7 @@ func TestClientSuccessfulRequest(t *testing.T) {
 
 	resp, err := client.Do(req)
 	defer closeBody(t, resp)
+
 	require.NoError(t, err)
 	assert.Equal(t, http.StatusOK, resp.StatusCode)
 }
@@ -136,6 +137,7 @@ func TestClientRetryOnly(t *testing.T) {
 
 	resp, err := client.Do(req)
 	defer closeBody(t, resp)
+
 	require.NoError(t, err)
 	assert.Equal(t, http.StatusOK, resp.StatusCode)
 	assert.Equal(t, int32(3), atomic.LoadInt32(&attemptCount))
@@ -367,6 +369,7 @@ func TestClientRetryMechanism(t *testing.T) {
 
 	resp, err := client.Do(req)
 	defer closeBody(t, resp)
+
 	require.NoError(t, err)
 	assert.Equal(t, http.StatusOK, resp.StatusCode)
 	assert.Equal(t, 3, attemptCount)
@@ -391,6 +394,7 @@ func TestClientContextCancellation(t *testing.T) {
 
 	resp, err := client.Do(req)
 	defer closeBody(t, resp)
+
 	require.Error(t, err)
 	require.Contains(t, err.Error(), context.DeadlineExceeded.Error())
 }

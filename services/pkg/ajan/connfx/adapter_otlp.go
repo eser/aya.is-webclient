@@ -175,19 +175,22 @@ func (c *OTLPConnection) HealthCheck(ctx context.Context) *HealthStatus {
 func (c *OTLPConnection) Close(ctx context.Context) error {
 	// Shutdown exporters
 	if c.logExporter != nil {
-		if err := c.logExporter.Shutdown(ctx); err != nil {
+		err := c.logExporter.Shutdown(ctx)
+		if err != nil {
 			return fmt.Errorf("%w: %w", ErrFailedToShutdownLogExporter, err)
 		}
 	}
 
 	if c.metricExporter != nil {
-		if err := c.metricExporter.Shutdown(ctx); err != nil {
+		err := c.metricExporter.Shutdown(ctx)
+		if err != nil {
 			return fmt.Errorf("%w: %w", ErrFailedToShutdownMetricExporter, err)
 		}
 	}
 
 	if c.traceExporter != nil {
-		if err := c.traceExporter.Shutdown(ctx); err != nil {
+		err := c.traceExporter.Shutdown(ctx)
+		if err != nil {
 			return fmt.Errorf("%w: %w", ErrFailedToShutdownTraceExporter, err)
 		}
 	}

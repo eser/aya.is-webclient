@@ -210,7 +210,8 @@ func (registry *Registry) RemoveConnection(ctx context.Context, name string) err
 	}
 
 	// Close the connection
-	if err := conn.Close(ctx); err != nil {
+	err := conn.Close(ctx)
+	if err != nil {
 		registry.logger.WarnContext(
 			ctx,
 			"error closing connection",
@@ -283,7 +284,8 @@ func (registry *Registry) Close(ctx context.Context) error {
 	var errors []error
 
 	for name, conn := range registry.connections {
-		if err := conn.Close(ctx); err != nil {
+		err := conn.Close(ctx)
+		if err != nil {
 			errors = append(
 				errors,
 				fmt.Errorf("%w (name=%q): %w", ErrFailedToCloseConnection, name, err),

@@ -3,10 +3,10 @@ package http
 import (
 	"net/http"
 
-	"github.com/eser/aya.is-services/pkg/ajan/httpfx"
-	"github.com/eser/aya.is-services/pkg/ajan/logfx"
-	"github.com/eser/aya.is-services/pkg/api/business/profiles"
-	"github.com/eser/aya.is-services/pkg/lib/cursors"
+	"github.com/eser/aya.is/services/pkg/ajan/httpfx"
+	"github.com/eser/aya.is/services/pkg/ajan/logfx"
+	"github.com/eser/aya.is/services/pkg/api/business/profiles"
+	"github.com/eser/aya.is/services/pkg/lib/cursors"
 )
 
 func RegisterHTTPRoutesForSite(

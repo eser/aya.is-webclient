@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/eser/aya.is-services/pkg/ajan/httpfx"
+	"github.com/eser/aya.is/services/pkg/ajan/httpfx"
 )
 
 // MetricsMiddleware creates HTTP metrics middleware using the clean slog-based logfx approach.

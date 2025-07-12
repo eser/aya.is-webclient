@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/eser/aya.is-services/pkg/ajan/httpfx"
-	"github.com/eser/aya.is-services/pkg/ajan/httpfx/middlewares"
+	"github.com/eser/aya.is/services/pkg/ajan/httpfx"
+	"github.com/eser/aya.is/services/pkg/ajan/httpfx/middlewares"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/stretchr/testify/assert"
 )
@@ -75,8 +75,8 @@ func TestAuthMiddleware(t *testing.T) { //nolint:funlen
 			}
 
 			middleware := middlewares.AuthMiddleware()
-			result := middleware(&httpCtx)
 
+			result := middleware(&httpCtx)
 			if result.StatusCode() != tt.expectedStatusCode {
 				assert.Equal(t, tt.expectedStatusCode, result.StatusCode())
 			}

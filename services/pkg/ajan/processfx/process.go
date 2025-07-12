@@ -9,7 +9,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/eser/aya.is-services/pkg/ajan/logfx"
+	"github.com/eser/aya.is/services/pkg/ajan/logfx"
 )
 
 const (
@@ -83,7 +83,6 @@ func (p *Process) StartGoroutine(
 		}
 
 		err := fn(p.Ctx)
-
 		if err != nil &&
 			p.BaseCtx.Err() == nil &&
 			!errors.Is(err, context.Canceled) {
@@ -118,6 +117,7 @@ func (p *Process) Shutdown() {
 
 	// Wait for all managed goroutines to finish.
 	shutdownComplete := make(chan struct{})
+
 	go func() {
 		for _, wg := range p.WaitGroups {
 			wg.Wait()

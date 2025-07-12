@@ -3,7 +3,7 @@ package subcommands
 import (
 	"context"
 
-	"github.com/eser/aya.is-services/pkg/api/adapters/appcontext"
+	"github.com/eser/aya.is/services/pkg/api/adapters/appcontext"
 	"github.com/spf13/cobra"
 )
 

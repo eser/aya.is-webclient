@@ -11,10 +11,10 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/eser/aya.is-services/pkg/ajan/connfx"
-	"github.com/eser/aya.is-services/pkg/ajan/logfx"
-	"github.com/eser/aya.is-services/pkg/lib/caching"
-	"github.com/eser/aya.is-services/pkg/lib/cursors"
+	"github.com/eser/aya.is/services/pkg/ajan/connfx"
+	"github.com/eser/aya.is/services/pkg/ajan/logfx"
+	"github.com/eser/aya.is/services/pkg/lib/caching"
+	"github.com/eser/aya.is/services/pkg/lib/cursors"
 	"github.com/pressly/goose/v3"
 )
 

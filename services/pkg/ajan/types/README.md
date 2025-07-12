@@ -38,7 +38,7 @@ func (m MetricInt) MarshalText() ([]byte, error)
 #### Usage Examples
 
 ```go
-import "github.com/eser/aya.is-services/pkg/ajan/types"
+import "github.com/eser/aya.is/services/pkg/ajan/types"
 
 // Parsing from text
 var memory types.MetricInt
@@ -97,7 +97,7 @@ func (m MetricFloat) MarshalText() ([]byte, error)
 #### Usage Examples
 
 ```go
-import "github.com/eser/aya.is-services/pkg/ajan/types"
+import "github.com/eser/aya.is/services/pkg/ajan/types"
 
 // Parsing from text
 var rate types.MetricFloat
@@ -139,8 +139,8 @@ The metric types are designed to work seamlessly with configuration systems:
 
 ```go
 import (
-    "github.com/eser/aya.is-services/pkg/ajan/configfx"
-    "github.com/eser/aya.is-services/pkg/ajan/types"
+    "github.com/eser/aya.is/services/pkg/ajan/configfx"
+    "github.com/eser/aya.is/services/pkg/ajan/types"
 )
 
 type DatabaseConfig struct {
@@ -187,7 +187,7 @@ fmt.Printf("Pool size: %d\n", int64(config.Database.PoolSize))
 ```go
 import (
     "encoding/json"
-    "github.com/eser/aya.is-services/pkg/ajan/types"
+    "github.com/eser/aya.is/services/pkg/ajan/types"
 )
 
 type Metrics struct {
@@ -294,7 +294,7 @@ The types package provides sentinel errors for error checking:
 ```go
 import (
     "errors"
-    "github.com/eser/aya.is-services/pkg/ajan/types"
+    "github.com/eser/aya.is/services/pkg/ajan/types"
 )
 
 var value types.MetricInt

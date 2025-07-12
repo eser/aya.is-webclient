@@ -13,7 +13,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/eser/aya.is-services/pkg/ajan/httpclient"
+	"github.com/eser/aya.is/services/pkg/ajan/httpclient"
 )
 
 const (

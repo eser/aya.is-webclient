@@ -3,7 +3,7 @@ package logfx_test
 import (
 	"testing"
 
-	"github.com/eser/aya.is-services/pkg/ajan/logfx"
+	"github.com/eser/aya.is/services/pkg/ajan/logfx"
 	"github.com/stretchr/testify/assert"
 )
 

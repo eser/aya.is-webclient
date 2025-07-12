@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/eser/aya.is-services/pkg/ajan/logfx"
+	"github.com/eser/aya.is/services/pkg/ajan/logfx"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -144,6 +144,7 @@ func TestTraceLines(t *testing.T) { //nolint:funlen
 
 	stackGenerator := func() []uintptr {
 		var pc [32]uintptr
+
 		n := runtime.Callers(0, pc[:])
 
 		return pc[:n]
@@ -151,6 +152,7 @@ func TestTraceLines(t *testing.T) { //nolint:funlen
 
 	stackGeneratorWithUnknownFunctionAddr := func() []uintptr {
 		var pc [32]uintptr
+
 		n := runtime.Callers(0, pc[:])
 		pc[0] = 0
 
@@ -179,12 +181,12 @@ func TestTraceLines(t *testing.T) { //nolint:funlen
 			expected: []string{
 				"runtime.Callers /usr/local/go/src/runtime/extern.go:331",
 				fmt.Sprint(
-					"github.com/eser/aya.is-services/pkg/ajan/logfx_test.TestTraceLines.func1 ",
+					"github.com/eser/aya.is/services/pkg/ajan/logfx_test.TestTraceLines.func1 ",
 					pwd(),
 					":117",
 				),
 				fmt.Sprint(
-					"github.com/eser/aya.is-services/pkg/ajan/logfx_test.TestTraceLines ",
+					"github.com/eser/aya.is/services/pkg/ajan/logfx_test.TestTraceLines ",
 					pwd(),
 					":145",
 				),
@@ -197,7 +199,7 @@ func TestTraceLines(t *testing.T) { //nolint:funlen
 			expected: []string{
 				"unknown",
 				fmt.Sprint(
-					"github.com/eser/aya.is-services/pkg/ajan/logfx_test.TestTraceLines ",
+					"github.com/eser/aya.is/services/pkg/ajan/logfx_test.TestTraceLines ",
 					pwd(),
 					":147",
 				),

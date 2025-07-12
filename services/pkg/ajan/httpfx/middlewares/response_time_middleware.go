@@ -4,7 +4,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/eser/aya.is-services/pkg/ajan/httpfx"
+	"github.com/eser/aya.is/services/pkg/ajan/httpfx"
 )
 
 const ResponseTimeHeader = "X-Request-Time"

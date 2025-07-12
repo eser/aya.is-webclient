@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/eser/aya.is-services/pkg/api/business/profiles"
+	"github.com/eser/aya.is/services/pkg/api/business/profiles"
 )
 
 type HTTPClient interface {

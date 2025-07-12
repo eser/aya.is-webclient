@@ -5,8 +5,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/eser/aya.is-services/pkg/ajan/logfx"
-	"github.com/eser/aya.is-services/pkg/lib/cursors"
+	"github.com/eser/aya.is/services/pkg/ajan/logfx"
+	"github.com/eser/aya.is/services/pkg/lib/cursors"
 )
 
 var (

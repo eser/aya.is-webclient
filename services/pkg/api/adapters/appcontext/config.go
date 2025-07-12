@@ -1,9 +1,9 @@
 package appcontext
 
 import (
-	"github.com/eser/aya.is-services/pkg/ajan"
-	"github.com/eser/aya.is-services/pkg/api/adapters/arcade"
-	"github.com/eser/aya.is-services/pkg/api/business/users"
+	"github.com/eser/aya.is/services/pkg/ajan"
+	"github.com/eser/aya.is/services/pkg/api/adapters/arcade"
+	"github.com/eser/aya.is/services/pkg/api/business/users"
 )
 
 type DataConfig struct {

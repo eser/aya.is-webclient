@@ -25,7 +25,7 @@ import (
     "fmt"
     "log"
 
-    "github.com/eser/aya.is-services/pkg/ajan/configfx"
+    "github.com/eser/aya.is/services/pkg/ajan/configfx"
 )
 
 // Define your configuration structure
@@ -490,9 +490,9 @@ func watchConfig(configFile string, config *Config, manager *configfx.ConfigMana
 ## Dependencies
 
 configfx uses the following internal packages:
-- `github.com/eser/aya.is-services/pkg/ajan/configfx/jsonparser`: JSON parsing functionality
-- `github.com/eser/aya.is-services/pkg/ajan/configfx/envparser`: Environment file parsing
-- `github.com/eser/aya.is-services/pkg/ajan/lib`: Utility functions for environment handling
+- `ajan/configfx/jsonparser`: JSON parsing functionality
+- `ajan/configfx/envparser`: Environment file parsing
+- `ajan/lib`: Utility functions for environment handling
 
 ## Thread Safety
 

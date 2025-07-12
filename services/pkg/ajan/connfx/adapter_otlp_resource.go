@@ -103,19 +103,22 @@ func (c *OTLPConnectionResource) GetTracerProvider() *sdktrace.TracerProvider {
 
 func (c *OTLPConnectionResource) Close(ctx context.Context) error {
 	if c.loggerProvider != nil {
-		if err := c.loggerProvider.Shutdown(ctx); err != nil {
+		err := c.loggerProvider.Shutdown(ctx)
+		if err != nil {
 			return fmt.Errorf("%w: %w", ErrFailedToShutdownLogProvider, err)
 		}
 	}
 
 	if c.meterProvider != nil {
-		if err := c.meterProvider.Shutdown(ctx); err != nil {
+		err := c.meterProvider.Shutdown(ctx)
+		if err != nil {
 			return fmt.Errorf("%w: %w", ErrFailedToShutdownMeterProvider, err)
 		}
 	}
 
 	if c.tracerProvider != nil {
-		if err := c.tracerProvider.Shutdown(ctx); err != nil {
+		err := c.tracerProvider.Shutdown(ctx)
+		if err != nil {
 			return fmt.Errorf("%w: %w", ErrFailedToShutdownTracerProvider, err)
 		}
 	}

@@ -4,8 +4,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/eser/aya.is-services/pkg/ajan/httpfx"
-	"github.com/eser/aya.is-services/pkg/api/business/users"
+	"github.com/eser/aya.is/services/pkg/ajan/httpfx"
+	"github.com/eser/aya.is/services/pkg/api/business/users"
 	"github.com/golang-jwt/jwt/v5"
 )
 
@@ -22,10 +22,10 @@ func AuthMiddleware(usersService *users.Service) httpfx.Handler {
 
 		tokenStr := strings.TrimPrefix(auth, "Bearer ")
 		secret := usersService.AuthConfig.JwtSecret
+
 		token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (any, error) {
 			return []byte(secret), nil
 		})
-
 		if err != nil || !token.Valid {
 			return ctx.Results.Unauthorized(httpfx.WithPlainText("Invalid token"))
 		}

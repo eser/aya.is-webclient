@@ -4,7 +4,7 @@ import (
 	"crypto/rand"
 	"testing"
 
-	"github.com/eser/aya.is-services/pkg/ajan/lib"
+	"github.com/eser/aya.is/services/pkg/ajan/lib"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -37,11 +37,13 @@ func TestCryptoGetRandomBytes(t *testing.T) { //nolint:paralleltest
 	for _, tt := range tests { //nolint:paralleltest
 		t.Run(tt.name, func(t *testing.T) {
 			originalRand := rand.Reader
+
 			defer func() {
 				rand.Reader = originalRand
 			}() // Restore original rand.Reader
 
 			const size = 16
+
 			result := lib.CryptoGetRandomBytes(size)
 
 			assert.Len(t, result, size, "CryptoGetRandomBytes() = %v, want length %v", result, size)

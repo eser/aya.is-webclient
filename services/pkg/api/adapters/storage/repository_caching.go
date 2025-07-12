@@ -6,7 +6,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/eser/aya.is-services/pkg/lib/vars"
+	"github.com/eser/aya.is/services/pkg/lib/vars"
 	"github.com/sqlc-dev/pqtype"
 )
 

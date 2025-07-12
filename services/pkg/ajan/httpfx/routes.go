@@ -3,7 +3,7 @@ package httpfx
 import (
 	"net/http"
 
-	"github.com/eser/aya.is-services/pkg/ajan/httpfx/uris"
+	"github.com/eser/aya.is/services/pkg/ajan/httpfx/uris"
 )
 
 //go:generate go tool stringer -type RouteParameterType -trimprefix RouteParameterType

@@ -4,9 +4,9 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/eser/aya.is-services/pkg/ajan/configfx/envparser"
-	"github.com/eser/aya.is-services/pkg/ajan/configfx/jsonparser"
-	"github.com/eser/aya.is-services/pkg/ajan/lib"
+	"github.com/eser/aya.is/services/pkg/ajan/configfx/envparser"
+	"github.com/eser/aya.is/services/pkg/ajan/configfx/jsonparser"
+	"github.com/eser/aya.is/services/pkg/ajan/lib"
 )
 
 var (
