@@ -116,6 +116,10 @@ func (s *Service) GetBySlugEx(
 		return nil, fmt.Errorf("%w(profile_id: %s): %w", ErrFailedToGetRecord, profileID, err)
 	}
 
+	if record == nil {
+		return nil, nil //nolint:nilnil
+	}
+
 	pages, err := s.repo.ListProfilePagesByProfileID(ctx, localeCode, record.ID)
 	if err != nil {
 		return nil, fmt.Errorf("%w(profile_id: %s): %w", ErrFailedToGetRecord, profileID, err)

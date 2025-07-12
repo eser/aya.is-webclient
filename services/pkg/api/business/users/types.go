@@ -45,7 +45,19 @@ type Session struct {
 	OauthRequestCodeVerifier string     `json:"oauth_request_code_verifier"`
 }
 
-// --- OAuth & Auth types ---
+// Config types.
+type GitHubAuthProviderConfig struct {
+	ClientID     string `conf:"client_id"`
+	ClientSecret string `conf:"client_secret"`
+}
+
+type AuthConfig struct {
+	JwtSecret string `conf:"jwt_secret" default:"secret"`
+
+	GitHub GitHubAuthProviderConfig `conf:"github"`
+}
+
+// Auth types
 
 type OAuthState struct {
 	State       string
@@ -56,6 +68,7 @@ type AuthResult struct {
 	User      *User
 	SessionID string
 	JWT       string
+	ExpiresAt time.Time
 }
 
 type JWTClaims struct {

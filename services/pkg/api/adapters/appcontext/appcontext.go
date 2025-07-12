@@ -11,6 +11,7 @@ import (
 	"github.com/eser/aya.is-services/pkg/ajan/httpclient"
 	"github.com/eser/aya.is-services/pkg/ajan/logfx"
 	"github.com/eser/aya.is-services/pkg/api/adapters/arcade"
+	"github.com/eser/aya.is-services/pkg/api/adapters/auth"
 	"github.com/eser/aya.is-services/pkg/api/adapters/auth_providers"
 	"github.com/eser/aya.is-services/pkg/api/adapters/storage"
 	"github.com/eser/aya.is-services/pkg/api/business/profiles"
@@ -32,7 +33,8 @@ type AppContext struct {
 
 	Arcade *arcade.Arcade
 
-	Repository *storage.Repository
+	Repository      *storage.Repository
+	JWTTokenService *auth.JWTTokenService
 
 	// Business
 	ProfilesService *profiles.Service
@@ -139,14 +141,31 @@ func (a *AppContext) Init(ctx context.Context) error { //nolint:funlen
 	}
 
 	// ----------------------------------------------------
+	// Adapter: JWTTokenService
+	// ----------------------------------------------------
+	a.JWTTokenService = auth.NewJWTTokenService(&a.Config.Auth)
+
+	// ----------------------------------------------------
 	// Business Services
 	// ----------------------------------------------------
 	authProviders := map[string]users.AuthProvider{
-		"github": auth_providers.NewGitHubAuthProvider(a.Logger, a.HTTPClient, a.Repository),
+		"github": auth_providers.NewGitHubAuthProvider(
+			&a.Config.Auth.GitHub,
+			a.Logger,
+			a.HTTPClient,
+			a.Repository,
+			a.JWTTokenService,
+		),
 	}
 
 	a.ProfilesService = profiles.NewService(a.Logger, a.Repository)
-	a.UsersService = users.NewService(a.Logger, a.Repository, authProviders)
+	a.UsersService = users.NewService(
+		a.Logger,
+		a.Repository,
+		a.JWTTokenService,
+		&a.Config.Auth,
+		authProviders,
+	)
 	a.StoriesService = stories.NewService(a.Logger, a.Repository)
 
 	return nil

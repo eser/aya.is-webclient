@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log/slog"
 	"time"
 
 	"github.com/eser/aya.is-services/pkg/ajan/logfx"
@@ -11,10 +12,17 @@ import (
 )
 
 var (
-	ErrFailedToGetRecord    = errors.New("failed to get record")
-	ErrFailedToListRecords  = errors.New("failed to list records")
-	ErrFailedToCreateRecord = errors.New("failed to create record")
-	ErrFailedToUpdateRecord = errors.New("failed to update record")
+	ErrFailedToGetRecord     = errors.New("failed to get record")
+	ErrFailedToListRecords   = errors.New("failed to list records")
+	ErrFailedToCreateRecord  = errors.New("failed to create record")
+	ErrFailedToUpdateRecord  = errors.New("failed to update record")
+	ErrInvalidToken          = errors.New("invalid token")
+	ErrSessionExpired        = errors.New("session expired")
+	ErrJWTNotConfigured      = errors.New("JWT not configured")
+	ErrInvalidSigningMethod  = errors.New("invalid JWT signing method")
+	ErrFailedToGenerateToken = errors.New("failed to generate token")
+	ErrFailedToGetUser       = errors.New("failed to get user")
+	ErrFailedToUpdateSession = errors.New("failed to update session")
 )
 
 type Repository interface {
@@ -43,23 +51,36 @@ type AuthProvider interface {
 	HandleOAuthCallback(ctx context.Context, code string, state string) (AuthResult, error)
 }
 
-type Service struct {
-	logger      *logfx.Logger
-	repo        Repository
-	idGenerator RecordIDGenerator
+type TokenService interface {
+	// ParseToken validates a JWT token and returns the claims
+	ParseToken(tokenStr string) (*JWTClaims, error)
 
+	// GenerateToken creates a new JWT token with the given claims
+	GenerateToken(claims *JWTClaims) (string, error)
+}
+
+type Service struct {
+	logger        *logfx.Logger
+	repo          Repository
+	idGenerator   RecordIDGenerator
+	tokenService  TokenService
+	AuthConfig    *AuthConfig
 	authProviders map[string]AuthProvider
 }
 
 func NewService(
 	logger *logfx.Logger,
 	repo Repository,
+	tokenService TokenService,
+	authConfig *AuthConfig,
 	authProviders map[string]AuthProvider,
 ) *Service {
 	return &Service{
 		logger:        logger,
 		repo:          repo,
 		idGenerator:   DefaultIDGenerator,
+		tokenService:  tokenService,
+		AuthConfig:    authConfig,
 		authProviders: authProviders,
 	}
 }
@@ -132,4 +153,82 @@ func (s *Service) GetAuthProvider(provider string) AuthProvider {
 	}
 
 	return service
+}
+
+// RefreshToken validates the current JWT token and issues a new one with extended expiration.
+func (s *Service) RefreshToken( //nolint:funlen
+	ctx context.Context,
+	tokenStr string,
+) (*AuthResult, error) {
+	s.logger.DebugContext(ctx, "Attempting to refresh JWT token")
+
+	// Parse and validate current token using the token service
+	claims, err := s.tokenService.ParseToken(tokenStr)
+	if err != nil {
+		s.logger.WarnContext(ctx, "Failed to parse JWT token", slog.String("error", err.Error()))
+
+		return nil, fmt.Errorf("%w: %w", ErrInvalidToken, err)
+	}
+
+	s.logger.DebugContext(ctx, "JWT token parsed successfully",
+		slog.String("user_id", claims.UserID),
+		slog.String("session_id", claims.SessionID))
+
+	// Verify session is still active
+	session, err := s.GetSessionByID(ctx, claims.SessionID)
+	if err != nil || session.Status != "active" {
+		s.logger.WarnContext(ctx, "Session is not active",
+			slog.String("session_id", claims.SessionID),
+			slog.String("status", session.Status))
+
+		return nil, ErrSessionExpired
+	}
+
+	// Get user details
+	user, err := s.GetByID(ctx, claims.UserID)
+	if err != nil {
+		s.logger.ErrorContext(ctx, "Failed to get user for token refresh",
+			slog.String("user_id", claims.UserID),
+			slog.String("error", err.Error()))
+
+		return nil, fmt.Errorf("%w: %w", ErrFailedToGetUser, err)
+	}
+
+	// Generate new JWT with extended expiration
+	now := time.Now()
+	expiresAt := now.Add(24 * time.Hour) //nolint:mnd
+
+	newClaims := &JWTClaims{
+		UserID:    claims.UserID,
+		SessionID: claims.SessionID,
+		ExpiresAt: expiresAt.Unix(),
+	}
+
+	tokenString, err := s.tokenService.GenerateToken(newClaims)
+	if err != nil {
+		s.logger.ErrorContext(ctx, "Failed to generate new JWT token",
+			slog.String("user_id", claims.UserID),
+			slog.String("error", err.Error()))
+
+		return nil, fmt.Errorf("%w: %w", ErrFailedToGenerateToken, err)
+	}
+
+	// Update session's last activity
+	if updateErr := s.UpdateSessionLoggedInAt(ctx, claims.SessionID, now); updateErr != nil {
+		s.logger.WarnContext(ctx, "Failed to update session logged in time",
+			slog.String("session_id", claims.SessionID),
+			slog.String("error", updateErr.Error()))
+		// Don't fail the whole operation for this
+	}
+
+	s.logger.DebugContext(ctx, "JWT token refreshed successfully",
+		slog.String("user_id", claims.UserID),
+		slog.String("session_id", claims.SessionID))
+
+	return &AuthResult{
+		User:      user,
+		SessionID: claims.SessionID,
+		JWT:       tokenString,
+		ExpiresAt: expiresAt,
+	}, nil
 }

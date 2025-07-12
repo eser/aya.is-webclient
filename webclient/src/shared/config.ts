@@ -66,7 +66,7 @@ export const siteConfig: SiteConfig = {
       key: "login",
 
       decide() {
-        return false;
+        return true;
       },
     }),
   },

@@ -1,7 +1,6 @@
 package http
 
 import (
-	"os"
 	"strings"
 	"time"
 
@@ -22,7 +21,7 @@ func AuthMiddleware(usersService *users.Service) httpfx.Handler {
 		}
 
 		tokenStr := strings.TrimPrefix(auth, "Bearer ")
-		secret := os.Getenv("JWT_SECRET")
+		secret := usersService.AuthConfig.JwtSecret
 		token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (any, error) {
 			return []byte(secret), nil
 		})

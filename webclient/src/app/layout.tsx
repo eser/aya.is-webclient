@@ -8,6 +8,8 @@ import { TranslationsProvider } from "@/shared/modules/i18n/translations-provide
 import { getNavigationState } from "@/shared/modules/navigation/get-navigation-state.ts";
 import { getTranslations } from "@/shared/modules/i18n/get-translations.tsx";
 import { PageLayout } from "@/shared/components/page-layouts/default/page-layout.tsx";
+import { AuthProvider } from "@/shared/modules/auth/auth-context.tsx";
+import { AuthErrorBanner } from "@/shared/modules/auth/auth-error-banner.tsx";
 import { RegisterGlobals } from "./register-globals.tsx";
 import { Analytics } from "./analytics.tsx";
 import "../shared/globals.css";
@@ -56,9 +58,12 @@ async function Layout(props: LayoutProps) {
       <body>
         <TranslationsProvider state={translationsStateValues}>
           <NavigationProvider state={navigationState}>
-            <PageLayout placeholders={placeholders}>
-              {props.children}
-            </PageLayout>
+            <AuthProvider>
+              <AuthErrorBanner />
+              <PageLayout placeholders={placeholders}>
+                {props.children}
+              </PageLayout>
+            </AuthProvider>
           </NavigationProvider>
         </TranslationsProvider>
         <RegisterGlobals />

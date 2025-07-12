@@ -17,7 +17,7 @@ type HeaderProps = {
 export function Header(props: HeaderProps) {
   // TODO(@eser) temporarily disabled
   // const login = await siteConfig.features.login();
-  const login = false;
+  const login = true;
 
   return (
     <header className={styles.header}>

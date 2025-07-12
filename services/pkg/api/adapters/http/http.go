@@ -32,7 +32,6 @@ func Run(
 	routes.Use(middlewares.TracingMiddleware(logger)) //nolint:contextcheck
 	routes.Use(middlewares.CorsMiddleware())
 	routes.Use(middlewares.MetricsMiddleware(httpService.InnerMetrics)) //nolint:contextcheck
-	// routes.Use(AuthMiddleware(usersService))
 
 	// http modules
 	healthcheck.RegisterHTTPRoutes(routes, config)
@@ -60,6 +59,15 @@ func Run(
 		routes,
 		logger,
 		storiesService,
+	)
+
+	// Authenticated routes (wrapped with auth middleware)
+	RegisterAuthenticatedRoutes( //nolint:contextcheck
+		routes,
+		logger,
+		profilesService,
+		storiesService,
+		usersService,
 	)
 
 	// run

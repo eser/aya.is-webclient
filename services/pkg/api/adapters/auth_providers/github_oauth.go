@@ -6,23 +6,27 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log/slog"
 	"net/http"
 	"net/url"
-	"os"
 	"strconv"
 	"strings"
 	"time"
 
 	"github.com/eser/aya.is-services/pkg/ajan/logfx"
 	"github.com/eser/aya.is-services/pkg/api/business/users"
-	"github.com/golang-jwt/jwt/v5"
 )
 
 const (
 	ExpirePeriod = 24 * time.Hour
 )
 
-var ErrFailedToGetAccessToken = errors.New("failed to get access token")
+var (
+	ErrFailedToGetAccessToken = errors.New("failed to get access token")
+	ErrFailedToCreateUser     = errors.New("failed to create user")
+	ErrFailedToCreateSession  = errors.New("failed to create session")
+	ErrFailedToGetUserInfo    = errors.New("failed to get user info")
+)
 
 type Repository interface {
 	CreateUser(ctx context.Context, user *users.User) error
@@ -34,28 +38,26 @@ type HTTPClient interface {
 }
 
 type GitHubAuthProvider struct {
-	logger     *logfx.Logger
-	httpClient HTTPClient
-	repo       Repository
-
-	ClientID     string
-	ClientSecret string
-	RedirectBase string
+	config       *users.GitHubAuthProviderConfig
+	logger       *logfx.Logger
+	httpClient   HTTPClient
+	repo         Repository
+	tokenService users.TokenService
 }
 
 func NewGitHubAuthProvider(
+	config *users.GitHubAuthProviderConfig,
 	logger *logfx.Logger,
 	httpClient HTTPClient,
 	repo Repository,
+	tokenService users.TokenService,
 ) *GitHubAuthProvider {
 	return &GitHubAuthProvider{
-		logger:     logger,
-		httpClient: httpClient,
-		repo:       repo,
-
-		ClientID:     os.Getenv("GITHUB_CLIENT_ID"),
-		ClientSecret: os.Getenv("GITHUB_CLIENT_SECRET"),
-		RedirectBase: os.Getenv("GITHUB_REDIRECT_BASE"),
+		config:       config,
+		logger:       logger,
+		httpClient:   httpClient,
+		repo:         repo,
+		tokenService: tokenService,
 	}
 }
 
@@ -66,7 +68,7 @@ func (g *GitHubAuthProvider) InitiateOAuth(
 	state := strconv.FormatInt(time.Now().UnixNano(), 10) // TODO: use secure random
 
 	queryString := url.Values{}
-	queryString.Set("client_id", g.ClientID)
+	queryString.Set("client_id", g.config.ClientID)
 	queryString.Set("redirect_uri", redirectURI)
 	queryString.Set("state", state)
 	queryString.Set("scope", "read:user user:email")
@@ -86,10 +88,13 @@ func (g *GitHubAuthProvider) HandleOAuthCallback( //nolint:funlen
 	code string,
 	state string,
 ) (_ users.AuthResult, err error) {
+	g.logger.DebugContext(ctx, "Starting GitHub OAuth callback",
+		slog.String("state", state))
+
 	// 1. Exchange code for access token
 	values := url.Values{
-		"client_id":     {g.ClientID},
-		"client_secret": {g.ClientSecret},
+		"client_id":     {g.config.ClientID},
+		"client_secret": {g.config.ClientSecret},
 		"code":          {code},
 	}
 	tokenReq, _ := http.NewRequestWithContext(
@@ -101,12 +106,18 @@ func (g *GitHubAuthProvider) HandleOAuthCallback( //nolint:funlen
 	tokenReq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	tokenResp, tokenRespErr := g.httpClient.Do(tokenReq)
-	if err != nil {
-		return users.AuthResult{}, tokenRespErr //nolint:wrapcheck
+	if tokenRespErr != nil {
+		g.logger.ErrorContext(ctx, "Failed to exchange code for access token",
+			slog.String("error", tokenRespErr.Error()))
+
+		return users.AuthResult{}, fmt.Errorf("%w: %w", ErrFailedToGetAccessToken, tokenRespErr)
 	}
 
 	defer func() {
-		err = tokenResp.Body.Close()
+		if closeErr := tokenResp.Body.Close(); closeErr != nil {
+			g.logger.WarnContext(ctx, "Failed to close response body",
+				slog.String("error", closeErr.Error()))
+		}
 	}()
 
 	body, _ := io.ReadAll(tokenResp.Body)
@@ -114,8 +125,12 @@ func (g *GitHubAuthProvider) HandleOAuthCallback( //nolint:funlen
 
 	accessToken := vals.Get("access_token")
 	if accessToken == "" {
+		g.logger.ErrorContext(ctx, "No access token received from GitHub")
+
 		return users.AuthResult{}, ErrFailedToGetAccessToken
 	}
+
+	g.logger.DebugContext(ctx, "Successfully obtained GitHub access token")
 
 	// 2. Fetch user info from GitHub
 	userReq, _ := http.NewRequestWithContext(
@@ -170,9 +185,17 @@ func (g *GitHubAuthProvider) HandleOAuthCallback( //nolint:funlen
 		DeletedAt:           nil,
 	}
 
+	g.logger.DebugContext(ctx, "Creating/updating user in database",
+		slog.String("user_id", user.ID),
+		slog.String("github_handle", ghUser.Login))
+
 	createUserErr := g.repo.CreateUser(ctx, &user) // ignore error if already exists
 	if createUserErr != nil {
-		return users.AuthResult{}, createUserErr //nolint:wrapcheck
+		g.logger.ErrorContext(ctx, "Failed to create user",
+			slog.String("user_id", user.ID),
+			slog.String("error", createUserErr.Error()))
+
+		return users.AuthResult{}, fmt.Errorf("%w: %w", ErrFailedToCreateUser, createUserErr)
 	}
 
 	// 4. Create session in DB
@@ -189,32 +212,52 @@ func (g *GitHubAuthProvider) HandleOAuthCallback( //nolint:funlen
 		UpdatedAt:                nil,
 	}
 
+	g.logger.DebugContext(ctx, "Creating session",
+		slog.String("session_id", session.ID),
+		slog.String("user_id", user.ID))
+
 	createSessionErr := g.repo.CreateSession(ctx, &session)
 	if createSessionErr != nil {
-		return users.AuthResult{}, createSessionErr //nolint:wrapcheck
+		g.logger.ErrorContext(ctx, "Failed to create session",
+			slog.String("session_id", session.ID),
+			slog.String("error", createSessionErr.Error()))
+
+		return users.AuthResult{}, fmt.Errorf("%w: %w", ErrFailedToCreateSession, createSessionErr)
 	}
 
 	// 5. Issue JWT
-	claims := users.JWTClaims{
+	claims := &users.JWTClaims{
 		UserID:    user.ID,
 		SessionID: session.ID,
 		ExpiresAt: expiresAt.Unix(),
 	}
-	jwtToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"user_id":    claims.UserID,
-		"session_id": claims.SessionID,
-		"exp":        claims.ExpiresAt,
-	})
-	secret := os.Getenv("JWT_SECRET")
 
-	tokenString, tokenStringErr := jwtToken.SignedString([]byte(secret))
+	g.logger.DebugContext(ctx, "Generating JWT token",
+		slog.String("user_id", user.ID),
+		slog.String("session_id", session.ID))
+
+	tokenString, tokenStringErr := g.tokenService.GenerateToken(claims)
 	if tokenStringErr != nil {
-		return users.AuthResult{}, tokenStringErr //nolint:wrapcheck
+		g.logger.ErrorContext(ctx, "Failed to generate JWT token",
+			slog.String("user_id", user.ID),
+			slog.String("error", tokenStringErr.Error()))
+
+		return users.AuthResult{}, fmt.Errorf(
+			"%w: %w",
+			users.ErrFailedToGenerateToken,
+			tokenStringErr,
+		)
 	}
+
+	g.logger.DebugContext(ctx, "GitHub OAuth callback completed successfully",
+		slog.String("user_id", user.ID),
+		slog.String("session_id", session.ID),
+		slog.String("github_handle", ghUser.Login))
 
 	return users.AuthResult{
 		User:      &user,
 		SessionID: session.ID,
 		JWT:       tokenString,
+		ExpiresAt: expiresAt,
 	}, nil
 }
