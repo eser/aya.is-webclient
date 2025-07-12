@@ -49,6 +49,7 @@ type Session struct {
 type GitHubAuthProviderConfig struct {
 	ClientID     string `conf:"client_id"`
 	ClientSecret string `conf:"client_secret"`
+	Scope        string `conf:"scope"         default:"read:user user:email"`
 }
 
 type AuthConfig struct {

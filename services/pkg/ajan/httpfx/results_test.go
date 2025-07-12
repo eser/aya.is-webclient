@@ -135,7 +135,7 @@ func TestResult_WithStatusCode(t *testing.T) {
 	t.Parallel()
 
 	results := &httpfx.Results{}
-	result := results.Ok().WithStatusCode(http.StatusAccepted)
+	result := results.Accepted()
 
 	assert.Equal(t, http.StatusAccepted, result.StatusCode())
 }
@@ -144,8 +144,8 @@ func TestResult_WithBody(t *testing.T) {
 	t.Parallel()
 
 	results := &httpfx.Results{}
-	newBody := "updated body"
-	result := results.Ok().WithBody(newBody)
+	newBody := []byte("updated body")
+	result := results.Ok(httpfx.WithBody(newBody))
 
-	assert.Equal(t, []byte(newBody), result.Body())
+	assert.Equal(t, newBody, result.Body())
 }

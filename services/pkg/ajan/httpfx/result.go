@@ -24,15 +24,3 @@ func (r Result) Body() []byte {
 func (r Result) RedirectToURI() string {
 	return r.InnerRedirectToURI
 }
-
-func (r Result) WithStatusCode(statusCode int) Result {
-	r.InnerStatusCode = statusCode
-
-	return r
-}
-
-func (r Result) WithBody(body string) Result {
-	r.InnerBody = []byte(body)
-
-	return r
-}

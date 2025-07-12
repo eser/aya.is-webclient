@@ -71,7 +71,7 @@ func (g *GitHubAuthProvider) InitiateOAuth(
 	queryString.Set("client_id", g.config.ClientID)
 	queryString.Set("redirect_uri", redirectURI)
 	queryString.Set("state", state)
-	queryString.Set("scope", "read:user user:email")
+	queryString.Set("scope", g.config.Scope)
 
 	oauthAuthorizeURL := url.URL{ //nolint:exhaustruct
 		Scheme:   "https",
@@ -80,7 +80,12 @@ func (g *GitHubAuthProvider) InitiateOAuth(
 		RawQuery: queryString.Encode(),
 	}
 
-	return oauthAuthorizeURL.String(), users.OAuthState{State: state, RedirectURI: redirectURI}, nil
+	oauthState := users.OAuthState{
+		State:       state,
+		RedirectURI: redirectURI,
+	}
+
+	return oauthAuthorizeURL.String(), oauthState, nil
 }
 
 func (g *GitHubAuthProvider) HandleOAuthCallback( //nolint:funlen

@@ -2,6 +2,7 @@ package http
 
 import (
 	"errors"
+	"log/slog"
 	"net/http"
 	"strings"
 
@@ -77,7 +78,12 @@ func RegisterHTTPRoutesForUsers( //nolint:funlen,cyclop
 				)
 			}
 
-			// Optionally set state in cookie/session
+			logger.InfoContext(ctx.Request.Context(), "Redirecting to auth provider login",
+				slog.String("auth_url", authURL),
+				slog.String("redirect_uri", redirectURI),
+				slog.String("auth_provider", authProviderName))
+
+			// FIXME(@eser) Optionally set state in cookie/session
 			return ctx.Results.Redirect(authURL)
 		}).
 		HasSummary("Auth Login").

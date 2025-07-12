@@ -76,6 +76,20 @@ func (r *Router) Route(pattern string, handlers ...Handler) *Route {
 		}
 
 		result := routeHandlers[0](ctx)
+		if result.RedirectToURI() != "" {
+			// http.Redirect(
+			// 	responseWriter,
+			// 	req,
+			// 	result.RedirectToURI(),
+			// 	result.StatusCode(),
+			// )
+			//
+			// return
+			responseWriter.Header().Set(
+				"Location",
+				result.RedirectToURI(),
+			)
+		}
 
 		responseWriter.WriteHeader(result.StatusCode())
 

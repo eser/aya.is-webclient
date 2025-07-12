@@ -116,6 +116,7 @@ func (ac *AMQPConnection) HealthCheck(ctx context.Context) *HealthStatus {
 		Message:   "",
 		Latency:   0,
 	}
+
 	err := ac.adapter.ensureConnection()
 	if err != nil {
 		status.State = ConnectionStateError
