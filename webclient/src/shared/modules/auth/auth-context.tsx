@@ -5,14 +5,9 @@ import { useRouter } from "next/navigation";
 import { getBackendUri } from "@/shared/config.ts";
 import { getTokenExpirationTime, refreshToken, clearAuthData } from "./token-refresh.ts";
 import { useNavigationClient } from "@/shared/modules/navigation/use-navigation-client.tsx";
-import { getUser } from "@/shared/modules/backend/users/get-user.ts";
+import { getCurrentUser, type CurrentUserData } from "@/shared/modules/backend/users/get-current-user.ts";
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  githubHandle: string | null;
-}
+type User = CurrentUserData;
 
 interface AuthContextType {
   user: User | null;
@@ -83,28 +78,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         localStorage.setItem("auth_token", authToken);
         setToken(authToken);
 
-        // Parse JWT to get user ID
+        // Parse JWT to get token expiration
         const tokenParts = authToken.split(".");
         if (tokenParts.length === 3) {
           const payload = JSON.parse(atob(tokenParts[1]));
-          const userId = payload.user_id;
 
-          // Fetch user details from backend
+          // Fetch user details from authenticated backend endpoint
           const locale = state.locale.code;
-          const userData = await getUser(locale, userId);
+          const userData = await getCurrentUser(locale);
 
           if (userData) {
-            const userInfo = {
-              id: userData.id,
-              kind: userData.kind,
-              name: userData.name,
-              email: userData.email,
-              githubHandle: userData.github_handle,
-              individualProfileId: userData.individual_profile_id,
-            };
-
-            localStorage.setItem("auth_user", JSON.stringify(userInfo));
-            setUser(userInfo);
+            localStorage.setItem("auth_user", JSON.stringify(userData));
+            setUser(userData);
 
             // Store token expiration
             if (payload.exp) {

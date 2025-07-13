@@ -5401,3 +5401,7 @@ insert into "story_publication" ("created_at", "deleted_at", "id", "kind", "prof
 insert into "story_publication" ("created_at", "deleted_at", "id", "kind", "profile_id", "properties", "story_id", "updated_at") values ('2024-09-04 22:24:44.792592+00', NULL, '01J6ZJ7QNBGTHZPRTAN02SPJXQ', '', '01J27JA3WM81T7D1TCNJ6Q06P5', NULL, '01J6ZJ7QNBGTHZPRTAN02SPJXQ', NULL);
 insert into "story_publication" ("created_at", "deleted_at", "id", "kind", "profile_id", "properties", "story_id", "updated_at") values ('2024-12-03 14:18:21.353+00', NULL, '01JE63T76EBA8SPHPX9VJ9K1M0', '', '01J27JA3WM81T7D1TCNJ6Q06P5', NULL, '01JE63T76EBA8SPHPX9VJ9K1M0', NULL);
 insert into "story_publication" ("created_at", "deleted_at", "id", "kind", "profile_id", "properties", "story_id", "updated_at") values ('2024-07-29 07:36:36.768032+00', NULL, '01J3YPPRB2EWZK7N31DMC50Y8C', '', '01JT4FS0K93K4GG4Z40ZDFY3EQ', NULL, '01J3YPPRB2EWZK7N31DMC50Y8C', NULL);
+
+-- users
+
+insert into "user" ("bsky_handle", "bsky_remote_id", "created_at", "deleted_at", "email", "github_handle", "github_remote_id", "id", "individual_profile_id", "kind", "name", "phone", "updated_at", "x_handle", "x_remote_id") values (NULL, NULL, '2025-07-13 17:23:16.244933+00', NULL, 'eser@acikyazilim.com', 'eser', '866558', '01K02CZZ4M5QBC350BJMBXBJFY', '01J27JA3WM81T7D1TCNJ6Q06P5', 'regular', 'Eser Ozvataf', NULL, NULL, NULL, NULL);
