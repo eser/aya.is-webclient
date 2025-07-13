@@ -39,6 +39,11 @@
     "Theme: Midnight": "主题：深色",
     "Localization": "本地化"
   },
+  "Auth": {
+    "login_with_github": "使用 GitHub 登录",
+    "profile": "我的资料",
+    "logout": "退出登录"
+  },
   "Home": {
     "AYA the Open Source Network": "AYA 开源网络",
     "A software foundation formed by volunteer-developed software": "一个由志愿者开发的软件组成的软件基金会",

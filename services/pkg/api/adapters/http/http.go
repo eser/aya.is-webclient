@@ -46,8 +46,8 @@ func Run(
 	openapi.RegisterHTTPRoutes(routes, config)
 	profiling.RegisterHTTPRoutes(routes, config)
 
-	// Authenticated routes (wrapped with auth middleware)
-	// Register these BEFORE general routes to avoid conflicts
+	// authenticated http routes (wrapped with auth middleware)
+	// Register these BEFORE general routes
 	RegisterAuthenticatedRoutes( //nolint:contextcheck
 		routes,
 		logger,
@@ -57,7 +57,7 @@ func Run(
 		storyService,
 	)
 
-	// http routes
+	// public http routes
 	RegisterHTTPRoutesForUsers( //nolint:contextcheck
 		baseURI,
 		routes,

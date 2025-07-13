@@ -23,7 +23,7 @@ func RegisterAuthenticatedRoutes( //nolint:funlen
 ) {
 	// Register authenticated route directly with auth middleware
 	routes.Route(
-		"GET /{locale}/users/me",
+		"GET /{locale}/protected/user-info",
 		AuthMiddleware(authService, userService),
 		func(ctx *httpfx.Context) httpfx.Result {
 			// Get user ID from context (set by auth middleware)
@@ -95,7 +95,13 @@ func RegisterAuthenticatedRoutes( //nolint:funlen
 				}
 			}
 
-			return ctx.Results.JSON(response)
+			// Wrap response in the expected format for the frontend fetcher
+			wrappedResponse := map[string]any{
+				"data":  response,
+				"error": nil,
+			}
+
+			return ctx.Results.JSON(wrappedResponse)
 		}).
 		HasSummary("Get Current User").
 		HasDescription("Returns the current authenticated user with profile data.").

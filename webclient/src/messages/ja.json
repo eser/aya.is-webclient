@@ -39,6 +39,11 @@
     "Theme: Midnight": "テーマ: ミッドナイト",
     "Localization": "ローカリゼーション"
   },
+  "Auth": {
+    "login_with_github": "GitHubでログイン",
+    "profile": "マイプロフィール",
+    "logout": "ログアウト"
+  },
   "Home": {
     "AYA the Open Source Network": "AYA オープンソースネットワーク",
     "A software foundation formed by volunteer-developed software": "ボランティア開発ソフトウェアによって形成されたソフトウェア財団",

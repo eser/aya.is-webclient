@@ -39,6 +39,11 @@
     "Theme: Midnight": "Thema: Donker",
     "Localization": "Lokalisatie"
   },
+  "Auth": {
+    "login_with_github": "Inloggen met GitHub",
+    "profile": "Mijn Profiel",
+    "logout": "Uitloggen"
+  },
   "Home": {
     "AYA the Open Source Network": "AYA het Open Source Netwerk",
     "A software foundation formed by volunteer-developed software": "Een softwarestichting gevormd door software die door vrijwilligers is ontwikkeld",

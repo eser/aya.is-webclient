@@ -15,7 +15,8 @@ export async function fetcher<T>(relativePath: string): Promise<T | null> {
   // Check if token needs refresh
   if (authToken && isTokenExpiringSoon()) {
     const newToken = await refreshToken();
-    if (newToken) {
+
+    if (newToken !== null) {
       authToken = newToken;
     }
   }
@@ -24,7 +25,7 @@ export async function fetcher<T>(relativePath: string): Promise<T | null> {
     "Content-Type": "application/json",
   };
 
-  if (authToken) {
+  if (authToken !== null) {
     headers["Authorization"] = `Bearer ${authToken}`;
   }
 
@@ -35,8 +36,10 @@ export async function fetcher<T>(relativePath: string): Promise<T | null> {
   // If unauthorized, try to refresh token and retry once
   if (request.status === 401 && authToken) {
     const newToken = await refreshToken();
-    if (newToken) {
+
+    if (newToken !== null) {
       headers["Authorization"] = `Bearer ${newToken}`;
+
       const retryRequest = await fetch(targetUrl, { headers });
 
       if (retryRequest.status === 404) {

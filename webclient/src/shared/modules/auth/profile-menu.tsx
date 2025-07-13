@@ -63,18 +63,11 @@ export function ProfileMenu({ className }: ProfileMenuProps) {
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-medium leading-none">
-              {user.individual_profile?.title || user.name}
+              {user.individual_profile?.title ?? user.name}
             </p>
-            {user.email && (
-              <p className="text-xs leading-none text-muted-foreground">
-                {user.email}
-              </p>
-            )}
-            {user.individual_profile?.slug && (
-              <p className="text-xs leading-none text-muted-foreground">
-                @{user.individual_profile.slug}
-              </p>
-            )}
+            <p className="text-xs leading-none text-muted-foreground">
+              {user.individual_profile?.slug !== undefined ? `https://aya.is/${user.individual_profile.slug}` : ""}
+            </p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />

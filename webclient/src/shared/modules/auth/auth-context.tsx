@@ -87,14 +87,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           const locale = state.locale.code;
           const userData = await getCurrentUser(locale);
 
-          if (userData) {
+          if (userData !== null) {
             localStorage.setItem("auth_user", JSON.stringify(userData));
             setUser(userData);
+            console.log("✅ User state updated with:", userData);
 
             // Store token expiration
             if (payload.exp) {
               localStorage.setItem("auth_token_expires_at", String(payload.exp * 1000));
             }
+          } else {
+            console.log("❌ No user data received");
           }
         }
 

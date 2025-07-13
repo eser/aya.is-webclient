@@ -7,7 +7,7 @@ export type CurrentUserData = User & {
 };
 
 export async function getCurrentUser(locale: string): Promise<CurrentUserData | null> {
-  const response = await fetcher<CurrentUserData>(`/${locale}/users/me`);
+  const response = await fetcher<CurrentUserData>(`/${locale}/protected/user-info`);
 
   return response;
 }

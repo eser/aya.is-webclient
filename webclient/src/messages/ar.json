@@ -40,6 +40,11 @@
     "Theme: Midnight": "السمة: داكن",
     "Localization": "التوطين"
   },
+  "Auth": {
+    "login_with_github": "تسجيل الدخول بـ GitHub",
+    "profile": "ملفي الشخصي",
+    "logout": "تسجيل الخروج"
+  },
   "Home": {
     "AYA the Open Source Network": "آيا شبكة المصدر المفتوح",
     "A software foundation formed by volunteer-developed software": "مؤسسة برمجيات مكونة من برامج مطورة بواسطة متطوعين",

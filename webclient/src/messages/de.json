@@ -39,6 +39,11 @@
     "Theme: Midnight": "Design: Dunkel",
     "Localization": "Lokalisierung"
   },
+  "Auth": {
+    "login_with_github": "Mit GitHub anmelden",
+    "profile": "Mein Profil",
+    "logout": "Abmelden"
+  },
   "Home": {
     "AYA the Open Source Network": "AYA Das Open Source Netzwerk",
     "A software foundation formed by volunteer-developed software": "Eine Software-Stiftung, gegründet durch von Freiwilligen entwickelte Software",
