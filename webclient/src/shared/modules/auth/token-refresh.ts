@@ -76,7 +76,7 @@ export function isTokenExpiringSoon(): boolean {
     return true; // If no expiration is stored, consider it expiring
   }
 
-  const expirationTime = parseInt(expiresAt) * 1000; // Convert to milliseconds
+  const expirationTime = parseInt(expiresAt)
   const now = Date.now();
   const fiveMinutes = 5 * 60 * 1000;
 
@@ -94,5 +94,5 @@ export function getTokenExpirationTime(): number | null {
     return null;
   }
 
-  return parseInt(expiresAt) * 1000; // Convert to milliseconds
+  return parseInt(expiresAt);
 }

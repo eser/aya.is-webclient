@@ -11,7 +11,6 @@ import {
   DropdownMenuTrigger,
 } from "@/shared/components/ui/dropdown-menu.tsx";
 import { useAuth } from "@/shared/modules/auth/auth-context.tsx";
-import { useRouter } from "next/navigation";
 import { useTranslations } from "@/shared/modules/i18n/use-translations.tsx";
 
 interface ProfileMenuProps {
@@ -20,33 +19,37 @@ interface ProfileMenuProps {
 
 export function ProfileMenu({ className }: ProfileMenuProps) {
   const { user, logout, isAuthenticated } = useAuth();
-  const router = useRouter();
   const { t } = useTranslations();
 
   if (!isAuthenticated || !user) {
     return null;
   }
 
-  const handleProfileClick = () => {
-    router.push(`/@${user.githubHandle || user.id}`);
-  };
-
   const handleLogout = async () => {
     await logout();
   };
 
+  const fallbackAvatarUrl = `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(user.name)}`;
   const avatarUrl = user.githubHandle
     ? `https://github.com/${user.githubHandle}.png?size=32`
-    : `https://api.dicebear.com/7.x/initials/svg?seed=${user.name}`;
+    : fallbackAvatarUrl;
+
+  const [imageError, setImageError] = React.useState(false);
+
+  const handleImageError = () => {
+    setImageError(true);
+  };
+
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className={`relative h-8 w-8 rounded-full ${className}`}>
+        <Button variant="ghost" className={`relative h-8 w-8 rounded-full p-0 ${className}`}>
           <img
-            className="h-8 w-8 rounded-full"
-            src={avatarUrl}
+            className="h-8 w-8 rounded-full object-cover"
+            src={imageError ? fallbackAvatarUrl : avatarUrl}
             alt={user.name}
+            onError={handleImageError}
           />
         </Button>
       </DropdownMenuTrigger>
@@ -62,9 +65,6 @@ export function ProfileMenu({ className }: ProfileMenuProps) {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleProfileClick}>
-          {t("Auth", "profile")}
-        </DropdownMenuItem>
         <DropdownMenuItem onClick={handleLogout}>
           {t("Auth", "logout")}
         </DropdownMenuItem>
