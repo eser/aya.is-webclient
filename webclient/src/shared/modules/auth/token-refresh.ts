@@ -1,4 +1,5 @@
 import { getBackendUri } from "@/shared/config.ts";
+import { refreshTokenRequest } from "@/shared/modules/backend/auth/refresh-token.ts";
 
 interface TokenRefreshResponse {
   token: string;
@@ -33,35 +34,26 @@ async function performTokenRefresh(): Promise<string | null> {
       return null;
     }
 
-    const backendUri = getBackendUri();
-    const response = await fetch(`${backendUri}/tr/auth/refresh`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${currentToken}`,
-      },
-    });
+    // Get locale from URL or default to 'tr'
+    const currentPath = globalThis.location?.pathname || "/tr";
+    const locale = currentPath.split("/")[1] || "tr";
 
-    if (!response.ok) {
-      // Token is invalid or expired
-      clearAuthData();
-      return null;
-    }
+    const data = await refreshTokenRequest(locale, currentToken);
 
-    const data = await response.json();
-
-    if (data.data?.token) {
+    if (data?.token) {
       // Store new token
       if (globalThis.localStorage !== undefined) {
-        localStorage.setItem("auth_token", data.data.token);
-        localStorage.setItem("auth_token_expires", data.data.expiresAt.toString());
+        localStorage.setItem("auth_token", data.token);
+        localStorage.setItem("auth_token_expires_at", data.expiresAt.toString());
       }
-      return data.data.token;
+      return data.token;
     }
 
     return null;
   } catch (error) {
     console.error("Token refresh failed:", error);
+    // Token is invalid or expired
+    clearAuthData();
     return null;
   }
 }
@@ -70,7 +62,7 @@ export function clearAuthData() {
   if (globalThis.localStorage !== undefined) {
     localStorage.removeItem("auth_token");
     localStorage.removeItem("auth_user");
-    localStorage.removeItem("auth_token_expires");
+    localStorage.removeItem("auth_token_expires_at");
   }
 }
 
@@ -79,7 +71,7 @@ export function isTokenExpiringSoon(): boolean {
     return false;
   }
 
-  const expiresAt = localStorage.getItem("auth_token_expires");
+  const expiresAt = localStorage.getItem("auth_token_expires_at");
   if (!expiresAt) {
     return true; // If no expiration is stored, consider it expiring
   }
@@ -97,7 +89,7 @@ export function getTokenExpirationTime(): number | null {
     return null;
   }
 
-  const expiresAt = localStorage.getItem("auth_token_expires");
+  const expiresAt = localStorage.getItem("auth_token_expires_at");
   if (!expiresAt) {
     return null;
   }

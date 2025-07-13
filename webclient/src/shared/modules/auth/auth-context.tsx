@@ -10,8 +10,8 @@ import { getUser } from "@/shared/modules/backend/users/get-user.ts";
 interface User {
   id: string;
   name: string;
-  email?: string;
-  githubHandle?: string;
+  email: string;
+  githubHandle: string | null;
 }
 
 interface AuthContextType {
@@ -96,10 +96,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           if (userData) {
             const userInfo = {
               id: userData.id,
+              kind: userData.kind,
               name: userData.name,
               email: userData.email,
               githubHandle: userData.github_handle,
+              individualProfileId: userData.individual_profile_id,
             };
+
             localStorage.setItem("auth_user", JSON.stringify(userInfo));
             setUser(userInfo);
 
