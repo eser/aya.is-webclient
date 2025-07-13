@@ -106,4 +106,95 @@ func RegisterAuthenticatedRoutes( //nolint:funlen
 		HasSummary("Get Current User").
 		HasDescription("Returns the current authenticated user with profile data.").
 		HasResponse(http.StatusOK)
+
+	// Register profile memberships route
+	routes.Route(
+		"GET /{locale}/protected/profile-memberships",
+		AuthMiddleware(authService, userService),
+		func(ctx *httpfx.Context) httpfx.Result {
+			// Get user ID from context (set by auth middleware)
+			userID, ok := ctx.Request.Context().Value(ContextKeyUserID).(string)
+			if !ok {
+				return ctx.Results.Error(
+					http.StatusInternalServerError,
+					httpfx.WithPlainText("User ID not found in context"),
+				)
+			}
+
+			// Get user data to find their individual profile ID
+			user, err := userService.GetByID(ctx.Request.Context(), userID)
+			if err != nil {
+				return ctx.Results.Error(
+					http.StatusNotFound,
+					httpfx.WithPlainText("User not found"),
+				)
+			}
+
+			// Check if user has an individual profile
+			if user.IndividualProfileID == nil {
+				// User has no individual profile, return empty list
+				wrappedResponse := map[string]any{
+					"data":  []map[string]any{},
+					"error": nil,
+				}
+
+				return ctx.Results.JSON(wrappedResponse)
+			}
+
+			// Get locale from path
+			locale := ctx.Request.PathValue("locale")
+
+			// Get memberships for the user's profile
+			memberships, membershipErr := profileService.GetMembershipsByUserProfileID(
+				ctx.Request.Context(),
+				locale,
+				*user.IndividualProfileID,
+			)
+			if membershipErr != nil {
+				logger.ErrorContext(ctx.Request.Context(), "Profile memberships fetch error",
+					slog.String("error", membershipErr.Error()),
+					slog.String("profile_id", *user.IndividualProfileID))
+
+				return ctx.Results.Error(
+					http.StatusInternalServerError,
+					httpfx.WithPlainText("Failed to fetch profile memberships"),
+				)
+			}
+
+			// Transform memberships to response format
+			membershipData := make([]map[string]any, len(memberships))
+			for i, membership := range memberships {
+				membershipData[i] = map[string]any{
+					"membership_id": membership.ID,
+					"kind":          membership.Kind,
+					"started_at":    membership.StartedAt,
+					"finished_at":   membership.FinishedAt,
+					"properties":    membership.Properties,
+					"profile": map[string]any{
+						"id":                  membership.Profile.ID,
+						"slug":                membership.Profile.Slug,
+						"kind":                membership.Profile.Kind,
+						"title":               membership.Profile.Title,
+						"description":         membership.Profile.Description,
+						"profile_picture_uri": membership.Profile.ProfilePictureURI,
+						"custom_domain":       membership.Profile.CustomDomain,
+						"pronouns":            membership.Profile.Pronouns,
+						"properties":          membership.Profile.Properties,
+						"created_at":          membership.Profile.CreatedAt,
+						"updated_at":          membership.Profile.UpdatedAt,
+					},
+				}
+			}
+
+			// Wrap response in the expected format for the frontend fetcher
+			wrappedResponse := map[string]any{
+				"data":  membershipData,
+				"error": nil,
+			}
+
+			return ctx.Results.JSON(wrappedResponse)
+		}).
+		HasSummary("Get Profile Memberships").
+		HasDescription("Returns the profiles where the current user's profile is a member.").
+		HasResponse(http.StatusOK)
 }

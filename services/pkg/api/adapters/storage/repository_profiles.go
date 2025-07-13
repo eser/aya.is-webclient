@@ -376,3 +376,49 @@ func (r *Repository) ListProfileMembers(
 
 	return wrappedResponse, nil
 }
+
+func (r *Repository) GetProfileMembershipsByMemberProfileID(
+	ctx context.Context,
+	localeCode string,
+	memberProfileID string,
+) ([]*profiles.ProfileMembership, error) {
+	rows, err := r.queries.GetProfileMembershipsByMemberProfileID(
+		ctx,
+		GetProfileMembershipsByMemberProfileIDParams{
+			LocaleCode:      localeCode,
+			MemberProfileID: memberProfileID,
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	memberships := make([]*profiles.ProfileMembership, len(rows))
+	for i, row := range rows {
+		memberships[i] = &profiles.ProfileMembership{
+			ID:         row.MembershipID,
+			Kind:       row.MembershipKind,
+			StartedAt:  vars.ToTimePtr(row.StartedAt),
+			FinishedAt: vars.ToTimePtr(row.FinishedAt),
+			Properties: vars.ToObject(row.MembershipProperties),
+			Profile: &profiles.Profile{
+				ID:                row.Profile.ID,
+				Slug:              row.Profile.Slug,
+				Kind:              row.Profile.Kind,
+				CustomDomain:      vars.ToStringPtr(row.Profile.CustomDomain),
+				ProfilePictureURI: vars.ToStringPtr(row.Profile.ProfilePictureURI),
+				Pronouns:          vars.ToStringPtr(row.Profile.Pronouns),
+				Title:             row.ProfileTx.Title,
+				Description:       row.ProfileTx.Description,
+				Properties:        vars.ToObject(row.Profile.Properties),
+				CreatedAt:         row.Profile.CreatedAt,
+				UpdatedAt:         vars.ToTimePtr(row.Profile.UpdatedAt),
+				DeletedAt:         vars.ToTimePtr(row.Profile.DeletedAt),
+			},
+			// MemberProfile is not needed for this use case since we're filtering by member profile ID
+			MemberProfile: nil,
+		}
+	}
+
+	return memberships, nil
+}

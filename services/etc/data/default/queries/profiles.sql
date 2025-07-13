@@ -101,3 +101,25 @@ FROM
 WHERE pm.deleted_at IS NULL
     AND (sqlc.narg(filter_profile_id)::TEXT IS NULL OR pm.profile_id = sqlc.narg(filter_profile_id)::TEXT)
     AND (sqlc.narg(filter_member_profile_id)::TEXT IS NULL OR pm.member_profile_id = sqlc.narg(filter_member_profile_id)::TEXT);
+
+-- name: GetProfileMembershipsByMemberProfileID :many
+SELECT
+  pm.id as membership_id,
+  pm.kind as membership_kind,
+  pm.started_at,
+  pm.finished_at,
+  pm.properties as membership_properties,
+  pm.created_at as membership_created_at,
+  sqlc.embed(p),
+  sqlc.embed(pt)
+FROM
+  "profile_membership" pm
+  INNER JOIN "profile" p ON p.id = pm.profile_id
+    AND p.deleted_at IS NULL
+  INNER JOIN "profile_tx" pt ON pt.profile_id = p.id
+    AND pt.locale_code = sqlc.arg(locale_code)
+WHERE
+  pm.deleted_at IS NULL
+  AND pm.member_profile_id = sqlc.arg(member_profile_id)
+  AND (pm.finished_at IS NULL OR pm.finished_at > NOW())
+ORDER BY pm.created_at DESC;

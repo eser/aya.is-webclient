@@ -63,6 +63,11 @@ type Repository interface {
 		kinds []string,
 		cursor *cursors.Cursor,
 	) (cursors.Cursored[[]*ProfileMembership], error)
+	GetProfileMembershipsByMemberProfileID(
+		ctx context.Context,
+		localeCode string,
+		memberProfileID string,
+	) ([]*ProfileMembership, error)
 	// CreateProfile(ctx context.Context, arg CreateProfileParams) (*Profile, error)
 	// UpdateProfile(ctx context.Context, arg UpdateProfileParams) (int64, error)
 	// DeleteProfile(ctx context.Context, id string) (int64, error)
@@ -317,6 +322,28 @@ func (s *Service) Import(ctx context.Context, fetcher RecentPostsFetcher) error 
 	// 		s.logger.InfoContext(ctx, "posts imported", "kind", link.Kind, "title", link.Title, "posts", posts)
 	// 	}
 	return nil
+}
+
+func (s *Service) GetMembershipsByUserProfileID(
+	ctx context.Context,
+	localeCode string,
+	userProfileID string,
+) ([]*ProfileMembership, error) {
+	memberships, err := s.repo.GetProfileMembershipsByMemberProfileID(
+		ctx,
+		localeCode,
+		userProfileID,
+	)
+	if err != nil {
+		return nil, fmt.Errorf(
+			"%w(userProfileID: %s): %w",
+			ErrFailedToGetRecord,
+			userProfileID,
+			err,
+		)
+	}
+
+	return memberships, nil
 }
 
 // func (s *Service) Create(ctx context.Context, input *Profile) (*Profile, error) {

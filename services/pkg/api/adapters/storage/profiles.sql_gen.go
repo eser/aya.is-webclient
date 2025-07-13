@@ -9,6 +9,8 @@ import (
 	"context"
 	"database/sql"
 	"time"
+
+	"github.com/sqlc-dev/pqtype"
 )
 
 const createProfile = `-- name: CreateProfile :exec
@@ -132,6 +134,112 @@ func (q *Queries) GetProfileIDBySlug(ctx context.Context, arg GetProfileIDBySlug
 	var id string
 	err := row.Scan(&id)
 	return id, err
+}
+
+const getProfileMembershipsByMemberProfileID = `-- name: GetProfileMembershipsByMemberProfileID :many
+SELECT
+  pm.id as membership_id,
+  pm.kind as membership_kind,
+  pm.started_at,
+  pm.finished_at,
+  pm.properties as membership_properties,
+  pm.created_at as membership_created_at,
+  p.id, p.slug, p.kind, p.custom_domain, p.profile_picture_uri, p.pronouns, p.properties, p.created_at, p.updated_at, p.deleted_at,
+  pt.profile_id, pt.locale_code, pt.title, pt.description, pt.properties
+FROM
+  "profile_membership" pm
+  INNER JOIN "profile" p ON p.id = pm.profile_id
+    AND p.deleted_at IS NULL
+  INNER JOIN "profile_tx" pt ON pt.profile_id = p.id
+    AND pt.locale_code = $1
+WHERE
+  pm.deleted_at IS NULL
+  AND pm.member_profile_id = $2
+  AND (pm.finished_at IS NULL OR pm.finished_at > NOW())
+ORDER BY pm.created_at DESC
+`
+
+type GetProfileMembershipsByMemberProfileIDParams struct {
+	LocaleCode      string `db:"locale_code" json:"locale_code"`
+	MemberProfileID string `db:"member_profile_id" json:"member_profile_id"`
+}
+
+type GetProfileMembershipsByMemberProfileIDRow struct {
+	MembershipID         string                `db:"membership_id" json:"membership_id"`
+	MembershipKind       string                `db:"membership_kind" json:"membership_kind"`
+	StartedAt            sql.NullTime          `db:"started_at" json:"started_at"`
+	FinishedAt           sql.NullTime          `db:"finished_at" json:"finished_at"`
+	MembershipProperties pqtype.NullRawMessage `db:"membership_properties" json:"membership_properties"`
+	MembershipCreatedAt  time.Time             `db:"membership_created_at" json:"membership_created_at"`
+	Profile              Profile               `db:"profile" json:"profile"`
+	ProfileTx            ProfileTx             `db:"profile_tx" json:"profile_tx"`
+}
+
+// GetProfileMembershipsByMemberProfileID
+//
+//	SELECT
+//	  pm.id as membership_id,
+//	  pm.kind as membership_kind,
+//	  pm.started_at,
+//	  pm.finished_at,
+//	  pm.properties as membership_properties,
+//	  pm.created_at as membership_created_at,
+//	  p.id, p.slug, p.kind, p.custom_domain, p.profile_picture_uri, p.pronouns, p.properties, p.created_at, p.updated_at, p.deleted_at,
+//	  pt.profile_id, pt.locale_code, pt.title, pt.description, pt.properties
+//	FROM
+//	  "profile_membership" pm
+//	  INNER JOIN "profile" p ON p.id = pm.profile_id
+//	    AND p.deleted_at IS NULL
+//	  INNER JOIN "profile_tx" pt ON pt.profile_id = p.id
+//	    AND pt.locale_code = $1
+//	WHERE
+//	  pm.deleted_at IS NULL
+//	  AND pm.member_profile_id = $2
+//	  AND (pm.finished_at IS NULL OR pm.finished_at > NOW())
+//	ORDER BY pm.created_at DESC
+func (q *Queries) GetProfileMembershipsByMemberProfileID(ctx context.Context, arg GetProfileMembershipsByMemberProfileIDParams) ([]*GetProfileMembershipsByMemberProfileIDRow, error) {
+	rows, err := q.db.QueryContext(ctx, getProfileMembershipsByMemberProfileID, arg.LocaleCode, arg.MemberProfileID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []*GetProfileMembershipsByMemberProfileIDRow{}
+	for rows.Next() {
+		var i GetProfileMembershipsByMemberProfileIDRow
+		if err := rows.Scan(
+			&i.MembershipID,
+			&i.MembershipKind,
+			&i.StartedAt,
+			&i.FinishedAt,
+			&i.MembershipProperties,
+			&i.MembershipCreatedAt,
+			&i.Profile.ID,
+			&i.Profile.Slug,
+			&i.Profile.Kind,
+			&i.Profile.CustomDomain,
+			&i.Profile.ProfilePictureURI,
+			&i.Profile.Pronouns,
+			&i.Profile.Properties,
+			&i.Profile.CreatedAt,
+			&i.Profile.UpdatedAt,
+			&i.Profile.DeletedAt,
+			&i.ProfileTx.ProfileID,
+			&i.ProfileTx.LocaleCode,
+			&i.ProfileTx.Title,
+			&i.ProfileTx.Description,
+			&i.ProfileTx.Properties,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, &i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }
 
 const getProfilePageByProfileIDAndSlug = `-- name: GetProfilePageByProfileIDAndSlug :one

@@ -121,6 +121,29 @@ type Querier interface {
 	//    AND deleted_at IS NULL
 	//  LIMIT 1
 	GetProfileIDBySlug(ctx context.Context, arg GetProfileIDBySlugParams) (string, error)
+	//GetProfileMembershipsByMemberProfileID
+	//
+	//  SELECT
+	//    pm.id as membership_id,
+	//    pm.kind as membership_kind,
+	//    pm.started_at,
+	//    pm.finished_at,
+	//    pm.properties as membership_properties,
+	//    pm.created_at as membership_created_at,
+	//    p.id, p.slug, p.kind, p.custom_domain, p.profile_picture_uri, p.pronouns, p.properties, p.created_at, p.updated_at, p.deleted_at,
+	//    pt.profile_id, pt.locale_code, pt.title, pt.description, pt.properties
+	//  FROM
+	//    "profile_membership" pm
+	//    INNER JOIN "profile" p ON p.id = pm.profile_id
+	//      AND p.deleted_at IS NULL
+	//    INNER JOIN "profile_tx" pt ON pt.profile_id = p.id
+	//      AND pt.locale_code = $1
+	//  WHERE
+	//    pm.deleted_at IS NULL
+	//    AND pm.member_profile_id = $2
+	//    AND (pm.finished_at IS NULL OR pm.finished_at > NOW())
+	//  ORDER BY pm.created_at DESC
+	GetProfileMembershipsByMemberProfileID(ctx context.Context, arg GetProfileMembershipsByMemberProfileIDParams) ([]*GetProfileMembershipsByMemberProfileIDRow, error)
 	//GetProfilePageByProfileIDAndSlug
 	//
 	//  SELECT pp.id, pp.profile_id, pp.slug, pp."order", pp.cover_picture_uri, pp.published_at, pp.created_at, pp.updated_at, pp.deleted_at, ppt.profile_page_id, ppt.locale_code, ppt.title, ppt.summary, ppt.content

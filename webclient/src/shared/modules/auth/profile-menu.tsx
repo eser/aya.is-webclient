@@ -71,9 +71,11 @@ export function ProfileMenu({ className }: ProfileMenuProps) {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleProfileClick}>
-          {t("Auth", "profile")}
-        </DropdownMenuItem>
+        {user.individual_profile !== undefined && (
+          <DropdownMenuItem onClick={handleProfileClick}>
+            {t("Auth", "profile")}
+          </DropdownMenuItem>
+        )}
         <DropdownMenuItem onClick={handleLogout}>
           {t("Auth", "logout")}
         </DropdownMenuItem>
