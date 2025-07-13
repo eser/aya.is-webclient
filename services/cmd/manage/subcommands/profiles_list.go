@@ -29,7 +29,7 @@ func execProfilesList(ctx context.Context) error {
 		return err //nolint:wrapcheck
 	}
 
-	profileList, err := appContext.ProfilesService.List(ctx, "en", cursors.NewCursor(0, nil))
+	profileList, err := appContext.ProfileService.List(ctx, "en", cursors.NewCursor(0, nil))
 	if err != nil {
 		panic(err)
 	}

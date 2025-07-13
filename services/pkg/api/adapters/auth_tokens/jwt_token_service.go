@@ -1,46 +1,46 @@
-package auth
+package auth_tokens
 
 import (
 	"errors"
 	"fmt"
 
-	"github.com/eser/aya.is/services/pkg/api/business/users"
+	"github.com/eser/aya.is/services/pkg/api/business/auth"
 	"github.com/golang-jwt/jwt/v5"
 )
 
 var ErrFailedToSignToken = errors.New("failed to sign token")
 
 type JWTTokenService struct {
-	config *users.AuthConfig
+	config *auth.Config
 }
 
-func NewJWTTokenService(config *users.AuthConfig) *JWTTokenService {
+func NewJWTTokenService(config *auth.Config) *JWTTokenService {
 	return &JWTTokenService{
 		config: config,
 	}
 }
 
 // ParseToken validates a JWT token and returns the claims.
-func (j *JWTTokenService) ParseToken(tokenStr string) (*users.JWTClaims, error) {
+func (j *JWTTokenService) ParseToken(tokenStr string) (*auth.JWTClaims, error) {
 	if j.config.JwtSecret == "" {
-		return nil, users.ErrJWTNotConfigured
+		return nil, auth.ErrJWTNotConfigured
 	}
 
 	token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (any, error) {
 		// Validate the signing method
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, users.ErrInvalidSigningMethod
+			return nil, auth.ErrInvalidSigningMethod
 		}
 
 		return []byte(j.config.JwtSecret), nil
 	})
 	if err != nil {
-		return nil, fmt.Errorf("%w: %w", users.ErrInvalidToken, err)
+		return nil, fmt.Errorf("%w: %w", auth.ErrInvalidToken, err)
 	}
 
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok || !token.Valid {
-		return nil, users.ErrInvalidToken
+		return nil, auth.ErrInvalidToken
 	}
 
 	// Extract claims
@@ -49,10 +49,10 @@ func (j *JWTTokenService) ParseToken(tokenStr string) (*users.JWTClaims, error) 
 	exp, _ := claims["exp"].(float64)
 
 	if userID == "" || sessionID == "" {
-		return nil, users.ErrInvalidToken
+		return nil, auth.ErrInvalidToken
 	}
 
-	return &users.JWTClaims{
+	return &auth.JWTClaims{
 		UserID:    userID,
 		SessionID: sessionID,
 		ExpiresAt: int64(exp),
@@ -60,9 +60,9 @@ func (j *JWTTokenService) ParseToken(tokenStr string) (*users.JWTClaims, error) 
 }
 
 // GenerateToken creates a new JWT token with the given claims.
-func (j *JWTTokenService) GenerateToken(claims *users.JWTClaims) (string, error) {
+func (j *JWTTokenService) GenerateToken(claims *auth.JWTClaims) (string, error) {
 	if j.config.JwtSecret == "" {
-		return "", users.ErrJWTNotConfigured
+		return "", auth.ErrJWTNotConfigured
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{

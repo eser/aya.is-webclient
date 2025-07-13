@@ -27,6 +27,7 @@ services:
     environment:
       ENV: production
       PORT: 8080
+      SITE_URI: http://localhost:8080
       LOG__LEVEL: WARN
       LOG__PRETTY: false
       # Database connection with both protocol and DSN

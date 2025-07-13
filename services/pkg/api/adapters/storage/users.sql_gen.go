@@ -165,6 +165,48 @@ func (q *Queries) GetUserByEmail(ctx context.Context, arg GetUserByEmailParams) 
 	return &i, err
 }
 
+const getUserByGitHubRemoteID = `-- name: GetUserByGitHubRemoteID :one
+SELECT id, kind, name, email, phone, github_handle, github_remote_id, bsky_handle, bsky_remote_id, x_handle, x_remote_id, individual_profile_id, created_at, updated_at, deleted_at
+FROM "user"
+WHERE github_remote_id = $1
+  AND deleted_at IS NULL
+LIMIT 1
+`
+
+type GetUserByGitHubRemoteIDParams struct {
+	GithubRemoteID sql.NullString `db:"github_remote_id" json:"github_remote_id"`
+}
+
+// GetUserByGitHubRemoteID
+//
+//	SELECT id, kind, name, email, phone, github_handle, github_remote_id, bsky_handle, bsky_remote_id, x_handle, x_remote_id, individual_profile_id, created_at, updated_at, deleted_at
+//	FROM "user"
+//	WHERE github_remote_id = $1
+//	  AND deleted_at IS NULL
+//	LIMIT 1
+func (q *Queries) GetUserByGitHubRemoteID(ctx context.Context, arg GetUserByGitHubRemoteIDParams) (*User, error) {
+	row := q.db.QueryRowContext(ctx, getUserByGitHubRemoteID, arg.GithubRemoteID)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.Kind,
+		&i.Name,
+		&i.Email,
+		&i.Phone,
+		&i.GithubHandle,
+		&i.GithubRemoteID,
+		&i.BskyHandle,
+		&i.BskyRemoteID,
+		&i.XHandle,
+		&i.XRemoteID,
+		&i.IndividualProfileID,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.DeletedAt,
+	)
+	return &i, err
+}
+
 const getUserByID = `-- name: GetUserByID :one
 SELECT id, kind, name, email, phone, github_handle, github_remote_id, bsky_handle, bsky_remote_id, x_handle, x_remote_id, individual_profile_id, created_at, updated_at, deleted_at
 FROM "user"

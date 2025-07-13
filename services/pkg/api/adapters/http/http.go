@@ -9,6 +9,7 @@ import (
 	"github.com/eser/aya.is/services/pkg/ajan/httpfx/modules/openapi"
 	"github.com/eser/aya.is/services/pkg/ajan/httpfx/modules/profiling"
 	"github.com/eser/aya.is/services/pkg/ajan/logfx"
+	"github.com/eser/aya.is/services/pkg/api/business/auth"
 	"github.com/eser/aya.is/services/pkg/api/business/profiles"
 	"github.com/eser/aya.is/services/pkg/api/business/stories"
 	"github.com/eser/aya.is/services/pkg/api/business/users"
@@ -16,11 +17,13 @@ import (
 
 func Run(
 	ctx context.Context,
+	baseURI string,
 	config *httpfx.Config,
 	logger *logfx.Logger,
-	profilesService *profiles.Service,
-	storiesService *stories.Service,
-	usersService *users.Service,
+	authService *auth.Service,
+	userService *users.Service,
+	profileService *profiles.Service,
+	storyService *stories.Service,
 ) (func(), error) {
 	routes := httpfx.NewRouter("/")
 	httpService := httpfx.NewHTTPService(config, routes, logger)
@@ -40,34 +43,37 @@ func Run(
 
 	// http routes
 	RegisterHTTPRoutesForUsers( //nolint:contextcheck
+		baseURI,
 		routes,
 		logger,
-		usersService,
+		authService,
+		userService,
 	)
 	RegisterHTTPRoutesForSite( //nolint:contextcheck
 		routes,
 		logger,
-		profilesService,
+		profileService,
 	)
 	RegisterHTTPRoutesForProfiles( //nolint:contextcheck
 		routes,
 		logger,
-		profilesService,
-		storiesService,
+		profileService,
+		storyService,
 	)
 	RegisterHTTPRoutesForStories( //nolint:contextcheck
 		routes,
 		logger,
-		storiesService,
+		storyService,
 	)
 
 	// Authenticated routes (wrapped with auth middleware)
 	RegisterAuthenticatedRoutes( //nolint:contextcheck
 		routes,
 		logger,
-		profilesService,
-		storiesService,
-		usersService,
+		authService,
+		userService,
+		profileService,
+		storyService,
 	)
 
 	// run

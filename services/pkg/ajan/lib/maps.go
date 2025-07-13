@@ -1,6 +1,8 @@
 package lib
 
-import "strings"
+import (
+	"strings"
+)
 
 func CaseInsensitiveSet(m *map[string]any, key string, value any) { //nolint:varnamelen
 	for k := range *m {

@@ -3,7 +3,7 @@ package appcontext
 import (
 	"github.com/eser/aya.is/services/pkg/ajan"
 	"github.com/eser/aya.is/services/pkg/api/adapters/arcade"
-	"github.com/eser/aya.is/services/pkg/api/business/users"
+	"github.com/eser/aya.is/services/pkg/api/business/auth"
 )
 
 type DataConfig struct {
@@ -20,9 +20,10 @@ type ExternalsConfig struct {
 }
 
 type AppConfig struct {
-	Data      DataConfig       `conf:"data"`
-	Auth      users.AuthConfig `conf:"auth"`
-	Externals ExternalsConfig  `conf:"externals"`
+	Auth      auth.Config     `conf:"auth"`
+	Data      DataConfig      `conf:"data"`
+	Externals ExternalsConfig `conf:"externals"`
+	SiteURI   string          `conf:"site_uri"  default:"http://localhost:8080"`
 	ajan.BaseConfig
 
 	Features FeatureFlags `conf:"features"`

@@ -54,7 +54,7 @@ export function Timeline(props: TimelineProps) {
           )
           : (
             <article>
-              {/* TODO: Add a specific translation key e.g., t("NewsPage", "NoNewsFound") */}
+              {/* TODO(@eser) Add a specific translation key e.g., t("NewsPage", "NoNewsFound") */}
               {t("Layout", "Content not yet available.")}
             </article>
           )}

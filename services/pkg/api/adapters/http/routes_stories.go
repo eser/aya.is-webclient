@@ -12,7 +12,7 @@ import (
 func RegisterHTTPRoutesForStories(
 	routes *httpfx.Router,
 	logger *logfx.Logger,
-	storiesService *stories.Service,
+	storyService *stories.Service,
 ) {
 	routes.
 		Route("GET /{locale}/stories", func(ctx *httpfx.Context) httpfx.Result {
@@ -20,7 +20,7 @@ func RegisterHTTPRoutesForStories(
 			localeParam := ctx.Request.PathValue("locale")
 			cursor := cursors.NewCursorFromRequest(ctx.Request)
 
-			records, err := storiesService.List(ctx.Request.Context(), localeParam, cursor)
+			records, err := storyService.List(ctx.Request.Context(), localeParam, cursor)
 			if err != nil {
 				return ctx.Results.Error(
 					http.StatusInternalServerError,
@@ -40,7 +40,7 @@ func RegisterHTTPRoutesForStories(
 			localeParam := ctx.Request.PathValue("locale")
 			slugParam := ctx.Request.PathValue("slug")
 
-			record, err := storiesService.GetBySlug(ctx.Request.Context(), localeParam, slugParam)
+			record, err := storyService.GetBySlug(ctx.Request.Context(), localeParam, slugParam)
 			if err != nil {
 				return ctx.Results.Error(
 					http.StatusInternalServerError,

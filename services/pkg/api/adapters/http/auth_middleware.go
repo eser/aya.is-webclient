@@ -5,13 +5,14 @@ import (
 	"time"
 
 	"github.com/eser/aya.is/services/pkg/ajan/httpfx"
+	"github.com/eser/aya.is/services/pkg/api/business/auth"
 	"github.com/eser/aya.is/services/pkg/api/business/users"
 	"github.com/golang-jwt/jwt/v5"
 )
 
 const AuthHeader = "Authorization"
 
-func AuthMiddleware(usersService *users.Service) httpfx.Handler {
+func AuthMiddleware(authService *auth.Service, userService *users.Service) httpfx.Handler {
 	return func(ctx *httpfx.Context) httpfx.Result {
 		// FIXME(@eser) no need to check if the header is specified
 		auth := ctx.Request.Header.Get(AuthHeader)
@@ -21,7 +22,7 @@ func AuthMiddleware(usersService *users.Service) httpfx.Handler {
 		}
 
 		tokenStr := strings.TrimPrefix(auth, "Bearer ")
-		secret := usersService.AuthConfig.JwtSecret
+		secret := authService.Config.JwtSecret
 
 		token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (any, error) {
 			return []byte(secret), nil
@@ -41,13 +42,13 @@ func AuthMiddleware(usersService *users.Service) httpfx.Handler {
 		}
 
 		// Load session from repository
-		session, err := usersService.GetSessionByID(ctx.Request.Context(), sessionID)
+		session, err := userService.GetSessionByID(ctx.Request.Context(), sessionID)
 		if err != nil || session.Status != "active" {
 			return ctx.Results.Unauthorized(httpfx.WithPlainText("Session invalid"))
 		}
 
 		// Update logged_in_at
-		_ = usersService.UpdateSessionLoggedInAt(ctx.Request.Context(), sessionID, time.Now())
+		_ = userService.UpdateSessionLoggedInAt(ctx.Request.Context(), sessionID, time.Now())
 
 		result := ctx.Next()
 

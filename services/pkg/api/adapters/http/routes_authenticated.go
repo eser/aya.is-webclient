@@ -3,6 +3,7 @@ package http
 import (
 	"github.com/eser/aya.is/services/pkg/ajan/httpfx"
 	"github.com/eser/aya.is/services/pkg/ajan/logfx"
+	"github.com/eser/aya.is/services/pkg/api/business/auth"
 	"github.com/eser/aya.is/services/pkg/api/business/profiles"
 	"github.com/eser/aya.is/services/pkg/api/business/stories"
 	"github.com/eser/aya.is/services/pkg/api/business/users"
@@ -12,13 +13,14 @@ import (
 func RegisterAuthenticatedRoutes(
 	routes *httpfx.Router,
 	logger *logfx.Logger,
-	profilesService *profiles.Service,
-	storiesService *stories.Service,
-	usersService *users.Service,
+	authService *auth.Service,
+	userService *users.Service,
+	profileService *profiles.Service,
+	storyService *stories.Service,
 ) {
 	// Create a sub-router with auth middleware
 	authRoutes := routes.Group("/")
-	authRoutes.Use(AuthMiddleware(usersService))
+	authRoutes.Use(AuthMiddleware(authService, userService))
 	// Example: Protected user profile endpoints
 	// authRoutes.Route("PUT /{locale}/users/{id}", updateUserHandler)
 	// authRoutes.Route("DELETE /{locale}/users/{id}", deleteUserHandler)

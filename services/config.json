@@ -1,5 +1,6 @@
 {
   "name": "api",
+  "site_uri": "https://api.aya.is",
   "features": {
     "dummy": true
   },

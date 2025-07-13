@@ -77,6 +77,43 @@ func (r *Repository) GetUserByEmail(
 	return result, nil
 }
 
+func (r *Repository) GetUserByGitHubRemoteID(
+	ctx context.Context,
+	githubRemoteID string,
+) (*users.User, error) {
+	row, err := r.queries.GetUserByGitHubRemoteID(
+		ctx,
+		GetUserByGitHubRemoteIDParams{
+			GithubRemoteID: sql.NullString{String: githubRemoteID, Valid: true},
+		},
+	)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, nil //nolint:nilnil
+		}
+
+		return nil, err
+	}
+
+	result := &users.User{
+		ID:                  row.ID,
+		Kind:                row.Kind,
+		Name:                row.Name,
+		Email:               vars.ToStringPtr(row.Email),
+		Phone:               vars.ToStringPtr(row.Phone),
+		GithubHandle:        vars.ToStringPtr(row.GithubHandle),
+		GithubRemoteID:      vars.ToStringPtr(row.GithubRemoteID),
+		BskyHandle:          vars.ToStringPtr(row.BskyHandle),
+		XHandle:             vars.ToStringPtr(row.XHandle),
+		IndividualProfileID: vars.ToStringPtr(row.IndividualProfileID),
+		CreatedAt:           row.CreatedAt,
+		UpdatedAt:           vars.ToTimePtr(row.UpdatedAt),
+		DeletedAt:           vars.ToTimePtr(row.DeletedAt),
+	}
+
+	return result, nil
+}
+
 func (r *Repository) ListUsers(
 	ctx context.Context,
 	cursor *cursors.Cursor,
@@ -144,6 +181,35 @@ func (r *Repository) CreateUser(
 	})
 	if err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (r *Repository) UpdateUser(
+	ctx context.Context,
+	user *users.User,
+) error {
+	rowsAffected, err := r.queries.UpdateUser(ctx, UpdateUserParams{
+		ID:                  user.ID,
+		Kind:                user.Kind,
+		Name:                user.Name,
+		Email:               vars.ToSQLNullString(user.Email),
+		Phone:               vars.ToSQLNullString(user.Phone),
+		GithubHandle:        vars.ToSQLNullString(user.GithubHandle),
+		GithubRemoteID:      vars.ToSQLNullString(user.GithubRemoteID),
+		BskyHandle:          vars.ToSQLNullString(user.BskyHandle),
+		BskyRemoteID:        sql.NullString{String: "", Valid: false},
+		XHandle:             vars.ToSQLNullString(user.XHandle),
+		XRemoteID:           sql.NullString{String: "", Valid: false},
+		IndividualProfileID: vars.ToSQLNullString(user.IndividualProfileID),
+	})
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected == 0 {
+		return sql.ErrNoRows
 	}
 
 	return nil

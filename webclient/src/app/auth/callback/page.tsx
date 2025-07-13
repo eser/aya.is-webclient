@@ -43,7 +43,7 @@ export default function AuthCallbackPage() {
         }
 
         // Store JWT token in localStorage for now
-        // TODO: Use secure httpOnly cookie in production
+        // TODO(@eser) Use secure httpOnly cookie in production
         if (globalThis.localStorage !== undefined) {
           localStorage.setItem("auth_token", data.data.token);
           if (data.data.user) {

@@ -28,7 +28,7 @@ func execProfilesImport(ctx context.Context) error {
 		return err //nolint:wrapcheck
 	}
 
-	err = appContext.ProfilesService.Import(ctx, appContext.Arcade)
+	err = appContext.ProfileService.Import(ctx, appContext.Arcade)
 	if err != nil {
 		panic(err)
 	}

@@ -12,6 +12,13 @@ WHERE email = sqlc.arg(email)
   AND deleted_at IS NULL
 LIMIT 1;
 
+-- name: GetUserByGitHubRemoteID :one
+SELECT *
+FROM "user"
+WHERE github_remote_id = sqlc.arg(github_remote_id)
+  AND deleted_at IS NULL
+LIMIT 1;
+
 -- name: ListUsers :many
 SELECT *
 FROM "user"

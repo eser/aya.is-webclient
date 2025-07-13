@@ -11,9 +11,10 @@ import (
 	"github.com/eser/aya.is/services/pkg/ajan/httpclient"
 	"github.com/eser/aya.is/services/pkg/ajan/logfx"
 	"github.com/eser/aya.is/services/pkg/api/adapters/arcade"
-	"github.com/eser/aya.is/services/pkg/api/adapters/auth"
 	"github.com/eser/aya.is/services/pkg/api/adapters/auth_providers"
+	"github.com/eser/aya.is/services/pkg/api/adapters/auth_tokens"
 	"github.com/eser/aya.is/services/pkg/api/adapters/storage"
+	"github.com/eser/aya.is/services/pkg/api/business/auth"
 	"github.com/eser/aya.is/services/pkg/api/business/profiles"
 	"github.com/eser/aya.is/services/pkg/api/business/stories"
 	"github.com/eser/aya.is/services/pkg/api/business/users"
@@ -34,12 +35,13 @@ type AppContext struct {
 	Arcade *arcade.Arcade
 
 	Repository      *storage.Repository
-	JWTTokenService *auth.JWTTokenService
+	JWTTokenService *auth_tokens.JWTTokenService
 
 	// Business
-	ProfilesService *profiles.Service
-	UsersService    *users.Service
-	StoriesService  *stories.Service
+	AuthService    *auth.Service
+	UserService    *users.Service
+	ProfileService *profiles.Service
+	StoryService   *stories.Service
 }
 
 func New() *AppContext {
@@ -72,6 +74,7 @@ func (a *AppContext) Init(ctx context.Context) error { //nolint:funlen
 		slog.String("module", "appcontext"),
 		slog.String("name", a.Config.AppName),
 		slog.String("environment", a.Config.AppEnv),
+		slog.String("site_uri", a.Config.SiteURI),
 		slog.Any("features", a.Config.Features),
 	)
 
@@ -143,30 +146,38 @@ func (a *AppContext) Init(ctx context.Context) error { //nolint:funlen
 	// ----------------------------------------------------
 	// Adapter: JWTTokenService
 	// ----------------------------------------------------
-	a.JWTTokenService = auth.NewJWTTokenService(&a.Config.Auth)
+	a.JWTTokenService = auth_tokens.NewJWTTokenService(&a.Config.Auth)
 
 	// ----------------------------------------------------
 	// Business Services
 	// ----------------------------------------------------
-	authProviders := map[string]users.AuthProvider{
-		"github": auth_providers.NewGitHubAuthProvider(
+	a.ProfileService = profiles.NewService(a.Logger, a.Repository)
+	a.UserService = users.NewService(
+		a.Logger,
+		a.Repository,
+	)
+	a.StoryService = stories.NewService(a.Logger, a.Repository)
+
+	a.AuthService = auth.NewService(
+		a.Logger,
+		a.JWTTokenService,
+		&a.Config.Auth,
+		a.UserService,
+	)
+
+	// ----------------------------------------------------
+	// Auth Providers (adapters)
+	// ----------------------------------------------------
+	a.AuthService.RegisterProvider(
+		"github",
+		auth_providers.NewGitHubAuthProvider(
 			&a.Config.Auth.GitHub,
 			a.Logger,
 			a.HTTPClient,
-			a.Repository,
 			a.JWTTokenService,
+			a.UserService,
 		),
-	}
-
-	a.ProfilesService = profiles.NewService(a.Logger, a.Repository)
-	a.UsersService = users.NewService(
-		a.Logger,
-		a.Repository,
-		a.JWTTokenService,
-		&a.Config.Auth,
-		authProviders,
 	)
-	a.StoriesService = stories.NewService(a.Logger, a.Repository)
 
 	return nil
 }

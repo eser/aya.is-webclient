@@ -14,8 +14,8 @@ import (
 func RegisterHTTPRoutesForProfiles( //nolint:funlen,cyclop,maintidx
 	routes *httpfx.Router,
 	logger *logfx.Logger,
-	profilesService *profiles.Service,
-	storiesService *stories.Service,
+	profileService *profiles.Service,
+	storyService *stories.Service,
 ) {
 	routes.
 		Route("GET /{locale}/profiles", func(ctx *httpfx.Context) httpfx.Result {
@@ -35,7 +35,7 @@ func RegisterHTTPRoutesForProfiles( //nolint:funlen,cyclop,maintidx
 				}
 			}
 
-			records, err := profilesService.List(ctx.Request.Context(), localeParam, cursor)
+			records, err := profileService.List(ctx.Request.Context(), localeParam, cursor)
 			if err != nil {
 				return ctx.Results.Error(
 					http.StatusInternalServerError,
@@ -55,7 +55,7 @@ func RegisterHTTPRoutesForProfiles( //nolint:funlen,cyclop,maintidx
 			localeParam := ctx.Request.PathValue("locale")
 			slugParam := ctx.Request.PathValue("slug")
 
-			record, err := profilesService.GetBySlugEx(
+			record, err := profileService.GetBySlugEx(
 				ctx.Request.Context(),
 				localeParam,
 				slugParam,
@@ -81,7 +81,7 @@ func RegisterHTTPRoutesForProfiles( //nolint:funlen,cyclop,maintidx
 			localeParam := ctx.Request.PathValue("locale")
 			slugParam := ctx.Request.PathValue("slug")
 
-			records, err := profilesService.ListPagesBySlug(
+			records, err := profileService.ListPagesBySlug(
 				ctx.Request.Context(),
 				localeParam,
 				slugParam,
@@ -110,7 +110,7 @@ func RegisterHTTPRoutesForProfiles( //nolint:funlen,cyclop,maintidx
 				slugParam := ctx.Request.PathValue("slug")
 				pageSlugParam := ctx.Request.PathValue("pageSlug")
 
-				records, err := profilesService.GetPageBySlug(
+				records, err := profileService.GetPageBySlug(
 					ctx.Request.Context(),
 					localeParam,
 					slugParam,
@@ -138,7 +138,7 @@ func RegisterHTTPRoutesForProfiles( //nolint:funlen,cyclop,maintidx
 			localeParam := ctx.Request.PathValue("locale")
 			slugParam := ctx.Request.PathValue("slug")
 
-			records, err := profilesService.ListLinksBySlug(
+			records, err := profileService.ListLinksBySlug(
 				ctx.Request.Context(),
 				localeParam,
 				slugParam,
@@ -165,7 +165,7 @@ func RegisterHTTPRoutesForProfiles( //nolint:funlen,cyclop,maintidx
 			slugParam := ctx.Request.PathValue("slug")
 			cursor := cursors.NewCursorFromRequest(ctx.Request)
 
-			records, err := storiesService.ListByPublicationProfileSlug(
+			records, err := storyService.ListByPublicationProfileSlug(
 				ctx.Request.Context(),
 				localeParam,
 				slugParam,
@@ -194,7 +194,7 @@ func RegisterHTTPRoutesForProfiles( //nolint:funlen,cyclop,maintidx
 				storySlugParam := ctx.Request.PathValue("storySlug")
 
 				// TODO(@eser) pass profile slug too for getting story by profile slug and story slug
-				record, err := storiesService.GetBySlug(
+				record, err := storyService.GetBySlug(
 					ctx.Request.Context(),
 					localeParam,
 					storySlugParam,
@@ -228,7 +228,7 @@ func RegisterHTTPRoutesForProfiles( //nolint:funlen,cyclop,maintidx
 				slugParam := ctx.Request.PathValue("slug")
 				cursor := cursors.NewCursorFromRequest(ctx.Request)
 
-				records, err := profilesService.ListProfileContributionsBySlug(
+				records, err := profileService.ListProfileContributionsBySlug(
 					ctx.Request.Context(),
 					localeParam,
 					slugParam,
@@ -257,7 +257,7 @@ func RegisterHTTPRoutesForProfiles( //nolint:funlen,cyclop,maintidx
 				slugParam := ctx.Request.PathValue("slug")
 				cursor := cursors.NewCursorFromRequest(ctx.Request)
 
-				records, err := profilesService.ListProfileMembersBySlug(
+				records, err := profileService.ListProfileMembersBySlug(
 					ctx.Request.Context(),
 					localeParam,
 					slugParam,

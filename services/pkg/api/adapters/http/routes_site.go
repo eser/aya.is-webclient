@@ -12,7 +12,7 @@ import (
 func RegisterHTTPRoutesForSite(
 	routes *httpfx.Router,
 	logger *logfx.Logger,
-	profilesService *profiles.Service,
+	profileService *profiles.Service,
 ) {
 	routes.
 		Route(
@@ -22,7 +22,7 @@ func RegisterHTTPRoutesForSite(
 				localeParam := ctx.Request.PathValue("locale")
 				domainParam := ctx.Request.PathValue("domain")
 
-				records, err := profilesService.GetByCustomDomain(
+				records, err := profileService.GetByCustomDomain(
 					ctx.Request.Context(),
 					localeParam,
 					domainParam,
@@ -48,7 +48,7 @@ func RegisterHTTPRoutesForSite(
 			// get variables from path
 			localeParam := ctx.Request.PathValue("locale")
 
-			records, err := profilesService.List(
+			records, err := profileService.List(
 				ctx.Request.Context(),
 				localeParam,
 				cursors.NewCursor(0, nil),

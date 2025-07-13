@@ -24,11 +24,13 @@ func main() {
 	process.StartGoroutine("http-server", func(ctx context.Context) error {
 		cleanup, err := http.Run(
 			ctx,
+			appContext.Config.SiteURI,
 			&appContext.Config.HTTP,
 			appContext.Logger,
-			appContext.ProfilesService,
-			appContext.StoriesService,
-			appContext.UsersService,
+			appContext.AuthService,
+			appContext.UserService,
+			appContext.ProfileService,
+			appContext.StoryService,
 		)
 		if err != nil {
 			appContext.Logger.ErrorContext(
