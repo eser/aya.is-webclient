@@ -1,6 +1,7 @@
 package middlewares
 
 import (
+	"net/http"
 	"strings"
 
 	"github.com/eser/aya.is/services/pkg/ajan/httpfx"
@@ -56,13 +57,21 @@ func WithAllowMethods(methods []string) CorsOption {
 }
 
 // CorsMiddleware creates a CORS middleware using functional options.
-func CorsMiddleware(options ...CorsOption) httpfx.Handler {
+func CorsMiddleware(options ...CorsOption) httpfx.Handler { //nolint:cyclop
 	// Start with default configuration
 	cfg := &corsConfig{
 		allowOrigin:      "*", // Default to allow all origins
-		allowCredentials: false,
-		allowHeaders:     []string{},
-		allowMethods:     []string{},
+		allowCredentials: true,
+		allowHeaders: []string{
+			"Accept",
+			"Authorization",
+			"Content-Type",
+			"Origin",
+			"Traceparent",
+			"Tracestate",
+			"X-Requested-With",
+		},
+		allowMethods: []string{"GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"},
 	}
 
 	// Apply all provided options
@@ -71,16 +80,38 @@ func CorsMiddleware(options ...CorsOption) httpfx.Handler {
 	}
 
 	return func(ctx *httpfx.Context) httpfx.Result {
-		result := ctx.Next()
-
 		headers := ctx.ResponseWriter.Header()
 
-		headers.Set(AccessControlAllowOriginHeader, cfg.allowOrigin)
+		// Determine allowed origin based on request origin
+		requestOrigin := ctx.Request.Header.Get("Origin")
+		allowedOrigin := cfg.allowOrigin
+
+		// If multiple origins are configured (comma-separated), check if request origin is allowed
+		if strings.Contains(cfg.allowOrigin, ",") {
+			allowedOrigins := strings.Split(cfg.allowOrigin, ",")
+			for _, origin := range allowedOrigins {
+				origin = strings.TrimSpace(origin)
+				if origin == requestOrigin {
+					allowedOrigin = requestOrigin
+
+					break
+				}
+			}
+
+			// If no match found and wildcard not set, use first origin as fallback
+			if allowedOrigin != requestOrigin && !strings.Contains(cfg.allowOrigin, "*") {
+				allowedOrigin = strings.TrimSpace(allowedOrigins[0])
+			}
+		}
+
+		// Set CORS headers for all requests
+		headers.Set(AccessControlAllowOriginHeader, allowedOrigin)
 
 		if cfg.allowCredentials {
 			headers.Set(AccessControlAllowCredentialsHeader, "true")
 		}
 
+		// For non-preflight requests, set headers and continue
 		if len(cfg.allowHeaders) > 0 {
 			headers.Set(AccessControlAllowHeadersHeader, strings.Join(cfg.allowHeaders, ", "))
 		}
@@ -89,6 +120,12 @@ func CorsMiddleware(options ...CorsOption) httpfx.Handler {
 			headers.Set(AccessControlAllowMethodsHeader, strings.Join(cfg.allowMethods, ", "))
 		}
 
-		return result
+		// Handle preflight OPTIONS requests
+		if ctx.Request.Method == http.MethodOptions {
+			// Return 200 OK for preflight
+			return ctx.Results.Ok()
+		}
+
+		return ctx.Next()
 	}
 }
