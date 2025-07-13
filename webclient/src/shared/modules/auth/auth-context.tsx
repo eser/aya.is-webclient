@@ -4,6 +4,8 @@ import * as React from "react";
 import { useRouter } from "next/navigation";
 import { getBackendUri } from "@/shared/config.ts";
 import { getTokenExpirationTime, refreshToken, clearAuthData } from "./token-refresh.ts";
+import { useNavigationClient } from "@/shared/modules/navigation/use-navigation-client.tsx";
+import { getUser } from "@/shared/modules/backend/users/get-user.ts";
 
 interface User {
   id: string;
@@ -18,7 +20,7 @@ interface AuthContextType {
   isLoading: boolean;
   isAuthenticated: boolean;
   authError: string | null;
-  login: (locale?: string, redirectUri?: string) => void;
+  login: (redirectUri?: string) => void;
   logout: () => Promise<void>;
   refreshAuth: () => void;
   clearError: () => void;
@@ -28,6 +30,7 @@ const AuthContext = React.createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
+  const { state } = useNavigationClient();
   const [user, setUser] = React.useState<User | null>(null);
   const [token, setToken] = React.useState<string | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
@@ -61,13 +64,78 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     loadAuthState();
   }, []);
 
+  // Check for auth_token in query string (OAuth callback)
+  React.useEffect(() => {
+    const handleAuthTokenFromQuery = async () => {
+      if (globalThis.location === undefined) {
+        return;
+      }
+
+      const urlParams = new URLSearchParams(globalThis.location.search);
+      const authToken = urlParams.get("auth_token");
+
+      if (!authToken) {
+        return;
+      }
+
+      try {
+        // Store token in localStorage
+        localStorage.setItem("auth_token", authToken);
+        setToken(authToken);
+
+        // Parse JWT to get user ID
+        const tokenParts = authToken.split(".");
+        if (tokenParts.length === 3) {
+          const payload = JSON.parse(atob(tokenParts[1]));
+          const userId = payload.user_id;
+
+          // Fetch user details from backend
+          const locale = state.locale.code;
+          const userData = await getUser(locale, userId);
+
+          if (userData) {
+            const userInfo = {
+              id: userData.id,
+              name: userData.name,
+              email: userData.email,
+              githubHandle: userData.github_handle,
+            };
+            localStorage.setItem("auth_user", JSON.stringify(userInfo));
+            setUser(userInfo);
+
+            // Store token expiration
+            if (payload.exp) {
+              localStorage.setItem("auth_token_expires_at", String(payload.exp * 1000));
+            }
+          }
+        }
+
+        // Clean URL by removing auth_token from query string
+        urlParams.delete("auth_token");
+        const newUrl = urlParams.toString()
+          ? `${globalThis.location.pathname}?${urlParams.toString()}`
+          : globalThis.location.pathname;
+        globalThis.history.replaceState({}, "", newUrl);
+      } catch (error) {
+        console.error("Failed to handle auth token from query:", error);
+        setAuthError("Failed to complete authentication. Please try again.");
+      }
+    };
+
+    handleAuthTokenFromQuery();
+  }, [state.locale.code]);
+
   // Set up automatic token refresh
   React.useEffect(() => {
-    if (!token) return;
+    if (token === null) {
+      return;
+    }
 
     const checkAndRefresh = async () => {
       const expirationTime = getTokenExpirationTime();
-      if (!expirationTime) return;
+      if (expirationTime === null) {
+        return 0;
+      }
 
       const now = Date.now();
       const timeUntilExpiry = expirationTime - now;
@@ -78,38 +146,47 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (refreshTime === 0) {
         // Token needs immediate refresh
         const newToken = await refreshToken();
+
         if (newToken) {
           setToken(newToken);
-        } else {
-          // Failed to refresh, clear auth state
-          clearAuthData();
-          setUser(null);
-          setToken(null);
-          setAuthError("Your session has expired. Please log in again.");
+
+          return 0;
         }
+
+        // Failed to refresh, clear auth state
+        clearAuthData();
+        setUser(null);
+        setToken(null);
+        setAuthError("Your session has expired. Please log in again.");
+
+        return 0;
       }
 
       return refreshTime;
     };
 
-    let timeoutId: NodeJS.Timeout;
+    let timeoutId: ReturnType<typeof setTimeout>;
 
     const setupRefreshTimer = async () => {
       const refreshTime = await checkAndRefresh();
+
       if (refreshTime && refreshTime > 0) {
         timeoutId = setTimeout(async () => {
           const newToken = await refreshToken();
-          if (newToken) {
+
+          if (newToken !== null) {
             setToken(newToken);
             // Set up next refresh
             setupRefreshTimer();
-          } else {
-            // Failed to refresh, clear auth state
-            clearAuthData();
-            setUser(null);
-            setToken(null);
-            setAuthError("Your session has expired. Please log in again.");
+
+            return;
           }
+
+          // Failed to refresh, clear auth state
+          clearAuthData();
+          setUser(null);
+          setToken(null);
+          setAuthError("Your session has expired. Please log in again.");
         }, refreshTime);
       }
     };
@@ -123,23 +200,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
   }, [token]);
 
-  const login = React.useCallback((locale: string = "tr", redirectUri?: string) => {
+  const login = React.useCallback((redirectUri?: string) => {
     const backendUri = getBackendUri();
     const currentUrl = globalThis.location?.href ?? "";
     const finalRedirectUri = redirectUri || currentUrl;
+    const locale = state.locale.code;
 
     // Redirect to backend OAuth endpoint
     const loginUrl = `${backendUri}/${locale}/auth/github/login${finalRedirectUri ? `?redirect_uri=${encodeURIComponent(finalRedirectUri)}` : ""}`;
     if (globalThis.location !== undefined) {
       globalThis.location.href = loginUrl;
     }
-  }, []);
+  }, [state.locale.code]);
 
   const logout = React.useCallback(async () => {
     try {
       // Call backend logout endpoint
       const backendUri = getBackendUri();
-      await fetch(`${backendUri}/tr/auth/logout`, {
+      const locale = state.locale.code;
+      await fetch(`${backendUri}/${locale}/auth/logout`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -155,7 +234,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setToken(null);
       router.push("/");
     }
-  }, [token, router]);
+  }, [token, router, state.locale.code]);
 
   const refreshAuth = React.useCallback(() => {
     // Re-load auth state from localStorage

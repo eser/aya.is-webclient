@@ -39,6 +39,11 @@
     "Theme: Midnight": "Tema: Koyu",
     "Localization": "Yerelleştirme"
   },
+  "Auth": {
+    "login_with_github": "GitHub ile Giriş",
+    "profile": "Profilim",
+    "logout": "Çıkış yap"
+  },
   "Home": {
     "AYA the Open Source Network": "AYA, Açık Yazılım Ağı",
     "A software foundation formed by volunteer-developed software": "Gönüllü geliştirilen yazılımlarla oluşan bir yazılım vakfı",

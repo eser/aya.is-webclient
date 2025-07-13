@@ -144,7 +144,7 @@ func (s *Service) AuthHandleCallback(
 		}
 
 		finalRedirectURIQueryString := finalRedirectURI.Query()
-		finalRedirectURIQueryString.Set("token", authResult.JWT)
+		finalRedirectURIQueryString.Set("auth_token", authResult.JWT)
 
 		finalRedirectURI.RawQuery = finalRedirectURIQueryString.Encode()
 
@@ -195,7 +195,7 @@ func (s *Service) RefreshToken( //nolint:funlen
 
 	// Generate new JWT with extended expiration
 	now := time.Now()
-	expiresAt := now.Add(24 * time.Hour) //nolint:mnd
+	expiresAt := now.Add(s.Config.TokenTTL)
 
 	newClaims := &JWTClaims{
 		UserID:    claims.UserID,

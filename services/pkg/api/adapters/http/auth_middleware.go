@@ -22,10 +22,9 @@ func AuthMiddleware(authService *auth.Service, userService *users.Service) httpf
 		}
 
 		tokenStr := strings.TrimPrefix(auth, "Bearer ")
-		secret := authService.Config.JwtSecret
 
 		token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (any, error) {
-			return []byte(secret), nil
+			return []byte(authService.Config.JwtSecret), nil
 		})
 		if err != nil || !token.Valid {
 			return ctx.Results.Unauthorized(httpfx.WithPlainText("Invalid token"))

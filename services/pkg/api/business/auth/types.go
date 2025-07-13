@@ -14,7 +14,8 @@ type GitHubAuthProviderConfig struct {
 }
 
 type Config struct {
-	JwtSecret string `conf:"jwt_secret" default:"secret"`
+	JwtSecret string        `conf:"jwt_secret" default:"secret"`
+	TokenTTL  time.Duration `conf:"token_ttl"  default:"365d"`
 
 	GitHub GitHubAuthProviderConfig `conf:"github"`
 }
