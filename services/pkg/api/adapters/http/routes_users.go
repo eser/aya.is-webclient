@@ -130,7 +130,13 @@ func RegisterHTTPRoutesForUsers( //nolint:funlen,cyclop
 					redirectURI,
 				)
 				if err != nil {
-					return ctx.Results.Unauthorized(httpfx.WithPlainText("Auth callback failed"))
+					logger.ErrorContext(ctx.Request.Context(), "Auth callback failed",
+						slog.String("error", err.Error()))
+
+					return ctx.Results.Error(
+						http.StatusInternalServerError,
+						httpfx.WithPlainText("Auth callback failed"),
+					)
 				}
 
 				if result.RedirectURI != "" {
