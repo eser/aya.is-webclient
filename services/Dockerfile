@@ -62,13 +62,14 @@ RUN go build ./cmd/serve/
 # Production image, copy all the files and run next
 FROM upstream-runner AS production-runner
 
-# Set working directory
-WORKDIR /srv/app
-
+# Install base system dependencies
 RUN apt-get update && \
-  apt-get -y install --no-install-recommends curl && \
+  apt-get -y install --no-install-recommends curl ca-certificates && \
   groupadd -r nonroot && \
   useradd -r -g nonroot nonroot
+
+# Set working directory
+WORKDIR /srv/app
 
 # Copy the binary from the production-builder container
 # COPY --from=production-builder /bin/sh /bin/sh

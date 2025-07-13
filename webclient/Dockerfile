@@ -13,11 +13,11 @@ FROM denoland/deno:distroless-2.4.1 AS upstream-runner
 ## ------------------------------------------------------------
 FROM upstream-builder AS base
 
-# Install node.js 24
-RUN apt-get update && apt-get -y install --no-install-recommends \
-  curl \
-  ca-certificates
+# Install base system dependencies
+RUN apt-get update && \
+  apt-get -y install --no-install-recommends curl ca-certificates
 
+# Install node.js 24
 RUN curl -fsSL https://deb.nodesource.com/setup_24.x -o nodesource_setup.sh
 RUN sh nodesource_setup.sh
 RUN apt-get install -y nodejs
