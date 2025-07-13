@@ -36,6 +36,11 @@ func Run(
 	routes.Use(middlewares.CorsMiddleware())
 	routes.Use(middlewares.MetricsMiddleware(httpService.InnerMetrics)) //nolint:contextcheck
 
+	// Global OPTIONS handler for preflight requests
+	routes.Route("OPTIONS {path...}", func(ctx *httpfx.Context) httpfx.Result {
+		return ctx.Results.Ok()
+	})
+
 	// http modules
 	healthcheck.RegisterHTTPRoutes(routes, config)
 	openapi.RegisterHTTPRoutes(routes, config)
