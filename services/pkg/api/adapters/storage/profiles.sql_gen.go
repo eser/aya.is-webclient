@@ -13,22 +13,89 @@ import (
 	"github.com/sqlc-dev/pqtype"
 )
 
+const checkProfileSlugExists = `-- name: CheckProfileSlugExists :one
+SELECT EXISTS(
+  SELECT 1 FROM "profile"
+  WHERE slug = $1
+    AND deleted_at IS NULL
+) AS exists
+`
+
+type CheckProfileSlugExistsParams struct {
+	Slug string `db:"slug" json:"slug"`
+}
+
+// CheckProfileSlugExists
+//
+//	SELECT EXISTS(
+//	  SELECT 1 FROM "profile"
+//	  WHERE slug = $1
+//	    AND deleted_at IS NULL
+//	) AS exists
+func (q *Queries) CheckProfileSlugExists(ctx context.Context, arg CheckProfileSlugExistsParams) (bool, error) {
+	row := q.db.QueryRowContext(ctx, checkProfileSlugExists, arg.Slug)
+	var exists bool
+	err := row.Scan(&exists)
+	return exists, err
+}
+
 const createProfile = `-- name: CreateProfile :exec
-INSERT INTO "profile" (id, slug)
-VALUES ($1, $2)
+INSERT INTO "profile" (id, slug, kind, custom_domain, profile_picture_uri, pronouns, properties)
+VALUES ($1, $2, $3, $4, $5, $6, $7)
 `
 
 type CreateProfileParams struct {
-	ID   string `db:"id" json:"id"`
-	Slug string `db:"slug" json:"slug"`
+	ID                string                `db:"id" json:"id"`
+	Slug              string                `db:"slug" json:"slug"`
+	Kind              string                `db:"kind" json:"kind"`
+	CustomDomain      sql.NullString        `db:"custom_domain" json:"custom_domain"`
+	ProfilePictureURI sql.NullString        `db:"profile_picture_uri" json:"profile_picture_uri"`
+	Pronouns          sql.NullString        `db:"pronouns" json:"pronouns"`
+	Properties        pqtype.NullRawMessage `db:"properties" json:"properties"`
 }
 
 // CreateProfile
 //
-//	INSERT INTO "profile" (id, slug)
-//	VALUES ($1, $2)
+//	INSERT INTO "profile" (id, slug, kind, custom_domain, profile_picture_uri, pronouns, properties)
+//	VALUES ($1, $2, $3, $4, $5, $6, $7)
 func (q *Queries) CreateProfile(ctx context.Context, arg CreateProfileParams) error {
-	_, err := q.db.ExecContext(ctx, createProfile, arg.ID, arg.Slug)
+	_, err := q.db.ExecContext(ctx, createProfile,
+		arg.ID,
+		arg.Slug,
+		arg.Kind,
+		arg.CustomDomain,
+		arg.ProfilePictureURI,
+		arg.Pronouns,
+		arg.Properties,
+	)
+	return err
+}
+
+const createProfileTx = `-- name: CreateProfileTx :exec
+INSERT INTO "profile_tx" (profile_id, locale_code, title, description, properties)
+VALUES ($1, $2, $3, $4, $5)
+`
+
+type CreateProfileTxParams struct {
+	ProfileID   string                `db:"profile_id" json:"profile_id"`
+	LocaleCode  string                `db:"locale_code" json:"locale_code"`
+	Title       string                `db:"title" json:"title"`
+	Description string                `db:"description" json:"description"`
+	Properties  pqtype.NullRawMessage `db:"properties" json:"properties"`
+}
+
+// CreateProfileTx
+//
+//	INSERT INTO "profile_tx" (profile_id, locale_code, title, description, properties)
+//	VALUES ($1, $2, $3, $4, $5)
+func (q *Queries) CreateProfileTx(ctx context.Context, arg CreateProfileTxParams) error {
+	_, err := q.db.ExecContext(ctx, createProfileTx,
+		arg.ProfileID,
+		arg.LocaleCode,
+		arg.Title,
+		arg.Description,
+		arg.Properties,
+	)
 	return err
 }
 

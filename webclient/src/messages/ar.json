@@ -21,7 +21,8 @@
     "Language": "لغة",
     "An error occurred": "حدث خطأ",
     "Page not found": "الصفحة غير موجودة",
-    "The page you are looking for does not exist. Please check your spelling and try again.": "الصفحة التي تبحث عنها غير موجودة. يرجى التحقق من صحة الكتابة وإعادة المحاولة."
+    "The page you are looking for does not exist. Please check your spelling and try again.": "الصفحة التي تبحث عنها غير موجودة. يرجى التحقق من صحة الكتابة وإعادة المحاولة.",
+    "Dismiss": "إخفاء"
   },
   "Loading": {
     "Loading...": "جاري التحميل...",
@@ -41,9 +42,15 @@
     "Localization": "التوطين"
   },
   "Auth": {
-    "login_with_github": "تسجيل الدخول بـ GitHub",
-    "profile": "ملفي الشخصي",
-    "logout": "تسجيل الخروج"
+    "Login with GitHub": "تسجيل الدخول بـ GitHub",
+    "My Profile": "ملفي الشخصي",
+    "Logout": "تسجيل الخروج",
+    "Authenticating...": "جاري المصادقة...",
+    "Please wait": "يرجى الانتظار",
+    "✓ Successfully logged in!": "✓ تم تسجيل الدخول بنجاح!",
+    "Redirecting to homepage...": "جاري التوجيه إلى الصفحة الرئيسية...",
+    "✗ Authentication failed": "✗ فشلت المصادقة",
+    "Return to Homepage": "العودة إلى الصفحة الرئيسية"
   },
   "Home": {
     "AYA the Open Source Network": "آيا شبكة المصدر المفتوح",

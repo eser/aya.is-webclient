@@ -226,9 +226,10 @@ func (s *Service) RefreshToken( //nolint:funlen
 		slog.String("session_id", claims.SessionID))
 
 	return &AuthResult{
-		User:      user,
-		SessionID: claims.SessionID,
-		JWT:       tokenString,
-		ExpiresAt: expiresAt,
+		User:        user,
+		SessionID:   claims.SessionID,
+		JWT:         tokenString,
+		ExpiresAt:   expiresAt,
+		RedirectURI: "",
 	}, nil
 }

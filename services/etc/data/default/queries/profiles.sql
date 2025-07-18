@@ -5,6 +5,13 @@ WHERE slug = sqlc.arg(slug)
   AND deleted_at IS NULL
 LIMIT 1;
 
+-- name: CheckProfileSlugExists :one
+SELECT EXISTS(
+  SELECT 1 FROM "profile"
+  WHERE slug = sqlc.arg(slug)
+    AND deleted_at IS NULL
+) AS exists;
+
 -- name: GetProfileIDByCustomDomain :one
 SELECT id
 FROM "profile"
@@ -30,8 +37,12 @@ WHERE (sqlc.narg(filter_kind)::TEXT IS NULL OR p.kind = ANY(string_to_array(sqlc
   AND p.deleted_at IS NULL;
 
 -- name: CreateProfile :exec
-INSERT INTO "profile" (id, slug)
-VALUES (sqlc.arg(id), sqlc.arg(slug));
+INSERT INTO "profile" (id, slug, kind, custom_domain, profile_picture_uri, pronouns, properties)
+VALUES (sqlc.arg(id), sqlc.arg(slug), sqlc.arg(kind), sqlc.narg(custom_domain), sqlc.narg(profile_picture_uri), sqlc.narg(pronouns), sqlc.narg(properties));
+
+-- name: CreateProfileTx :exec
+INSERT INTO "profile_tx" (profile_id, locale_code, title, description, properties)
+VALUES (sqlc.arg(profile_id), sqlc.arg(locale_code), sqlc.arg(title), sqlc.arg(description), sqlc.narg(properties));
 
 -- name: UpdateProfile :execrows
 UPDATE "profile"

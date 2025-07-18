@@ -20,7 +20,8 @@
     "Language": "Dil",
     "An error occurred": "Bir hata oluştu",
     "Page not found": "Sayfa bulunamadı",
-    "The page you are looking for does not exist. Please check your spelling and try again.": "Aradığınız sayfa mevcut değil. Lütfen yazımınızı kontrol ediniz ve tekrar deneyiniz."
+    "The page you are looking for does not exist. Please check your spelling and try again.": "Aradığınız sayfa mevcut değil. Lütfen yazımınızı kontrol ediniz ve tekrar deneyiniz.",
+    "Dismiss": "Kapat"
   },
   "Loading": {
     "Loading...": "Yükleniyor...",
@@ -40,9 +41,15 @@
     "Localization": "Yerelleştirme"
   },
   "Auth": {
-    "login_with_github": "GitHub ile Giriş",
-    "profile": "Profilim",
-    "logout": "Çıkış yap"
+    "Login with GitHub": "GitHub ile Giriş",
+    "My Profile": "Profilim",
+    "Logout": "Çıkış yap",
+    "Authenticating...": "Kimlik doğrulanıyor...",
+    "Please wait": "Lütfen bekleyin",
+    "✓ Successfully logged in!": "✓ Başarıyla giriş yapıldı!",
+    "Redirecting to homepage...": "Ana sayfaya yönlendiriliyorsunuz...",
+    "✗ Authentication failed": "✗ Kimlik doğrulama başarısız",
+    "Return to Homepage": "Ana Sayfaya Dön"
   },
   "Home": {
     "AYA the Open Source Network": "AYA, Açık Yazılım Ağı",

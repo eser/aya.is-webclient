@@ -19,16 +19,16 @@ interface ProfileMenuProps {
 }
 
 export function ProfileMenu({ className }: ProfileMenuProps) {
-  const { user, logout, isAuthenticated } = useAuth();
+  const { session, logout, isAuthenticated } = useAuth();
   const router = useRouter();
   const { t } = useTranslations();
 
-  if (!isAuthenticated || !user) {
+  if (!isAuthenticated || !session) {
     return null;
   }
 
   const handleProfileClick = () => {
-    router.push(`/${user.individual_profile?.slug}`);
+    router.push(`/${session.selected_profile?.slug}`);
   };
 
   const handleLogout = async () => {
@@ -36,9 +36,9 @@ export function ProfileMenu({ className }: ProfileMenuProps) {
   };
 
   // Determine avatar URL with priority: profile picture > GitHub avatar > fallback
-  const fallbackAvatarUrl = `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(user.name)}`;
-  const avatarUrl = user.individual_profile?.profile_picture_uri ||
-    (user.github_handle ? `https://github.com/${user.github_handle}.png?size=32` : null) ||
+  const fallbackAvatarUrl = `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(session.user?.name)}`;
+  const avatarUrl = session.selected_profile?.profile_picture_uri ||
+    (session.user?.github_handle ? `https://github.com/${session.user.github_handle}.png?size=32` : null) ||
     fallbackAvatarUrl;
 
   const [imageError, setImageError] = React.useState(false);
@@ -54,7 +54,7 @@ export function ProfileMenu({ className }: ProfileMenuProps) {
           <img
             className="h-8 w-8 rounded-full object-cover"
             src={imageError ? fallbackAvatarUrl : avatarUrl}
-            alt={user.name}
+            alt={session.user?.name}
             onError={handleImageError}
           />
         </Button>
@@ -63,21 +63,21 @@ export function ProfileMenu({ className }: ProfileMenuProps) {
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-medium leading-none">
-              {user.individual_profile?.title ?? user.name}
+              {session.selected_profile?.title ?? session.user?.name}
             </p>
             <p className="text-xs leading-none text-muted-foreground">
-              {user.individual_profile?.slug !== undefined ? `https://aya.is/${user.individual_profile.slug}` : ""}
+              {session.selected_profile?.slug !== undefined ? `https://aya.is/${session.selected_profile.slug}` : ""}
             </p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {user.individual_profile !== undefined && (
+        {session.selected_profile !== undefined && (
           <DropdownMenuItem onClick={handleProfileClick}>
-            {t("Auth", "profile")}
+            {t("Auth", "My Profile")}
           </DropdownMenuItem>
         )}
         <DropdownMenuItem onClick={handleLogout}>
-          {t("Auth", "logout")}
+          {t("Auth", "Logout")}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

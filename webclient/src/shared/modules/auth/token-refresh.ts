@@ -1,4 +1,4 @@
-import { getBackendUri } from "@/shared/config.ts";
+import { getBackendUri as _getBackendUri } from "@/shared/config.ts";
 import { refreshTokenRequest } from "@/shared/modules/backend/auth/refresh-token.ts";
 
 interface TokenRefreshResponse {
@@ -61,8 +61,8 @@ async function performTokenRefresh(): Promise<string | null> {
 export function clearAuthData() {
   if (globalThis.localStorage !== undefined) {
     localStorage.removeItem("auth_token");
-    localStorage.removeItem("auth_user");
     localStorage.removeItem("auth_token_expires_at");
+    localStorage.removeItem("auth_session");
   }
 }
 
@@ -95,4 +95,12 @@ export function getTokenExpirationTime(): number | null {
   }
 
   return parseInt(expiresAt);
+}
+
+export function getToken(): string | null {
+  if (globalThis.localStorage === undefined) {
+    return null;
+  }
+
+  return localStorage.getItem("auth_token");
 }

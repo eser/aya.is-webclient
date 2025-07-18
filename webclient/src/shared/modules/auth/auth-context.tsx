@@ -3,14 +3,13 @@
 import * as React from "react";
 import { useRouter } from "next/navigation";
 import { getBackendUri } from "@/shared/config.ts";
-import { getTokenExpirationTime, refreshToken, clearAuthData } from "./token-refresh.ts";
+import { clearAuthData, getTokenExpirationTime, refreshToken } from "./token-refresh.ts";
 import { useNavigationClient } from "@/shared/modules/navigation/use-navigation-client.tsx";
-import { getCurrentUser, type CurrentUserData } from "@/shared/modules/backend/users/get-current-user.ts";
-
-type User = CurrentUserData;
+import { getCurrentSession } from "@/shared/modules/backend/sessions/get-current-session.ts";
+import type { Session } from "@/shared/modules/backend/sessions/types.ts";
 
 interface AuthContextType {
-  user: User | null;
+  session: Session | null;
   token: string | null;
   isLoading: boolean;
   isAuthenticated: boolean;
@@ -26,7 +25,7 @@ const AuthContext = React.createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const { state } = useNavigationClient();
-  const [user, setUser] = React.useState<User | null>(null);
+  const [session, setSession] = React.useState<Session | null>(null);
   const [token, setToken] = React.useState<string | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
   const [authError, setAuthError] = React.useState<string | null>(null);
@@ -41,11 +40,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       try {
         const storedToken = localStorage.getItem("auth_token");
-        const storedUser = localStorage.getItem("auth_user");
+        const storedSession = localStorage.getItem("auth_session");
 
-        if (storedToken && storedUser) {
+        if (storedToken && storedSession) {
           setToken(storedToken);
-          setUser(JSON.parse(storedUser));
+          setSession(JSON.parse(storedSession));
         }
       } catch (error) {
         console.error("Failed to load auth state:", error);
@@ -83,21 +82,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (tokenParts.length === 3) {
           const payload = JSON.parse(atob(tokenParts[1]));
 
-          // Fetch user details from authenticated backend endpoint
+          // Fetch session details from authenticated backend endpoint
           const locale = state.locale.code;
-          const userData = await getCurrentUser(locale);
+          const sessionPayload = await getCurrentSession(locale);
 
-          if (userData !== null) {
-            localStorage.setItem("auth_user", JSON.stringify(userData));
-            setUser(userData);
-            console.log("✅ User state updated with:", userData);
+          if (sessionPayload !== null) {
+            localStorage.setItem("auth_session", JSON.stringify(sessionPayload));
+            setSession(sessionPayload);
+            console.log("✅ Session state updated with:", sessionPayload);
 
             // Store token expiration
             if (payload.exp) {
               localStorage.setItem("auth_token_expires_at", String(payload.exp * 1000));
             }
           } else {
-            console.log("❌ No user data received");
+            console.log("❌ No session payload received");
           }
         }
 
@@ -146,7 +145,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         // Failed to refresh, clear auth state
         clearAuthData();
-        setUser(null);
+        setSession(null);
         setToken(null);
         setAuthError("Your session has expired. Please log in again.");
 
@@ -175,7 +174,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
           // Failed to refresh, clear auth state
           clearAuthData();
-          setUser(null);
+          setSession(null);
           setToken(null);
           setAuthError("Your session has expired. Please log in again.");
         }, refreshTime);
@@ -198,7 +197,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const locale = state.locale.code;
 
     // Redirect to backend OAuth endpoint
-    const loginUrl = `${backendUri}/${locale}/auth/github/login${finalRedirectUri ? `?redirect_uri=${encodeURIComponent(finalRedirectUri)}` : ""}`;
+    const loginUrl = `${backendUri}/${locale}/auth/github/login${
+      finalRedirectUri ? `?redirect_uri=${encodeURIComponent(finalRedirectUri)}` : ""
+    }`;
     if (globalThis.location !== undefined) {
       globalThis.location.href = loginUrl;
     }
@@ -221,7 +222,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } finally {
       // Clear local state regardless of backend response
       clearAuthData();
-      setUser(null);
+      setSession(null);
       setToken(null);
       router.push("/");
     }
@@ -230,12 +231,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const refreshAuth = React.useCallback(() => {
     // Re-load auth state from localStorage
     const storedToken = localStorage.getItem("auth_token");
-    const storedUser = localStorage.getItem("auth_user");
+    const storedSession = localStorage.getItem("auth_session");
 
-    if (storedToken && storedUser) {
+    if (storedToken && storedSession) {
       try {
         setToken(storedToken);
-        setUser(JSON.parse(storedUser));
+        setSession(JSON.parse(storedSession));
       } catch (error) {
         console.error("Failed to refresh auth:", error);
       }
@@ -248,17 +249,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const value = React.useMemo(
     () => ({
-      user,
+      session,
       token,
       isLoading,
-      isAuthenticated: !!user && !!token,
+      isAuthenticated: !!session && !!token,
       authError,
       login,
       logout,
       refreshAuth,
       clearError,
     }),
-    [user, token, isLoading, authError, login, logout, refreshAuth, clearError]
+    [session, token, isLoading, authError, login, logout, refreshAuth, clearError],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

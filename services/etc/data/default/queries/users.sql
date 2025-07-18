@@ -77,6 +77,12 @@ SET kind = sqlc.arg(kind),
 WHERE id = sqlc.arg(id)
   AND deleted_at IS NULL;
 
+-- name: SetUserIndividualProfileID :execrows
+UPDATE "user"
+SET individual_profile_id = sqlc.arg(individual_profile_id)
+WHERE id = sqlc.arg(id)
+  AND deleted_at IS NULL;
+
 -- name: RemoveUser :execrows
 UPDATE "user"
 SET deleted_at = NOW()

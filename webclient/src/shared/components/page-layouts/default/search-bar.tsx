@@ -19,7 +19,7 @@ import {
   CommandSeparator,
   // CommandShortcut,
 } from "@/shared/components/ui/command.tsx";
-import { getBackendUri, siteConfig } from "@/shared/config.ts";
+import { getBackendUri as _getBackendUri, siteConfig } from "@/shared/config.ts";
 import { getNavItems } from "@/app/site.ts";
 
 type SearchBarProps = {

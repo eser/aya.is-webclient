@@ -23,9 +23,10 @@ type RecentPostsFetcher interface {
 	) ([]*ExternalPost, error)
 }
 
-type Repository interface {
+type Repository interface { //nolint:interfacebloat
 	GetProfileIDBySlug(ctx context.Context, slug string) (string, error)
 	GetProfileIDByCustomDomain(ctx context.Context, domain string) (*string, error)
+	CheckProfileSlugExists(ctx context.Context, slug string) (bool, error)
 	GetProfileByID(ctx context.Context, localeCode string, id string) (*Profile, error)
 	ListProfiles(
 		ctx context.Context,
@@ -68,7 +69,24 @@ type Repository interface {
 		localeCode string,
 		memberProfileID string,
 	) ([]*ProfileMembership, error)
-	// CreateProfile(ctx context.Context, arg CreateProfileParams) (*Profile, error)
+	CreateProfile(
+		ctx context.Context,
+		id string,
+		slug string,
+		kind string,
+		customDomain *string,
+		profilePictureURI *string,
+		pronouns *string,
+		properties map[string]any,
+	) error
+	CreateProfileTx(
+		ctx context.Context,
+		profileID string,
+		localeCode string,
+		title string,
+		description string,
+		properties map[string]any,
+	) error
 	// UpdateProfile(ctx context.Context, arg UpdateProfileParams) (int64, error)
 	// DeleteProfile(ctx context.Context, id string) (int64, error)
 }
@@ -344,6 +362,67 @@ func (s *Service) GetMembershipsByUserProfileID(
 	}
 
 	return memberships, nil
+}
+
+func (s *Service) CheckSlugExists(ctx context.Context, slug string) (bool, error) {
+	exists, err := s.repo.CheckProfileSlugExists(ctx, slug)
+	if err != nil {
+		return false, fmt.Errorf("%w(slug: %s): %w", ErrFailedToGetRecord, slug, err)
+	}
+
+	return exists, nil
+}
+
+func (s *Service) Create(
+	ctx context.Context,
+	localeCode string,
+	slug string,
+	kind string,
+	title string,
+	description string,
+	customDomain *string,
+	profilePictureURI *string,
+	pronouns *string,
+	properties map[string]any,
+) (*Profile, error) {
+	// Generate new profile ID
+	profileID := s.idGenerator()
+
+	// Create the main profile record
+	err := s.repo.CreateProfile(
+		ctx,
+		string(profileID),
+		slug,
+		kind,
+		customDomain,
+		profilePictureURI,
+		pronouns,
+		properties,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create profile: %w", err)
+	}
+
+	// Create the localized profile data
+	err = s.repo.CreateProfileTx(
+		ctx,
+		string(profileID),
+		localeCode,
+		title,
+		description,
+		nil, // No additional properties for profile_tx for now
+	)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create profile translation: %w", err)
+	}
+
+	// Fetch and return the created profile
+	profile, err := s.repo.GetProfileByID(ctx, localeCode, string(profileID))
+	if err != nil {
+		return nil, fmt.Errorf("failed to fetch created profile: %w", err)
+	}
+
+	return profile, nil
 }
 
 // func (s *Service) Create(ctx context.Context, input *Profile) (*Profile, error) {

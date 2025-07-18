@@ -12,8 +12,8 @@ import (
 )
 
 const (
-	AuthHeader                         = "Authorization"
-	ContextKeyUserID httpfx.ContextKey = "user_id"
+	AuthHeader                            = "Authorization"
+	ContextKeySessionID httpfx.ContextKey = "session_id"
 )
 
 func AuthMiddleware(authService *auth.Service, userService *users.Service) httpfx.Handler {
@@ -53,15 +53,13 @@ func AuthMiddleware(authService *auth.Service, userService *users.Service) httpf
 		// Update logged_in_at
 		_ = userService.UpdateSessionLoggedInAt(ctx.Request.Context(), sessionID, time.Now())
 
-		// Store user ID in context for route handlers
-		if session.LoggedInUserID != nil {
-			newContext := context.WithValue(
-				ctx.Request.Context(),
-				ContextKeyUserID,
-				*session.LoggedInUserID,
-			)
-			ctx.UpdateContext(newContext)
-		}
+		// Store session ID in context for route handlers
+		newContext := context.WithValue(
+			ctx.Request.Context(),
+			ContextKeySessionID,
+			sessionID,
+		)
+		ctx.UpdateContext(newContext)
 
 		result := ctx.Next()
 

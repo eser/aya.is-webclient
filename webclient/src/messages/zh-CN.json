@@ -20,7 +20,8 @@
     "Language": "语言",
     "An error occurred": "发生错误",
     "Page not found": "页面未找到",
-    "The page you are looking for does not exist. Please check your spelling and try again.": "您查找的页面不存在。请检查您的拼写并重试。"
+    "The page you are looking for does not exist. Please check your spelling and try again.": "您查找的页面不存在。请检查您的拼写并重试。",
+    "Dismiss": "关闭"
   },
   "Loading": {
     "Loading...": "加载中...",
@@ -40,9 +41,15 @@
     "Localization": "本地化"
   },
   "Auth": {
-    "login_with_github": "使用 GitHub 登录",
-    "profile": "我的资料",
-    "logout": "退出登录"
+    "Login with GitHub": "使用 GitHub 登录",
+    "My Profile": "我的资料",
+    "Logout": "退出登录",
+    "Authenticating...": "正在验证...",
+    "Please wait": "请稍候",
+    "✓ Successfully logged in!": "✓ 登录成功！",
+    "Redirecting to homepage...": "正在重定向到首页...",
+    "✗ Authentication failed": "✗ 身份验证失败",
+    "Return to Homepage": "返回首页"
   },
   "Home": {
     "AYA the Open Source Network": "AYA 开源网络",

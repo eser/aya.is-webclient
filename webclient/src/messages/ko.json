@@ -20,7 +20,8 @@
     "Language": "언어",
     "An error occurred": "오류가 발생했습니다.",
     "Page not found": "페이지를 찾을 수 없습니다.",
-    "The page you are looking for does not exist. Please check your spelling and try again.": "찾고있는 페이지가 존재하지 않습니다. 철자를 확인하고 다시 시도해주세요."
+    "The page you are looking for does not exist. Please check your spelling and try again.": "찾고있는 페이지가 존재하지 않습니다. 철자를 확인하고 다시 시도해주세요.",
+    "Dismiss": "닫기"
   },
   "Loading": {
     "Loading...": "로드 중...",
@@ -40,9 +41,15 @@
     "Localization": "현지화"
   },
   "Auth": {
-    "login_with_github": "GitHub로 로그인",
-    "profile": "내 프로필",
-    "logout": "로그아웃"
+    "Login with GitHub": "GitHub로 로그인",
+    "My Profile": "내 프로필",
+    "Logout": "로그아웃",
+    "Authenticating...": "인증 중...",
+    "Please wait": "잠시만 기다려 주세요",
+    "✓ Successfully logged in!": "✓ 로그인에 성공했습니다!",
+    "Redirecting to homepage...": "홈페이지로 리디렉션 중...",
+    "✗ Authentication failed": "✗ 인증에 실패했습니다",
+    "Return to Homepage": "홈페이지로 돌아가기"
   },
   "Home": {
     "AYA the Open Source Network": "AYA 오픈 소스 네트워크",

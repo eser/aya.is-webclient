@@ -20,7 +20,8 @@
     "Language": "言語",
     "An error occurred": "エラーが発生しました",
     "Page not found": "ページが見つかりません",
-    "The page you are looking for does not exist. Please check your spelling and try again.": "お探しのページは存在しません。ご確認の上、再度お試しください。"
+    "The page you are looking for does not exist. Please check your spelling and try again.": "お探しのページは存在しません。ご確認の上、再度お試しください。",
+    "Dismiss": "閉じる"
   },
   "Loading": {
     "Loading...": "読み込み中...",
@@ -40,9 +41,15 @@
     "Localization": "ローカリゼーション"
   },
   "Auth": {
-    "login_with_github": "GitHubでログイン",
-    "profile": "マイプロフィール",
-    "logout": "ログアウト"
+    "Login with GitHub": "GitHubでログイン",
+    "My Profile": "マイプロフィール",
+    "Logout": "ログアウト",
+    "Authenticating...": "認証中...",
+    "Please wait": "お待ちください",
+    "✓ Successfully logged in!": "✓ ログインに成功しました！",
+    "Redirecting to homepage...": "ホームページにリダイレクト中...",
+    "✗ Authentication failed": "✗ 認証に失敗しました",
+    "Return to Homepage": "ホームページに戻る"
   },
   "Home": {
     "AYA the Open Source Network": "AYA オープンソースネットワーク",

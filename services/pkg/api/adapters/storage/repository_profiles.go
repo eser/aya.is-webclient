@@ -35,6 +35,29 @@ func (r *Repository) GetProfileIDBySlug(ctx context.Context, slug string) (strin
 	return result, err //nolint:wrapcheck
 }
 
+func (r *Repository) CheckProfileSlugExists(ctx context.Context, slug string) (bool, error) {
+	var result bool
+
+	err := r.cache.Execute(
+		ctx,
+		"profile_slug_exists:"+slug,
+		&result,
+		func(ctx context.Context) (any, error) {
+			exists, err := r.queries.CheckProfileSlugExists(
+				ctx,
+				CheckProfileSlugExistsParams{Slug: slug},
+			)
+			if err != nil {
+				return nil, err
+			}
+
+			return exists, nil
+		},
+	)
+
+	return result, err //nolint:wrapcheck
+}
+
 func (r *Repository) GetProfileIDByCustomDomain(
 	ctx context.Context,
 	domain string,
@@ -421,4 +444,46 @@ func (r *Repository) GetProfileMembershipsByMemberProfileID(
 	}
 
 	return memberships, nil
+}
+
+func (r *Repository) CreateProfile(
+	ctx context.Context,
+	id string,
+	slug string,
+	kind string,
+	customDomain *string,
+	profilePictureURI *string,
+	pronouns *string,
+	properties map[string]any,
+) error {
+	params := CreateProfileParams{
+		ID:                id,
+		Slug:              slug,
+		Kind:              kind,
+		CustomDomain:      vars.ToSQLNullString(customDomain),
+		ProfilePictureURI: vars.ToSQLNullString(profilePictureURI),
+		Pronouns:          vars.ToSQLNullString(pronouns),
+		Properties:        vars.ToSQLNullRawMessage(properties),
+	}
+
+	return r.queries.CreateProfile(ctx, params)
+}
+
+func (r *Repository) CreateProfileTx(
+	ctx context.Context,
+	profileID string,
+	localeCode string,
+	title string,
+	description string,
+	properties map[string]any,
+) error {
+	params := CreateProfileTxParams{
+		ProfileID:   profileID,
+		LocaleCode:  localeCode,
+		Title:       title,
+		Description: description,
+		Properties:  vars.ToSQLNullRawMessage(properties),
+	}
+
+	return r.queries.CreateProfileTx(ctx, params)
 }

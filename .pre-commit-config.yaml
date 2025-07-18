@@ -108,6 +108,7 @@ repos:
             .pre-commit-config.yaml|
             LICENSE|
             Makefile|
+            CLAUDE.md|
             README.en.md|
             README.md
           )$

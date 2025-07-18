@@ -20,7 +20,8 @@
     "Language": "Язык",
     "An error occurred": "Произошла ошибка",
     "Page not found": "Страница не найдена",
-    "The page you are looking for does not exist. Please check your spelling and try again.": "Страница, которую вы ищете, не существует. Пожалуйста, проверьте правильность написания и попробуйте снова."
+    "The page you are looking for does not exist. Please check your spelling and try again.": "Страница, которую вы ищете, не существует. Пожалуйста, проверьте правильность написания и попробуйте снова.",
+    "Dismiss": "Отклонить"
   },
   "Loading": {
     "Loading...": "Загрузка...",
@@ -40,9 +41,15 @@
     "Localization": "Локализация"
   },
   "Auth": {
-    "login_with_github": "Войти через GitHub",
-    "profile": "Мой Профиль",
-    "logout": "Выйти"
+    "Login with GitHub": "Войти через GitHub",
+    "My Profile": "Мой Профиль",
+    "Logout": "Выйти",
+    "Authenticating...": "Аутентификация...",
+    "Please wait": "Пожалуйста, подождите",
+    "✓ Successfully logged in!": "✓ Успешный вход!",
+    "Redirecting to homepage...": "Перенаправление на главную страницу...",
+    "✗ Authentication failed": "✗ Ошибка аутентификации",
+    "Return to Homepage": "Вернуться на главную страницу"
   },
   "Home": {
     "AYA the Open Source Network": "AYA Сеть Открытого Исходного Кода",

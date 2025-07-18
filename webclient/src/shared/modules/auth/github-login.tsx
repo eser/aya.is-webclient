@@ -27,7 +27,7 @@ export function GitHubLogin({ redirectUri }: GitHubLoginProps) {
 
   return (
     <Button className={styles.button} onClick={handleLogin}>
-      <span>{t("Auth", "login_with_github")}</span>
+      <span>{t("Auth", "Login with GitHub")}</span>
     </Button>
   );
 }

@@ -20,7 +20,8 @@
     "Language": "Taal",
     "An error occurred": "Er is een fout opgetreden",
     "Page not found": "Pagina niet gevonden",
-    "The page you are looking for does not exist. Please check your spelling and try again.": "De pagina die u zoekt bestaat niet. Controleer uw spelling en probeer het opnieuw."
+    "The page you are looking for does not exist. Please check your spelling and try again.": "De pagina die u zoekt bestaat niet. Controleer uw spelling en probeer het opnieuw.",
+    "Dismiss": "Afwijzen"
   },
   "Loading": {
     "Loading...": "Laden...",
@@ -40,9 +41,15 @@
     "Localization": "Lokalisatie"
   },
   "Auth": {
-    "login_with_github": "Inloggen met GitHub",
-    "profile": "Mijn Profiel",
-    "logout": "Uitloggen"
+    "Login with GitHub": "Inloggen met GitHub",
+    "My Profile": "Mijn Profiel",
+    "Logout": "Uitloggen",
+    "Authenticating...": "Authenticeren...",
+    "Please wait": "Even geduld",
+    "✓ Successfully logged in!": "✓ Succesvol ingelogd!",
+    "Redirecting to homepage...": "Doorverwijzen naar startpagina...",
+    "✗ Authentication failed": "✗ Authenticatie mislukt",
+    "Return to Homepage": "Terug naar startpagina"
   },
   "Home": {
     "AYA the Open Source Network": "AYA het Open Source Netwerk",

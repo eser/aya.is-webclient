@@ -214,3 +214,23 @@ func (r *Repository) UpdateUser(
 
 	return nil
 }
+
+func (r *Repository) SetUserIndividualProfileID(
+	ctx context.Context,
+	userID string,
+	profileID string,
+) error {
+	rowsAffected, err := r.queries.SetUserIndividualProfileID(ctx, SetUserIndividualProfileIDParams{
+		ID:                  userID,
+		IndividualProfileID: sql.NullString{String: profileID, Valid: true},
+	})
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected == 0 {
+		return sql.ErrNoRows
+	}
+
+	return nil
+}

@@ -27,6 +27,7 @@ type Repository interface {
 	) (cursors.Cursored[[]*User], error)
 	CreateUser(ctx context.Context, user *User) error
 	UpdateUser(ctx context.Context, user *User) error
+	SetUserIndividualProfileID(ctx context.Context, userID string, profileID string) error
 
 	CreateSession(ctx context.Context, session *Session) error
 	GetSessionByID(ctx context.Context, id string) (*Session, error)
@@ -124,7 +125,7 @@ func (s *Service) UpdateSessionLoggedInAt(
 	return nil
 }
 
-func (s *Service) UpsertGitHubUser(
+func (s *Service) UpsertGitHubUser( //nolint:funlen
 	ctx context.Context,
 	githubRemoteID string,
 	email string,
@@ -192,13 +193,18 @@ func (s *Service) UpsertGitHubUser(
 
 	// User doesn't exist, create new one
 	newUser := &User{
-		ID:             string(s.idGenerator()),
-		Kind:           "regular",
-		Name:           name,
-		Email:          &email,
-		GithubHandle:   &githubHandle,
-		GithubRemoteID: &githubRemoteID,
-		CreatedAt:      time.Now(),
+		ID:                  string(s.idGenerator()),
+		Kind:                "regular",
+		Name:                name,
+		Email:               &email,
+		GithubHandle:        &githubHandle,
+		GithubRemoteID:      &githubRemoteID,
+		BskyHandle:          nil,
+		XHandle:             nil,
+		IndividualProfileID: nil,
+		CreatedAt:           time.Now(),
+		UpdatedAt:           nil,
+		DeletedAt:           nil,
 	}
 
 	err = s.repo.CreateUser(ctx, newUser)
@@ -207,4 +213,23 @@ func (s *Service) UpsertGitHubUser(
 	}
 
 	return newUser, nil
+}
+
+func (s *Service) SetIndividualProfileID(
+	ctx context.Context,
+	userID string,
+	profileID string,
+) error {
+	err := s.repo.SetUserIndividualProfileID(ctx, userID, profileID)
+	if err != nil {
+		return fmt.Errorf(
+			"%w(user_id: %s, profile_id: %s): %w",
+			ErrFailedToUpdateRecord,
+			userID,
+			profileID,
+			err,
+		)
+	}
+
+	return nil
 }

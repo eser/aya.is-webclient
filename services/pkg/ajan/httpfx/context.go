@@ -2,7 +2,15 @@ package httpfx
 
 import (
 	"context"
+	"encoding/json"
+	"errors"
+	"fmt"
 	"net/http"
+)
+
+var (
+	ErrRequestBodyNil    = errors.New("request body is nil")
+	ErrFailedToParseJSON = errors.New("failed to parse JSON body")
 )
 
 type ContextKey string
@@ -41,4 +49,21 @@ func (c *Context) Next() Result {
 
 func (c *Context) UpdateContext(ctx context.Context) {
 	c.Request = c.Request.WithContext(ctx)
+}
+
+func (c *Context) ParseJSONBody(target any) error {
+	if c.Request.Body == nil {
+		return ErrRequestBodyNil
+	}
+
+	defer c.Request.Body.Close()
+
+	decoder := json.NewDecoder(c.Request.Body)
+
+	err := decoder.Decode(target)
+	if err != nil {
+		return fmt.Errorf("%w: %w", ErrFailedToParseJSON, err)
+	}
+
+	return nil
 }

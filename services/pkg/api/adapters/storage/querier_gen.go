@@ -9,11 +9,24 @@ import (
 )
 
 type Querier interface {
+	//CheckProfileSlugExists
+	//
+	//  SELECT EXISTS(
+	//    SELECT 1 FROM "profile"
+	//    WHERE slug = $1
+	//      AND deleted_at IS NULL
+	//  ) AS exists
+	CheckProfileSlugExists(ctx context.Context, arg CheckProfileSlugExistsParams) (bool, error)
 	//CreateProfile
 	//
-	//  INSERT INTO "profile" (id, slug)
-	//  VALUES ($1, $2)
+	//  INSERT INTO "profile" (id, slug, kind, custom_domain, profile_picture_uri, pronouns, properties)
+	//  VALUES ($1, $2, $3, $4, $5, $6, $7)
 	CreateProfile(ctx context.Context, arg CreateProfileParams) error
+	//CreateProfileTx
+	//
+	//  INSERT INTO "profile_tx" (profile_id, locale_code, title, description, properties)
+	//  VALUES ($1, $2, $3, $4, $5)
+	CreateProfileTx(ctx context.Context, arg CreateProfileTxParams) error
 	//CreateSession
 	//
 	//  INSERT INTO
@@ -385,6 +398,13 @@ type Querier interface {
 	//  VALUES ($1, $2, NOW())
 	//  ON CONFLICT ("key") DO UPDATE SET value = $2, updated_at = NOW()
 	SetInCache(ctx context.Context, arg SetInCacheParams) (int64, error)
+	//SetUserIndividualProfileID
+	//
+	//  UPDATE "user"
+	//  SET individual_profile_id = $1
+	//  WHERE id = $2
+	//    AND deleted_at IS NULL
+	SetUserIndividualProfileID(ctx context.Context, arg SetUserIndividualProfileIDParams) (int64, error)
 	//UpdateProfile
 	//
 	//  UPDATE "profile"

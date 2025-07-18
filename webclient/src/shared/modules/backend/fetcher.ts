@@ -33,31 +33,42 @@ export async function fetcher<T>(relativePath: string): Promise<T | null> {
     headers,
   });
 
-  // If unauthorized, try to refresh token and retry once
-  if (request.status === 401 && authToken) {
-    const newToken = await refreshToken();
+  // Handle authentication errors
+  if (request.status === 401 || request.status === 405) {
+    // If we have a token, try to refresh it and retry
+    if (authToken) {
+      const newToken = await refreshToken();
 
-    if (newToken !== null) {
-      headers["Authorization"] = `Bearer ${newToken}`;
+      if (newToken !== null) {
+        headers["Authorization"] = `Bearer ${newToken}`;
 
-      const retryRequest = await fetch(targetUrl, { headers });
+        const retryRequest = await fetch(targetUrl, { headers });
 
-      if (retryRequest.status === 404) {
-        return null;
+        if (retryRequest.status === 404) {
+          return null;
+        }
+
+        if (retryRequest.status === 401 || retryRequest.status === 405) {
+          // Still unauthorized after refresh, return null for unauthenticated state
+          return null;
+        }
+
+        if (retryRequest.status >= 500) {
+          throw new Error(`Internal server error: ${retryRequest.status}`);
+        }
+
+        const retryResult = (await retryRequest.json()) as Result<T>;
+
+        if (retryResult.error !== undefined && retryResult.error !== null) {
+          throw new Error(retryResult.error);
+        }
+
+        return retryResult.data;
       }
-
-      if (retryRequest.status >= 500) {
-        throw new Error(`Internal server error: ${retryRequest.status}`);
-      }
-
-      const retryResult = (await retryRequest.json()) as Result<T>;
-
-      if (retryResult.error !== undefined && retryResult.error !== null) {
-        throw new Error(retryResult.error);
-      }
-
-      return retryResult.data;
     }
+
+    // No token or refresh failed - return null for unauthenticated state
+    return null;
   }
 
   if (request.status === 404) {

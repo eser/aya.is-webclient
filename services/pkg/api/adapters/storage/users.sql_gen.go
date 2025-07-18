@@ -330,6 +330,32 @@ func (q *Queries) RemoveUser(ctx context.Context, arg RemoveUserParams) (int64, 
 	return result.RowsAffected()
 }
 
+const setUserIndividualProfileID = `-- name: SetUserIndividualProfileID :execrows
+UPDATE "user"
+SET individual_profile_id = $1
+WHERE id = $2
+  AND deleted_at IS NULL
+`
+
+type SetUserIndividualProfileIDParams struct {
+	IndividualProfileID sql.NullString `db:"individual_profile_id" json:"individual_profile_id"`
+	ID                  string         `db:"id" json:"id"`
+}
+
+// SetUserIndividualProfileID
+//
+//	UPDATE "user"
+//	SET individual_profile_id = $1
+//	WHERE id = $2
+//	  AND deleted_at IS NULL
+func (q *Queries) SetUserIndividualProfileID(ctx context.Context, arg SetUserIndividualProfileIDParams) (int64, error) {
+	result, err := q.db.ExecContext(ctx, setUserIndividualProfileID, arg.IndividualProfileID, arg.ID)
+	if err != nil {
+		return 0, err
+	}
+	return result.RowsAffected()
+}
+
 const updateUser = `-- name: UpdateUser :execrows
 UPDATE "user"
 SET kind = $1,
