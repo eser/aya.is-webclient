@@ -9,7 +9,8 @@ CREATE TABLE IF NOT EXISTS "profile" (
   "properties" JSONB,
   "created_at" TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
   "updated_at" TIMESTAMP WITH TIME ZONE,
-  "deleted_at" TIMESTAMP WITH TIME ZONE
+  "deleted_at" TIMESTAMP WITH TIME ZONE,
+  "approved_at" TIMESTAMP WITH TIME ZONE
 );
 
 CREATE TABLE IF NOT EXISTS "profile_tx" (

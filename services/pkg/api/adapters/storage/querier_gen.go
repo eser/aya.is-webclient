@@ -22,6 +22,84 @@ type Querier interface {
 	//  INSERT INTO "profile" (id, slug, kind, custom_domain, profile_picture_uri, pronouns, properties)
 	//  VALUES ($1, $2, $3, $4, $5, $6, $7)
 	CreateProfile(ctx context.Context, arg CreateProfileParams) error
+	//CreateProfileLink
+	//
+	//  INSERT INTO "profile_link" (
+	//    id,
+	//    kind,
+	//    profile_id,
+	//    "order",
+	//    is_managed,
+	//    is_verified,
+	//    is_hidden,
+	//    remote_id,
+	//    public_id,
+	//    uri,
+	//    title,
+	//    auth_provider,
+	//    auth_access_token_scope,
+	//    auth_access_token,
+	//    auth_access_token_expires_at,
+	//    auth_refresh_token,
+	//    auth_refresh_token_expires_at,
+	//    created_at
+	//  ) VALUES (
+	//    $1,
+	//    $2,
+	//    $3,
+	//    $4,
+	//    $5,
+	//    $6,
+	//    $7,
+	//    $8,
+	//    $9,
+	//    $10,
+	//    $11,
+	//    $12,
+	//    $13,
+	//    $14,
+	//    $15,
+	//    $16,
+	//    $17,
+	//    NOW()
+	//  ) RETURNING id, profile_id, kind, "order", is_managed, is_verified, is_hidden, remote_id, public_id, uri, title, auth_provider, auth_access_token_scope, auth_access_token, auth_access_token_expires_at, auth_refresh_token, auth_refresh_token_expires_at, properties, created_at, updated_at, deleted_at
+	CreateProfileLink(ctx context.Context, arg CreateProfileLinkParams) (*ProfileLink, error)
+	//CreateProfilePage
+	//
+	//  INSERT INTO "profile_page" (
+	//    id,
+	//    slug,
+	//    profile_id,
+	//    "order",
+	//    cover_picture_uri,
+	//    published_at,
+	//    created_at
+	//  ) VALUES (
+	//    $1,
+	//    $2,
+	//    $3,
+	//    $4,
+	//    $5,
+	//    $6,
+	//    NOW()
+	//  ) RETURNING id, profile_id, slug, "order", cover_picture_uri, published_at, created_at, updated_at, deleted_at
+	CreateProfilePage(ctx context.Context, arg CreateProfilePageParams) (*ProfilePage, error)
+	//CreateProfilePageTx
+	//
+	//  INSERT INTO "profile_page_tx" (
+	//    profile_page_id,
+	//    locale_code,
+	//    title,
+	//    summary,
+	//    content
+	//  ) VALUES (
+	//    $1,
+	//    $2,
+	//    $3,
+	//    $4,
+	//    $5
+	//  )
+	CreateProfilePageTx(ctx context.Context, arg CreateProfilePageTxParams) error
 	//CreateProfileTx
 	//
 	//  INSERT INTO "profile_tx" (profile_id, locale_code, title, description, properties)
@@ -93,6 +171,20 @@ type Querier interface {
 	//      $15
 	//    )
 	CreateUser(ctx context.Context, arg CreateUserParams) error
+	//DeleteProfileLink
+	//
+	//  UPDATE "profile_link"
+	//  SET deleted_at = NOW()
+	//  WHERE id = $1
+	//    AND deleted_at IS NULL
+	DeleteProfileLink(ctx context.Context, arg DeleteProfileLinkParams) (int64, error)
+	//DeleteProfilePage
+	//
+	//  UPDATE "profile_page"
+	//  SET deleted_at = NOW()
+	//  WHERE id = $1
+	//    AND deleted_at IS NULL
+	DeleteProfilePage(ctx context.Context, arg DeleteProfilePageParams) (int64, error)
 	//GetFromCache
 	//
 	//  SELECT value, updated_at
@@ -110,7 +202,7 @@ type Querier interface {
 	GetFromCacheSince(ctx context.Context, arg GetFromCacheSinceParams) (*GetFromCacheSinceRow, error)
 	//GetProfileByID
 	//
-	//  SELECT p.id, p.slug, p.kind, p.custom_domain, p.profile_picture_uri, p.pronouns, p.properties, p.created_at, p.updated_at, p.deleted_at, pt.profile_id, pt.locale_code, pt.title, pt.description, pt.properties
+	//  SELECT p.id, p.slug, p.kind, p.custom_domain, p.profile_picture_uri, p.pronouns, p.properties, p.created_at, p.updated_at, p.deleted_at, p.approved_at, pt.profile_id, pt.locale_code, pt.title, pt.description, pt.properties
 	//  FROM "profile" p
 	//    INNER JOIN "profile_tx" pt ON pt.profile_id = p.id
 	//    AND pt.locale_code = $1
@@ -134,6 +226,13 @@ type Querier interface {
 	//    AND deleted_at IS NULL
 	//  LIMIT 1
 	GetProfileIDBySlug(ctx context.Context, arg GetProfileIDBySlugParams) (string, error)
+	//GetProfileLink
+	//
+	//  SELECT id, profile_id, kind, "order", is_managed, is_verified, is_hidden, remote_id, public_id, uri, title, auth_provider, auth_access_token_scope, auth_access_token, auth_access_token_expires_at, auth_refresh_token, auth_refresh_token_expires_at, properties, created_at, updated_at, deleted_at
+	//  FROM "profile_link"
+	//  WHERE id = $1
+	//    AND deleted_at IS NULL
+	GetProfileLink(ctx context.Context, arg GetProfileLinkParams) (*ProfileLink, error)
 	//GetProfileMembershipsByMemberProfileID
 	//
 	//  SELECT
@@ -143,11 +242,12 @@ type Querier interface {
 	//    pm.finished_at,
 	//    pm.properties as membership_properties,
 	//    pm.created_at as membership_created_at,
-	//    p.id, p.slug, p.kind, p.custom_domain, p.profile_picture_uri, p.pronouns, p.properties, p.created_at, p.updated_at, p.deleted_at,
+	//    p.id, p.slug, p.kind, p.custom_domain, p.profile_picture_uri, p.pronouns, p.properties, p.created_at, p.updated_at, p.deleted_at, p.approved_at,
 	//    pt.profile_id, pt.locale_code, pt.title, pt.description, pt.properties
 	//  FROM
 	//    "profile_membership" pm
 	//    INNER JOIN "profile" p ON p.id = pm.profile_id
+	//      AND p.approved_at IS NOT NULL
 	//      AND p.deleted_at IS NULL
 	//    INNER JOIN "profile_tx" pt ON pt.profile_id = p.id
 	//      AND pt.locale_code = $1
@@ -157,6 +257,37 @@ type Querier interface {
 	//    AND (pm.finished_at IS NULL OR pm.finished_at > NOW())
 	//  ORDER BY pm.created_at DESC
 	GetProfileMembershipsByMemberProfileID(ctx context.Context, arg GetProfileMembershipsByMemberProfileIDParams) ([]*GetProfileMembershipsByMemberProfileIDRow, error)
+	//GetProfileOwnershipForUser
+	//
+	//  SELECT
+	//    p.id,
+	//    p.slug,
+	//    p.kind as profile_kind,
+	//    u.kind as user_kind,
+	//    CASE
+	//      WHEN u.kind = 'admin' THEN true
+	//      WHEN p.kind = 'individual' AND u.individual_profile_id = p.id THEN true
+	//      WHEN pm.kind IN ('owner', 'lead') THEN true
+	//      ELSE false
+	//    END as can_edit
+	//  FROM "profile" p
+	//  LEFT JOIN "profile_membership" pm ON p.id = pm.profile_id
+	//    AND pm.deleted_at IS NULL
+	//    AND (pm.finished_at IS NULL OR pm.finished_at > NOW())
+	//  LEFT JOIN "profile" up ON pm.member_profile_id = up.id AND up.deleted_at IS NULL
+	//  LEFT JOIN "user" u ON up.id = u.individual_profile_id
+	//  WHERE u.id = $1
+	//    AND p.slug = $2
+	//    AND p.deleted_at IS NULL
+	//  LIMIT 1
+	GetProfileOwnershipForUser(ctx context.Context, arg GetProfileOwnershipForUserParams) (*GetProfileOwnershipForUserRow, error)
+	//GetProfilePage
+	//
+	//  SELECT id, profile_id, slug, "order", cover_picture_uri, published_at, created_at, updated_at, deleted_at
+	//  FROM "profile_page"
+	//  WHERE id = $1
+	//    AND deleted_at IS NULL
+	GetProfilePage(ctx context.Context, arg GetProfilePageParams) (*ProfilePage, error)
 	//GetProfilePageByProfileIDAndSlug
 	//
 	//  SELECT pp.id, pp.profile_id, pp.slug, pp."order", pp.cover_picture_uri, pp.published_at, pp.created_at, pp.updated_at, pp.deleted_at, ppt.profile_page_id, ppt.locale_code, ppt.title, ppt.summary, ppt.content
@@ -166,6 +297,12 @@ type Querier interface {
 	//  WHERE pp.profile_id = $2 AND pp.slug = $3 AND pp.deleted_at IS NULL
 	//  ORDER BY pp."order"
 	GetProfilePageByProfileIDAndSlug(ctx context.Context, arg GetProfilePageByProfileIDAndSlugParams) (*GetProfilePageByProfileIDAndSlugRow, error)
+	//GetProfileTxByID
+	//
+	//  SELECT pt.profile_id, pt.locale_code, pt.title, pt.description, pt.properties
+	//  FROM "profile_tx" pt
+	//  WHERE pt.profile_id = $1
+	GetProfileTxByID(ctx context.Context, arg GetProfileTxByIDParams) ([]*GetProfileTxByIDRow, error)
 	//GetSessionByID
 	//
 	//  SELECT
@@ -189,13 +326,14 @@ type Querier interface {
 	//  SELECT
 	//    s.id, s.author_profile_id, s.slug, s.kind, s.status, s.is_featured, s.story_picture_uri, s.properties, s.created_at, s.updated_at, s.deleted_at,
 	//    st.story_id, st.locale_code, st.title, st.summary, st.content,
-	//    p.id, p.slug, p.kind, p.custom_domain, p.profile_picture_uri, p.pronouns, p.properties, p.created_at, p.updated_at, p.deleted_at,
+	//    p.id, p.slug, p.kind, p.custom_domain, p.profile_picture_uri, p.pronouns, p.properties, p.created_at, p.updated_at, p.deleted_at, p.approved_at,
 	//    pt.profile_id, pt.locale_code, pt.title, pt.description, pt.properties,
 	//    pb.publications
 	//  FROM "story" s
 	//    INNER JOIN "story_tx" st ON st.story_id = s.id
 	//    AND st.locale_code = $1
 	//    LEFT JOIN "profile" p ON p.id = s.author_profile_id
+	//    AND p.approved_at IS NOT NULL
 	//    AND p.deleted_at IS NULL
 	//    INNER JOIN "profile_tx" pt ON pt.profile_id = p.id
 	//    AND pt.locale_code = $1
@@ -249,6 +387,22 @@ type Querier interface {
 	//    AND deleted_at IS NULL
 	//  LIMIT 1
 	GetUserByID(ctx context.Context, arg GetUserByIDParams) (*User, error)
+	//GetUserProfilePermissions
+	//
+	//  SELECT
+	//    p.id,
+	//    p.slug,
+	//    p.kind as profile_kind,
+	//    COALESCE(pm.kind, '') as membership_kind,
+	//    u.kind as user_kind
+	//  FROM "profile" p
+	//  LEFT JOIN "profile_membership" pm ON p.id = pm.profile_id AND pm.deleted_at IS NULL
+	//  LEFT JOIN "profile" up ON pm.member_profile_id = up.id AND up.deleted_at IS NULL
+	//  LEFT JOIN "user" u ON up.id = u.individual_profile_id
+	//  WHERE u.id = $1
+	//    AND p.deleted_at IS NULL
+	//    AND (pm.finished_at IS NULL OR pm.finished_at > NOW())
+	GetUserProfilePermissions(ctx context.Context, arg GetUserProfilePermissionsParams) ([]*GetUserProfilePermissionsRow, error)
 	//ListProfileLinksByProfileID
 	//
 	//  SELECT id, profile_id, kind, "order", is_managed, is_verified, is_hidden, remote_id, public_id, uri, title, auth_provider, auth_access_token_scope, auth_access_token, auth_access_token_expires_at, auth_refresh_token, auth_refresh_token_expires_at, properties, created_at, updated_at, deleted_at
@@ -272,19 +426,21 @@ type Querier interface {
 	//
 	//  SELECT
 	//    pm.id, pm.profile_id, pm.member_profile_id, pm.kind, pm.properties, pm.started_at, pm.finished_at, pm.created_at, pm.updated_at, pm.deleted_at,
-	//    p1.id, p1.slug, p1.kind, p1.custom_domain, p1.profile_picture_uri, p1.pronouns, p1.properties, p1.created_at, p1.updated_at, p1.deleted_at,
+	//    p1.id, p1.slug, p1.kind, p1.custom_domain, p1.profile_picture_uri, p1.pronouns, p1.properties, p1.created_at, p1.updated_at, p1.deleted_at, p1.approved_at,
 	//    p1t.profile_id, p1t.locale_code, p1t.title, p1t.description, p1t.properties,
-	//    p2.id, p2.slug, p2.kind, p2.custom_domain, p2.profile_picture_uri, p2.pronouns, p2.properties, p2.created_at, p2.updated_at, p2.deleted_at,
+	//    p2.id, p2.slug, p2.kind, p2.custom_domain, p2.profile_picture_uri, p2.pronouns, p2.properties, p2.created_at, p2.updated_at, p2.deleted_at, p2.approved_at,
 	//    p2t.profile_id, p2t.locale_code, p2t.title, p2t.description, p2t.properties
 	//  FROM
 	//  	"profile_membership" pm
 	//    INNER JOIN "profile" p1 ON p1.id = pm.profile_id
 	//      AND ($1::TEXT IS NULL OR p1.kind = ANY(string_to_array($1::TEXT, ',')))
+	//      AND p1.approved_at IS NOT NULL
 	//      AND p1.deleted_at IS NULL
 	//    INNER JOIN "profile_tx" p1t ON p1t.profile_id = p1.id
 	//  	  AND p1t.locale_code = $2
 	//    INNER JOIN "profile" p2 ON p2.id = pm.member_profile_id
 	//      AND ($3::TEXT IS NULL OR p2.kind = ANY(string_to_array($3::TEXT, ',')))
+	//      AND p2.approved_at IS NOT NULL
 	//      AND p2.deleted_at IS NULL
 	//    INNER JOIN "profile_tx" p2t ON p2t.profile_id = p2.id
 	//  	  AND p2t.locale_code = $2
@@ -304,11 +460,12 @@ type Querier interface {
 	ListProfilePagesByProfileID(ctx context.Context, arg ListProfilePagesByProfileIDParams) ([]*ListProfilePagesByProfileIDRow, error)
 	//ListProfiles
 	//
-	//  SELECT p.id, p.slug, p.kind, p.custom_domain, p.profile_picture_uri, p.pronouns, p.properties, p.created_at, p.updated_at, p.deleted_at, pt.profile_id, pt.locale_code, pt.title, pt.description, pt.properties
+	//  SELECT p.id, p.slug, p.kind, p.custom_domain, p.profile_picture_uri, p.pronouns, p.properties, p.created_at, p.updated_at, p.deleted_at, p.approved_at, pt.profile_id, pt.locale_code, pt.title, pt.description, pt.properties
 	//  FROM "profile" p
 	//    INNER JOIN "profile_tx" pt ON pt.profile_id = p.id
 	//    AND pt.locale_code = $1
 	//  WHERE ($2::TEXT IS NULL OR p.kind = ANY(string_to_array($2::TEXT, ',')))
+	//    AND p.approved_at IS NOT NULL
 	//    AND p.deleted_at IS NULL
 	ListProfiles(ctx context.Context, arg ListProfilesParams) ([]*ListProfilesRow, error)
 	// -- name: ListStories :many
@@ -327,13 +484,14 @@ type Querier interface {
 	//  SELECT
 	//    s.id, s.author_profile_id, s.slug, s.kind, s.status, s.is_featured, s.story_picture_uri, s.properties, s.created_at, s.updated_at, s.deleted_at,
 	//    st.story_id, st.locale_code, st.title, st.summary, st.content,
-	//    p1.id, p1.slug, p1.kind, p1.custom_domain, p1.profile_picture_uri, p1.pronouns, p1.properties, p1.created_at, p1.updated_at, p1.deleted_at,
+	//    p1.id, p1.slug, p1.kind, p1.custom_domain, p1.profile_picture_uri, p1.pronouns, p1.properties, p1.created_at, p1.updated_at, p1.deleted_at, p1.approved_at,
 	//    p1t.profile_id, p1t.locale_code, p1t.title, p1t.description, p1t.properties,
 	//    pb.publications
 	//  FROM "story" s
 	//    INNER JOIN "story_tx" st ON st.story_id = s.id
 	//    AND st.locale_code = $1
 	//    LEFT JOIN "profile" p1 ON p1.id = s.author_profile_id
+	//    AND p1.approved_at IS NOT NULL
 	//    AND p1.deleted_at IS NULL
 	//    INNER JOIN "profile_tx" p1t ON p1t.profile_id = p1.id
 	//    AND p1t.locale_code = $1
@@ -343,6 +501,7 @@ type Querier interface {
 	//      ) AS "publications"
 	//      FROM story_publication sp
 	//        INNER JOIN "profile" p2 ON p2.id = sp.profile_id
+	//        AND p2.approved_at IS NOT NULL
 	//        AND p2.deleted_at IS NULL
 	//        INNER JOIN "profile_tx" p2t ON p2t.profile_id = p2.id
 	//        AND p2t.locale_code = $1
@@ -408,10 +567,59 @@ type Querier interface {
 	//UpdateProfile
 	//
 	//  UPDATE "profile"
-	//  SET slug = $1
-	//  WHERE id = $2
+	//  SET
+	//    profile_picture_uri = $1,
+	//    pronouns = $2,
+	//    properties = $3,
+	//    updated_at = NOW()
+	//  WHERE id = $4
 	//    AND deleted_at IS NULL
 	UpdateProfile(ctx context.Context, arg UpdateProfileParams) (int64, error)
+	//UpdateProfileLink
+	//
+	//  UPDATE "profile_link"
+	//  SET
+	//    kind = $1,
+	//    "order" = $2,
+	//    uri = $3,
+	//    title = $4,
+	//    is_hidden = $5,
+	//    updated_at = NOW()
+	//  WHERE id = $6
+	//    AND deleted_at IS NULL
+	UpdateProfileLink(ctx context.Context, arg UpdateProfileLinkParams) (int64, error)
+	//UpdateProfilePage
+	//
+	//  UPDATE "profile_page"
+	//  SET
+	//    slug = $1,
+	//    "order" = $2,
+	//    cover_picture_uri = $3,
+	//    published_at = $4,
+	//    updated_at = NOW()
+	//  WHERE id = $5
+	//    AND deleted_at IS NULL
+	UpdateProfilePage(ctx context.Context, arg UpdateProfilePageParams) (int64, error)
+	//UpdateProfilePageTx
+	//
+	//  UPDATE "profile_page_tx"
+	//  SET
+	//    title = $1,
+	//    summary = $2,
+	//    content = $3
+	//  WHERE profile_page_id = $4
+	//    AND locale_code = $5
+	UpdateProfilePageTx(ctx context.Context, arg UpdateProfilePageTxParams) (int64, error)
+	//UpdateProfileTx
+	//
+	//  UPDATE "profile_tx"
+	//  SET
+	//    title = $1,
+	//    description = $2,
+	//    properties = $3
+	//  WHERE profile_id = $4
+	//    AND locale_code = $5
+	UpdateProfileTx(ctx context.Context, arg UpdateProfileTxParams) (int64, error)
 	//UpdateSessionLoggedInAt
 	//
 	//  UPDATE
@@ -439,6 +647,35 @@ type Querier interface {
 	//  WHERE id = $12
 	//    AND deleted_at IS NULL
 	UpdateUser(ctx context.Context, arg UpdateUserParams) (int64, error)
+	//UpsertProfilePageTx
+	//
+	//  INSERT INTO "profile_page_tx" (
+	//    profile_page_id,
+	//    locale_code,
+	//    title,
+	//    summary,
+	//    content
+	//  ) VALUES (
+	//    $1,
+	//    $2,
+	//    $3,
+	//    $4,
+	//    $5
+	//  ) ON CONFLICT (profile_page_id, locale_code) DO UPDATE SET
+	//    title = EXCLUDED.title,
+	//    summary = EXCLUDED.summary,
+	//    content = EXCLUDED.content
+	UpsertProfilePageTx(ctx context.Context, arg UpsertProfilePageTxParams) error
+	//UpsertProfileTx
+	//
+	//  INSERT INTO "profile_tx" (profile_id, locale_code, title, description, properties)
+	//  VALUES ($1, $2, $3, $4, $5)
+	//  ON CONFLICT (profile_id, locale_code)
+	//  DO UPDATE SET
+	//    title = EXCLUDED.title,
+	//    description = EXCLUDED.description,
+	//    properties = EXCLUDED.properties
+	UpsertProfileTx(ctx context.Context, arg UpsertProfileTxParams) error
 }
 
 var _ Querier = (*Queries)(nil)

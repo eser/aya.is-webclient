@@ -15,13 +15,14 @@ const getStoryByID = `-- name: GetStoryByID :one
 SELECT
   s.id, s.author_profile_id, s.slug, s.kind, s.status, s.is_featured, s.story_picture_uri, s.properties, s.created_at, s.updated_at, s.deleted_at,
   st.story_id, st.locale_code, st.title, st.summary, st.content,
-  p.id, p.slug, p.kind, p.custom_domain, p.profile_picture_uri, p.pronouns, p.properties, p.created_at, p.updated_at, p.deleted_at,
+  p.id, p.slug, p.kind, p.custom_domain, p.profile_picture_uri, p.pronouns, p.properties, p.created_at, p.updated_at, p.deleted_at, p.approved_at,
   pt.profile_id, pt.locale_code, pt.title, pt.description, pt.properties,
   pb.publications
 FROM "story" s
   INNER JOIN "story_tx" st ON st.story_id = s.id
   AND st.locale_code = $1
   LEFT JOIN "profile" p ON p.id = s.author_profile_id
+  AND p.approved_at IS NOT NULL
   AND p.deleted_at IS NULL
   INNER JOIN "profile_tx" pt ON pt.profile_id = p.id
   AND pt.locale_code = $1
@@ -64,13 +65,14 @@ type GetStoryByIDRow struct {
 //	SELECT
 //	  s.id, s.author_profile_id, s.slug, s.kind, s.status, s.is_featured, s.story_picture_uri, s.properties, s.created_at, s.updated_at, s.deleted_at,
 //	  st.story_id, st.locale_code, st.title, st.summary, st.content,
-//	  p.id, p.slug, p.kind, p.custom_domain, p.profile_picture_uri, p.pronouns, p.properties, p.created_at, p.updated_at, p.deleted_at,
+//	  p.id, p.slug, p.kind, p.custom_domain, p.profile_picture_uri, p.pronouns, p.properties, p.created_at, p.updated_at, p.deleted_at, p.approved_at,
 //	  pt.profile_id, pt.locale_code, pt.title, pt.description, pt.properties,
 //	  pb.publications
 //	FROM "story" s
 //	  INNER JOIN "story_tx" st ON st.story_id = s.id
 //	  AND st.locale_code = $1
 //	  LEFT JOIN "profile" p ON p.id = s.author_profile_id
+//	  AND p.approved_at IS NOT NULL
 //	  AND p.deleted_at IS NULL
 //	  INNER JOIN "profile_tx" pt ON pt.profile_id = p.id
 //	  AND pt.locale_code = $1
@@ -126,6 +128,7 @@ func (q *Queries) GetStoryByID(ctx context.Context, arg GetStoryByIDParams) (*Ge
 		&i.Profile.CreatedAt,
 		&i.Profile.UpdatedAt,
 		&i.Profile.DeletedAt,
+		&i.Profile.ApprovedAt,
 		&i.ProfileTx.ProfileID,
 		&i.ProfileTx.LocaleCode,
 		&i.ProfileTx.Title,
@@ -167,13 +170,14 @@ const listStoriesOfPublication = `-- name: ListStoriesOfPublication :many
 SELECT
   s.id, s.author_profile_id, s.slug, s.kind, s.status, s.is_featured, s.story_picture_uri, s.properties, s.created_at, s.updated_at, s.deleted_at,
   st.story_id, st.locale_code, st.title, st.summary, st.content,
-  p1.id, p1.slug, p1.kind, p1.custom_domain, p1.profile_picture_uri, p1.pronouns, p1.properties, p1.created_at, p1.updated_at, p1.deleted_at,
+  p1.id, p1.slug, p1.kind, p1.custom_domain, p1.profile_picture_uri, p1.pronouns, p1.properties, p1.created_at, p1.updated_at, p1.deleted_at, p1.approved_at,
   p1t.profile_id, p1t.locale_code, p1t.title, p1t.description, p1t.properties,
   pb.publications
 FROM "story" s
   INNER JOIN "story_tx" st ON st.story_id = s.id
   AND st.locale_code = $1
   LEFT JOIN "profile" p1 ON p1.id = s.author_profile_id
+  AND p1.approved_at IS NOT NULL
   AND p1.deleted_at IS NULL
   INNER JOIN "profile_tx" p1t ON p1t.profile_id = p1.id
   AND p1t.locale_code = $1
@@ -183,6 +187,7 @@ FROM "story" s
     ) AS "publications"
     FROM story_publication sp
       INNER JOIN "profile" p2 ON p2.id = sp.profile_id
+      AND p2.approved_at IS NOT NULL
       AND p2.deleted_at IS NULL
       INNER JOIN "profile_tx" p2t ON p2t.profile_id = p2.id
       AND p2t.locale_code = $1
@@ -230,13 +235,14 @@ type ListStoriesOfPublicationRow struct {
 //	SELECT
 //	  s.id, s.author_profile_id, s.slug, s.kind, s.status, s.is_featured, s.story_picture_uri, s.properties, s.created_at, s.updated_at, s.deleted_at,
 //	  st.story_id, st.locale_code, st.title, st.summary, st.content,
-//	  p1.id, p1.slug, p1.kind, p1.custom_domain, p1.profile_picture_uri, p1.pronouns, p1.properties, p1.created_at, p1.updated_at, p1.deleted_at,
+//	  p1.id, p1.slug, p1.kind, p1.custom_domain, p1.profile_picture_uri, p1.pronouns, p1.properties, p1.created_at, p1.updated_at, p1.deleted_at, p1.approved_at,
 //	  p1t.profile_id, p1t.locale_code, p1t.title, p1t.description, p1t.properties,
 //	  pb.publications
 //	FROM "story" s
 //	  INNER JOIN "story_tx" st ON st.story_id = s.id
 //	  AND st.locale_code = $1
 //	  LEFT JOIN "profile" p1 ON p1.id = s.author_profile_id
+//	  AND p1.approved_at IS NOT NULL
 //	  AND p1.deleted_at IS NULL
 //	  INNER JOIN "profile_tx" p1t ON p1t.profile_id = p1.id
 //	  AND p1t.locale_code = $1
@@ -246,6 +252,7 @@ type ListStoriesOfPublicationRow struct {
 //	    ) AS "publications"
 //	    FROM story_publication sp
 //	      INNER JOIN "profile" p2 ON p2.id = sp.profile_id
+//	      AND p2.approved_at IS NOT NULL
 //	      AND p2.deleted_at IS NULL
 //	      INNER JOIN "profile_tx" p2t ON p2t.profile_id = p2.id
 //	      AND p2t.locale_code = $1
@@ -300,6 +307,7 @@ func (q *Queries) ListStoriesOfPublication(ctx context.Context, arg ListStoriesO
 			&i.Profile.CreatedAt,
 			&i.Profile.UpdatedAt,
 			&i.Profile.DeletedAt,
+			&i.Profile.ApprovedAt,
 			&i.ProfileTx.ProfileID,
 			&i.ProfileTx.LocaleCode,
 			&i.ProfileTx.Title,

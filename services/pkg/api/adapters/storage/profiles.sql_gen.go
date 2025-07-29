@@ -71,6 +71,278 @@ func (q *Queries) CreateProfile(ctx context.Context, arg CreateProfileParams) er
 	return err
 }
 
+const createProfileLink = `-- name: CreateProfileLink :one
+INSERT INTO "profile_link" (
+  id,
+  kind,
+  profile_id,
+  "order",
+  is_managed,
+  is_verified,
+  is_hidden,
+  remote_id,
+  public_id,
+  uri,
+  title,
+  auth_provider,
+  auth_access_token_scope,
+  auth_access_token,
+  auth_access_token_expires_at,
+  auth_refresh_token,
+  auth_refresh_token_expires_at,
+  created_at
+) VALUES (
+  $1,
+  $2,
+  $3,
+  $4,
+  $5,
+  $6,
+  $7,
+  $8,
+  $9,
+  $10,
+  $11,
+  $12,
+  $13,
+  $14,
+  $15,
+  $16,
+  $17,
+  NOW()
+) RETURNING id, profile_id, kind, "order", is_managed, is_verified, is_hidden, remote_id, public_id, uri, title, auth_provider, auth_access_token_scope, auth_access_token, auth_access_token_expires_at, auth_refresh_token, auth_refresh_token_expires_at, properties, created_at, updated_at, deleted_at
+`
+
+type CreateProfileLinkParams struct {
+	ID                        string         `db:"id" json:"id"`
+	Kind                      string         `db:"kind" json:"kind"`
+	ProfileID                 string         `db:"profile_id" json:"profile_id"`
+	LinkOrder                 int32          `db:"link_order" json:"link_order"`
+	IsManaged                 bool           `db:"is_managed" json:"is_managed"`
+	IsVerified                bool           `db:"is_verified" json:"is_verified"`
+	IsHidden                  bool           `db:"is_hidden" json:"is_hidden"`
+	RemoteID                  sql.NullString `db:"remote_id" json:"remote_id"`
+	PublicID                  sql.NullString `db:"public_id" json:"public_id"`
+	URI                       sql.NullString `db:"uri" json:"uri"`
+	Title                     string         `db:"title" json:"title"`
+	AuthProvider              sql.NullString `db:"auth_provider" json:"auth_provider"`
+	AuthAccessTokenScope      sql.NullString `db:"auth_access_token_scope" json:"auth_access_token_scope"`
+	AuthAccessToken           sql.NullString `db:"auth_access_token" json:"auth_access_token"`
+	AuthAccessTokenExpiresAt  sql.NullTime   `db:"auth_access_token_expires_at" json:"auth_access_token_expires_at"`
+	AuthRefreshToken          sql.NullString `db:"auth_refresh_token" json:"auth_refresh_token"`
+	AuthRefreshTokenExpiresAt sql.NullTime   `db:"auth_refresh_token_expires_at" json:"auth_refresh_token_expires_at"`
+}
+
+// CreateProfileLink
+//
+//	INSERT INTO "profile_link" (
+//	  id,
+//	  kind,
+//	  profile_id,
+//	  "order",
+//	  is_managed,
+//	  is_verified,
+//	  is_hidden,
+//	  remote_id,
+//	  public_id,
+//	  uri,
+//	  title,
+//	  auth_provider,
+//	  auth_access_token_scope,
+//	  auth_access_token,
+//	  auth_access_token_expires_at,
+//	  auth_refresh_token,
+//	  auth_refresh_token_expires_at,
+//	  created_at
+//	) VALUES (
+//	  $1,
+//	  $2,
+//	  $3,
+//	  $4,
+//	  $5,
+//	  $6,
+//	  $7,
+//	  $8,
+//	  $9,
+//	  $10,
+//	  $11,
+//	  $12,
+//	  $13,
+//	  $14,
+//	  $15,
+//	  $16,
+//	  $17,
+//	  NOW()
+//	) RETURNING id, profile_id, kind, "order", is_managed, is_verified, is_hidden, remote_id, public_id, uri, title, auth_provider, auth_access_token_scope, auth_access_token, auth_access_token_expires_at, auth_refresh_token, auth_refresh_token_expires_at, properties, created_at, updated_at, deleted_at
+func (q *Queries) CreateProfileLink(ctx context.Context, arg CreateProfileLinkParams) (*ProfileLink, error) {
+	row := q.db.QueryRowContext(ctx, createProfileLink,
+		arg.ID,
+		arg.Kind,
+		arg.ProfileID,
+		arg.LinkOrder,
+		arg.IsManaged,
+		arg.IsVerified,
+		arg.IsHidden,
+		arg.RemoteID,
+		arg.PublicID,
+		arg.URI,
+		arg.Title,
+		arg.AuthProvider,
+		arg.AuthAccessTokenScope,
+		arg.AuthAccessToken,
+		arg.AuthAccessTokenExpiresAt,
+		arg.AuthRefreshToken,
+		arg.AuthRefreshTokenExpiresAt,
+	)
+	var i ProfileLink
+	err := row.Scan(
+		&i.ID,
+		&i.ProfileID,
+		&i.Kind,
+		&i.Order,
+		&i.IsManaged,
+		&i.IsVerified,
+		&i.IsHidden,
+		&i.RemoteID,
+		&i.PublicID,
+		&i.URI,
+		&i.Title,
+		&i.AuthProvider,
+		&i.AuthAccessTokenScope,
+		&i.AuthAccessToken,
+		&i.AuthAccessTokenExpiresAt,
+		&i.AuthRefreshToken,
+		&i.AuthRefreshTokenExpiresAt,
+		&i.Properties,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.DeletedAt,
+	)
+	return &i, err
+}
+
+const createProfilePage = `-- name: CreateProfilePage :one
+INSERT INTO "profile_page" (
+  id,
+  slug,
+  profile_id,
+  "order",
+  cover_picture_uri,
+  published_at,
+  created_at
+) VALUES (
+  $1,
+  $2,
+  $3,
+  $4,
+  $5,
+  $6,
+  NOW()
+) RETURNING id, profile_id, slug, "order", cover_picture_uri, published_at, created_at, updated_at, deleted_at
+`
+
+type CreateProfilePageParams struct {
+	ID              string         `db:"id" json:"id"`
+	Slug            string         `db:"slug" json:"slug"`
+	ProfileID       string         `db:"profile_id" json:"profile_id"`
+	PageOrder       int32          `db:"page_order" json:"page_order"`
+	CoverPictureURI sql.NullString `db:"cover_picture_uri" json:"cover_picture_uri"`
+	PublishedAt     sql.NullTime   `db:"published_at" json:"published_at"`
+}
+
+// CreateProfilePage
+//
+//	INSERT INTO "profile_page" (
+//	  id,
+//	  slug,
+//	  profile_id,
+//	  "order",
+//	  cover_picture_uri,
+//	  published_at,
+//	  created_at
+//	) VALUES (
+//	  $1,
+//	  $2,
+//	  $3,
+//	  $4,
+//	  $5,
+//	  $6,
+//	  NOW()
+//	) RETURNING id, profile_id, slug, "order", cover_picture_uri, published_at, created_at, updated_at, deleted_at
+func (q *Queries) CreateProfilePage(ctx context.Context, arg CreateProfilePageParams) (*ProfilePage, error) {
+	row := q.db.QueryRowContext(ctx, createProfilePage,
+		arg.ID,
+		arg.Slug,
+		arg.ProfileID,
+		arg.PageOrder,
+		arg.CoverPictureURI,
+		arg.PublishedAt,
+	)
+	var i ProfilePage
+	err := row.Scan(
+		&i.ID,
+		&i.ProfileID,
+		&i.Slug,
+		&i.Order,
+		&i.CoverPictureURI,
+		&i.PublishedAt,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.DeletedAt,
+	)
+	return &i, err
+}
+
+const createProfilePageTx = `-- name: CreateProfilePageTx :exec
+INSERT INTO "profile_page_tx" (
+  profile_page_id,
+  locale_code,
+  title,
+  summary,
+  content
+) VALUES (
+  $1,
+  $2,
+  $3,
+  $4,
+  $5
+)
+`
+
+type CreateProfilePageTxParams struct {
+	ProfilePageID string `db:"profile_page_id" json:"profile_page_id"`
+	LocaleCode    string `db:"locale_code" json:"locale_code"`
+	Title         string `db:"title" json:"title"`
+	Summary       string `db:"summary" json:"summary"`
+	Content       string `db:"content" json:"content"`
+}
+
+// CreateProfilePageTx
+//
+//	INSERT INTO "profile_page_tx" (
+//	  profile_page_id,
+//	  locale_code,
+//	  title,
+//	  summary,
+//	  content
+//	) VALUES (
+//	  $1,
+//	  $2,
+//	  $3,
+//	  $4,
+//	  $5
+//	)
+func (q *Queries) CreateProfilePageTx(ctx context.Context, arg CreateProfilePageTxParams) error {
+	_, err := q.db.ExecContext(ctx, createProfilePageTx,
+		arg.ProfilePageID,
+		arg.LocaleCode,
+		arg.Title,
+		arg.Summary,
+		arg.Content,
+	)
+	return err
+}
+
 const createProfileTx = `-- name: CreateProfileTx :exec
 INSERT INTO "profile_tx" (profile_id, locale_code, title, description, properties)
 VALUES ($1, $2, $3, $4, $5)
@@ -99,8 +371,58 @@ func (q *Queries) CreateProfileTx(ctx context.Context, arg CreateProfileTxParams
 	return err
 }
 
+const deleteProfileLink = `-- name: DeleteProfileLink :execrows
+UPDATE "profile_link"
+SET deleted_at = NOW()
+WHERE id = $1
+  AND deleted_at IS NULL
+`
+
+type DeleteProfileLinkParams struct {
+	ID string `db:"id" json:"id"`
+}
+
+// DeleteProfileLink
+//
+//	UPDATE "profile_link"
+//	SET deleted_at = NOW()
+//	WHERE id = $1
+//	  AND deleted_at IS NULL
+func (q *Queries) DeleteProfileLink(ctx context.Context, arg DeleteProfileLinkParams) (int64, error) {
+	result, err := q.db.ExecContext(ctx, deleteProfileLink, arg.ID)
+	if err != nil {
+		return 0, err
+	}
+	return result.RowsAffected()
+}
+
+const deleteProfilePage = `-- name: DeleteProfilePage :execrows
+UPDATE "profile_page"
+SET deleted_at = NOW()
+WHERE id = $1
+  AND deleted_at IS NULL
+`
+
+type DeleteProfilePageParams struct {
+	ID string `db:"id" json:"id"`
+}
+
+// DeleteProfilePage
+//
+//	UPDATE "profile_page"
+//	SET deleted_at = NOW()
+//	WHERE id = $1
+//	  AND deleted_at IS NULL
+func (q *Queries) DeleteProfilePage(ctx context.Context, arg DeleteProfilePageParams) (int64, error) {
+	result, err := q.db.ExecContext(ctx, deleteProfilePage, arg.ID)
+	if err != nil {
+		return 0, err
+	}
+	return result.RowsAffected()
+}
+
 const getProfileByID = `-- name: GetProfileByID :one
-SELECT p.id, p.slug, p.kind, p.custom_domain, p.profile_picture_uri, p.pronouns, p.properties, p.created_at, p.updated_at, p.deleted_at, pt.profile_id, pt.locale_code, pt.title, pt.description, pt.properties
+SELECT p.id, p.slug, p.kind, p.custom_domain, p.profile_picture_uri, p.pronouns, p.properties, p.created_at, p.updated_at, p.deleted_at, p.approved_at, pt.profile_id, pt.locale_code, pt.title, pt.description, pt.properties
 FROM "profile" p
   INNER JOIN "profile_tx" pt ON pt.profile_id = p.id
   AND pt.locale_code = $1
@@ -121,7 +443,7 @@ type GetProfileByIDRow struct {
 
 // GetProfileByID
 //
-//	SELECT p.id, p.slug, p.kind, p.custom_domain, p.profile_picture_uri, p.pronouns, p.properties, p.created_at, p.updated_at, p.deleted_at, pt.profile_id, pt.locale_code, pt.title, pt.description, pt.properties
+//	SELECT p.id, p.slug, p.kind, p.custom_domain, p.profile_picture_uri, p.pronouns, p.properties, p.created_at, p.updated_at, p.deleted_at, p.approved_at, pt.profile_id, pt.locale_code, pt.title, pt.description, pt.properties
 //	FROM "profile" p
 //	  INNER JOIN "profile_tx" pt ON pt.profile_id = p.id
 //	  AND pt.locale_code = $1
@@ -142,6 +464,7 @@ func (q *Queries) GetProfileByID(ctx context.Context, arg GetProfileByIDParams) 
 		&i.Profile.CreatedAt,
 		&i.Profile.UpdatedAt,
 		&i.Profile.DeletedAt,
+		&i.Profile.ApprovedAt,
 		&i.ProfileTx.ProfileID,
 		&i.ProfileTx.LocaleCode,
 		&i.ProfileTx.Title,
@@ -203,6 +526,52 @@ func (q *Queries) GetProfileIDBySlug(ctx context.Context, arg GetProfileIDBySlug
 	return id, err
 }
 
+const getProfileLink = `-- name: GetProfileLink :one
+SELECT id, profile_id, kind, "order", is_managed, is_verified, is_hidden, remote_id, public_id, uri, title, auth_provider, auth_access_token_scope, auth_access_token, auth_access_token_expires_at, auth_refresh_token, auth_refresh_token_expires_at, properties, created_at, updated_at, deleted_at
+FROM "profile_link"
+WHERE id = $1
+  AND deleted_at IS NULL
+`
+
+type GetProfileLinkParams struct {
+	ID string `db:"id" json:"id"`
+}
+
+// GetProfileLink
+//
+//	SELECT id, profile_id, kind, "order", is_managed, is_verified, is_hidden, remote_id, public_id, uri, title, auth_provider, auth_access_token_scope, auth_access_token, auth_access_token_expires_at, auth_refresh_token, auth_refresh_token_expires_at, properties, created_at, updated_at, deleted_at
+//	FROM "profile_link"
+//	WHERE id = $1
+//	  AND deleted_at IS NULL
+func (q *Queries) GetProfileLink(ctx context.Context, arg GetProfileLinkParams) (*ProfileLink, error) {
+	row := q.db.QueryRowContext(ctx, getProfileLink, arg.ID)
+	var i ProfileLink
+	err := row.Scan(
+		&i.ID,
+		&i.ProfileID,
+		&i.Kind,
+		&i.Order,
+		&i.IsManaged,
+		&i.IsVerified,
+		&i.IsHidden,
+		&i.RemoteID,
+		&i.PublicID,
+		&i.URI,
+		&i.Title,
+		&i.AuthProvider,
+		&i.AuthAccessTokenScope,
+		&i.AuthAccessToken,
+		&i.AuthAccessTokenExpiresAt,
+		&i.AuthRefreshToken,
+		&i.AuthRefreshTokenExpiresAt,
+		&i.Properties,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.DeletedAt,
+	)
+	return &i, err
+}
+
 const getProfileMembershipsByMemberProfileID = `-- name: GetProfileMembershipsByMemberProfileID :many
 SELECT
   pm.id as membership_id,
@@ -211,11 +580,12 @@ SELECT
   pm.finished_at,
   pm.properties as membership_properties,
   pm.created_at as membership_created_at,
-  p.id, p.slug, p.kind, p.custom_domain, p.profile_picture_uri, p.pronouns, p.properties, p.created_at, p.updated_at, p.deleted_at,
+  p.id, p.slug, p.kind, p.custom_domain, p.profile_picture_uri, p.pronouns, p.properties, p.created_at, p.updated_at, p.deleted_at, p.approved_at,
   pt.profile_id, pt.locale_code, pt.title, pt.description, pt.properties
 FROM
   "profile_membership" pm
   INNER JOIN "profile" p ON p.id = pm.profile_id
+    AND p.approved_at IS NOT NULL
     AND p.deleted_at IS NULL
   INNER JOIN "profile_tx" pt ON pt.profile_id = p.id
     AND pt.locale_code = $1
@@ -251,11 +621,12 @@ type GetProfileMembershipsByMemberProfileIDRow struct {
 //	  pm.finished_at,
 //	  pm.properties as membership_properties,
 //	  pm.created_at as membership_created_at,
-//	  p.id, p.slug, p.kind, p.custom_domain, p.profile_picture_uri, p.pronouns, p.properties, p.created_at, p.updated_at, p.deleted_at,
+//	  p.id, p.slug, p.kind, p.custom_domain, p.profile_picture_uri, p.pronouns, p.properties, p.created_at, p.updated_at, p.deleted_at, p.approved_at,
 //	  pt.profile_id, pt.locale_code, pt.title, pt.description, pt.properties
 //	FROM
 //	  "profile_membership" pm
 //	  INNER JOIN "profile" p ON p.id = pm.profile_id
+//	    AND p.approved_at IS NOT NULL
 //	    AND p.deleted_at IS NULL
 //	  INNER JOIN "profile_tx" pt ON pt.profile_id = p.id
 //	    AND pt.locale_code = $1
@@ -290,6 +661,7 @@ func (q *Queries) GetProfileMembershipsByMemberProfileID(ctx context.Context, ar
 			&i.Profile.CreatedAt,
 			&i.Profile.UpdatedAt,
 			&i.Profile.DeletedAt,
+			&i.Profile.ApprovedAt,
 			&i.ProfileTx.ProfileID,
 			&i.ProfileTx.LocaleCode,
 			&i.ProfileTx.Title,
@@ -307,6 +679,113 @@ func (q *Queries) GetProfileMembershipsByMemberProfileID(ctx context.Context, ar
 		return nil, err
 	}
 	return items, nil
+}
+
+const getProfileOwnershipForUser = `-- name: GetProfileOwnershipForUser :one
+SELECT
+  p.id,
+  p.slug,
+  p.kind as profile_kind,
+  u.kind as user_kind,
+  CASE
+    WHEN u.kind = 'admin' THEN true
+    WHEN p.kind = 'individual' AND u.individual_profile_id = p.id THEN true
+    WHEN pm.kind IN ('owner', 'lead') THEN true
+    ELSE false
+  END as can_edit
+FROM "profile" p
+LEFT JOIN "profile_membership" pm ON p.id = pm.profile_id
+  AND pm.deleted_at IS NULL
+  AND (pm.finished_at IS NULL OR pm.finished_at > NOW())
+LEFT JOIN "profile" up ON pm.member_profile_id = up.id AND up.deleted_at IS NULL
+LEFT JOIN "user" u ON up.id = u.individual_profile_id
+WHERE u.id = $1
+  AND p.slug = $2
+  AND p.deleted_at IS NULL
+LIMIT 1
+`
+
+type GetProfileOwnershipForUserParams struct {
+	UserID      string `db:"user_id" json:"user_id"`
+	ProfileSlug string `db:"profile_slug" json:"profile_slug"`
+}
+
+type GetProfileOwnershipForUserRow struct {
+	ID          string         `db:"id" json:"id"`
+	Slug        string         `db:"slug" json:"slug"`
+	ProfileKind string         `db:"profile_kind" json:"profile_kind"`
+	UserKind    sql.NullString `db:"user_kind" json:"user_kind"`
+	CanEdit     bool           `db:"can_edit" json:"can_edit"`
+}
+
+// GetProfileOwnershipForUser
+//
+//	SELECT
+//	  p.id,
+//	  p.slug,
+//	  p.kind as profile_kind,
+//	  u.kind as user_kind,
+//	  CASE
+//	    WHEN u.kind = 'admin' THEN true
+//	    WHEN p.kind = 'individual' AND u.individual_profile_id = p.id THEN true
+//	    WHEN pm.kind IN ('owner', 'lead') THEN true
+//	    ELSE false
+//	  END as can_edit
+//	FROM "profile" p
+//	LEFT JOIN "profile_membership" pm ON p.id = pm.profile_id
+//	  AND pm.deleted_at IS NULL
+//	  AND (pm.finished_at IS NULL OR pm.finished_at > NOW())
+//	LEFT JOIN "profile" up ON pm.member_profile_id = up.id AND up.deleted_at IS NULL
+//	LEFT JOIN "user" u ON up.id = u.individual_profile_id
+//	WHERE u.id = $1
+//	  AND p.slug = $2
+//	  AND p.deleted_at IS NULL
+//	LIMIT 1
+func (q *Queries) GetProfileOwnershipForUser(ctx context.Context, arg GetProfileOwnershipForUserParams) (*GetProfileOwnershipForUserRow, error) {
+	row := q.db.QueryRowContext(ctx, getProfileOwnershipForUser, arg.UserID, arg.ProfileSlug)
+	var i GetProfileOwnershipForUserRow
+	err := row.Scan(
+		&i.ID,
+		&i.Slug,
+		&i.ProfileKind,
+		&i.UserKind,
+		&i.CanEdit,
+	)
+	return &i, err
+}
+
+const getProfilePage = `-- name: GetProfilePage :one
+SELECT id, profile_id, slug, "order", cover_picture_uri, published_at, created_at, updated_at, deleted_at
+FROM "profile_page"
+WHERE id = $1
+  AND deleted_at IS NULL
+`
+
+type GetProfilePageParams struct {
+	ID string `db:"id" json:"id"`
+}
+
+// GetProfilePage
+//
+//	SELECT id, profile_id, slug, "order", cover_picture_uri, published_at, created_at, updated_at, deleted_at
+//	FROM "profile_page"
+//	WHERE id = $1
+//	  AND deleted_at IS NULL
+func (q *Queries) GetProfilePage(ctx context.Context, arg GetProfilePageParams) (*ProfilePage, error) {
+	row := q.db.QueryRowContext(ctx, getProfilePage, arg.ID)
+	var i ProfilePage
+	err := row.Scan(
+		&i.ID,
+		&i.ProfileID,
+		&i.Slug,
+		&i.Order,
+		&i.CoverPictureURI,
+		&i.PublishedAt,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.DeletedAt,
+	)
+	return &i, err
 }
 
 const getProfilePageByProfileIDAndSlug = `-- name: GetProfilePageByProfileIDAndSlug :one
@@ -369,6 +848,126 @@ func (q *Queries) GetProfilePageByProfileIDAndSlug(ctx context.Context, arg GetP
 		&i.Content,
 	)
 	return &i, err
+}
+
+const getProfileTxByID = `-- name: GetProfileTxByID :many
+SELECT pt.profile_id, pt.locale_code, pt.title, pt.description, pt.properties
+FROM "profile_tx" pt
+WHERE pt.profile_id = $1
+`
+
+type GetProfileTxByIDParams struct {
+	ID string `db:"id" json:"id"`
+}
+
+type GetProfileTxByIDRow struct {
+	ProfileTx ProfileTx `db:"profile_tx" json:"profile_tx"`
+}
+
+// GetProfileTxByID
+//
+//	SELECT pt.profile_id, pt.locale_code, pt.title, pt.description, pt.properties
+//	FROM "profile_tx" pt
+//	WHERE pt.profile_id = $1
+func (q *Queries) GetProfileTxByID(ctx context.Context, arg GetProfileTxByIDParams) ([]*GetProfileTxByIDRow, error) {
+	rows, err := q.db.QueryContext(ctx, getProfileTxByID, arg.ID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []*GetProfileTxByIDRow{}
+	for rows.Next() {
+		var i GetProfileTxByIDRow
+		if err := rows.Scan(
+			&i.ProfileTx.ProfileID,
+			&i.ProfileTx.LocaleCode,
+			&i.ProfileTx.Title,
+			&i.ProfileTx.Description,
+			&i.ProfileTx.Properties,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, &i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getUserProfilePermissions = `-- name: GetUserProfilePermissions :many
+SELECT
+  p.id,
+  p.slug,
+  p.kind as profile_kind,
+  COALESCE(pm.kind, '') as membership_kind,
+  u.kind as user_kind
+FROM "profile" p
+LEFT JOIN "profile_membership" pm ON p.id = pm.profile_id AND pm.deleted_at IS NULL
+LEFT JOIN "profile" up ON pm.member_profile_id = up.id AND up.deleted_at IS NULL
+LEFT JOIN "user" u ON up.id = u.individual_profile_id
+WHERE u.id = $1
+  AND p.deleted_at IS NULL
+  AND (pm.finished_at IS NULL OR pm.finished_at > NOW())
+`
+
+type GetUserProfilePermissionsParams struct {
+	UserID string `db:"user_id" json:"user_id"`
+}
+
+type GetUserProfilePermissionsRow struct {
+	ID             string         `db:"id" json:"id"`
+	Slug           string         `db:"slug" json:"slug"`
+	ProfileKind    string         `db:"profile_kind" json:"profile_kind"`
+	MembershipKind string         `db:"membership_kind" json:"membership_kind"`
+	UserKind       sql.NullString `db:"user_kind" json:"user_kind"`
+}
+
+// GetUserProfilePermissions
+//
+//	SELECT
+//	  p.id,
+//	  p.slug,
+//	  p.kind as profile_kind,
+//	  COALESCE(pm.kind, '') as membership_kind,
+//	  u.kind as user_kind
+//	FROM "profile" p
+//	LEFT JOIN "profile_membership" pm ON p.id = pm.profile_id AND pm.deleted_at IS NULL
+//	LEFT JOIN "profile" up ON pm.member_profile_id = up.id AND up.deleted_at IS NULL
+//	LEFT JOIN "user" u ON up.id = u.individual_profile_id
+//	WHERE u.id = $1
+//	  AND p.deleted_at IS NULL
+//	  AND (pm.finished_at IS NULL OR pm.finished_at > NOW())
+func (q *Queries) GetUserProfilePermissions(ctx context.Context, arg GetUserProfilePermissionsParams) ([]*GetUserProfilePermissionsRow, error) {
+	rows, err := q.db.QueryContext(ctx, getUserProfilePermissions, arg.UserID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []*GetUserProfilePermissionsRow{}
+	for rows.Next() {
+		var i GetUserProfilePermissionsRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.Slug,
+			&i.ProfileKind,
+			&i.MembershipKind,
+			&i.UserKind,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, &i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }
 
 const listProfileLinksByProfileID = `-- name: ListProfileLinksByProfileID :many
@@ -508,19 +1107,21 @@ func (q *Queries) ListProfileLinksForKind(ctx context.Context, arg ListProfileLi
 const listProfileMemberships = `-- name: ListProfileMemberships :many
 SELECT
   pm.id, pm.profile_id, pm.member_profile_id, pm.kind, pm.properties, pm.started_at, pm.finished_at, pm.created_at, pm.updated_at, pm.deleted_at,
-  p1.id, p1.slug, p1.kind, p1.custom_domain, p1.profile_picture_uri, p1.pronouns, p1.properties, p1.created_at, p1.updated_at, p1.deleted_at,
+  p1.id, p1.slug, p1.kind, p1.custom_domain, p1.profile_picture_uri, p1.pronouns, p1.properties, p1.created_at, p1.updated_at, p1.deleted_at, p1.approved_at,
   p1t.profile_id, p1t.locale_code, p1t.title, p1t.description, p1t.properties,
-  p2.id, p2.slug, p2.kind, p2.custom_domain, p2.profile_picture_uri, p2.pronouns, p2.properties, p2.created_at, p2.updated_at, p2.deleted_at,
+  p2.id, p2.slug, p2.kind, p2.custom_domain, p2.profile_picture_uri, p2.pronouns, p2.properties, p2.created_at, p2.updated_at, p2.deleted_at, p2.approved_at,
   p2t.profile_id, p2t.locale_code, p2t.title, p2t.description, p2t.properties
 FROM
 	"profile_membership" pm
   INNER JOIN "profile" p1 ON p1.id = pm.profile_id
     AND ($1::TEXT IS NULL OR p1.kind = ANY(string_to_array($1::TEXT, ',')))
+    AND p1.approved_at IS NOT NULL
     AND p1.deleted_at IS NULL
   INNER JOIN "profile_tx" p1t ON p1t.profile_id = p1.id
 	  AND p1t.locale_code = $2
   INNER JOIN "profile" p2 ON p2.id = pm.member_profile_id
     AND ($3::TEXT IS NULL OR p2.kind = ANY(string_to_array($3::TEXT, ',')))
+    AND p2.approved_at IS NOT NULL
     AND p2.deleted_at IS NULL
   INNER JOIN "profile_tx" p2t ON p2t.profile_id = p2.id
 	  AND p2t.locale_code = $2
@@ -549,19 +1150,21 @@ type ListProfileMembershipsRow struct {
 //
 //	SELECT
 //	  pm.id, pm.profile_id, pm.member_profile_id, pm.kind, pm.properties, pm.started_at, pm.finished_at, pm.created_at, pm.updated_at, pm.deleted_at,
-//	  p1.id, p1.slug, p1.kind, p1.custom_domain, p1.profile_picture_uri, p1.pronouns, p1.properties, p1.created_at, p1.updated_at, p1.deleted_at,
+//	  p1.id, p1.slug, p1.kind, p1.custom_domain, p1.profile_picture_uri, p1.pronouns, p1.properties, p1.created_at, p1.updated_at, p1.deleted_at, p1.approved_at,
 //	  p1t.profile_id, p1t.locale_code, p1t.title, p1t.description, p1t.properties,
-//	  p2.id, p2.slug, p2.kind, p2.custom_domain, p2.profile_picture_uri, p2.pronouns, p2.properties, p2.created_at, p2.updated_at, p2.deleted_at,
+//	  p2.id, p2.slug, p2.kind, p2.custom_domain, p2.profile_picture_uri, p2.pronouns, p2.properties, p2.created_at, p2.updated_at, p2.deleted_at, p2.approved_at,
 //	  p2t.profile_id, p2t.locale_code, p2t.title, p2t.description, p2t.properties
 //	FROM
 //		"profile_membership" pm
 //	  INNER JOIN "profile" p1 ON p1.id = pm.profile_id
 //	    AND ($1::TEXT IS NULL OR p1.kind = ANY(string_to_array($1::TEXT, ',')))
+//	    AND p1.approved_at IS NOT NULL
 //	    AND p1.deleted_at IS NULL
 //	  INNER JOIN "profile_tx" p1t ON p1t.profile_id = p1.id
 //		  AND p1t.locale_code = $2
 //	  INNER JOIN "profile" p2 ON p2.id = pm.member_profile_id
 //	    AND ($3::TEXT IS NULL OR p2.kind = ANY(string_to_array($3::TEXT, ',')))
+//	    AND p2.approved_at IS NOT NULL
 //	    AND p2.deleted_at IS NULL
 //	  INNER JOIN "profile_tx" p2t ON p2t.profile_id = p2.id
 //		  AND p2t.locale_code = $2
@@ -604,6 +1207,7 @@ func (q *Queries) ListProfileMemberships(ctx context.Context, arg ListProfileMem
 			&i.Profile.CreatedAt,
 			&i.Profile.UpdatedAt,
 			&i.Profile.DeletedAt,
+			&i.Profile.ApprovedAt,
 			&i.ProfileTx.ProfileID,
 			&i.ProfileTx.LocaleCode,
 			&i.ProfileTx.Title,
@@ -619,6 +1223,7 @@ func (q *Queries) ListProfileMemberships(ctx context.Context, arg ListProfileMem
 			&i.Profile_2.CreatedAt,
 			&i.Profile_2.UpdatedAt,
 			&i.Profile_2.DeletedAt,
+			&i.Profile_2.ApprovedAt,
 			&i.ProfileTx_2.ProfileID,
 			&i.ProfileTx_2.LocaleCode,
 			&i.ProfileTx_2.Title,
@@ -718,11 +1323,12 @@ func (q *Queries) ListProfilePagesByProfileID(ctx context.Context, arg ListProfi
 }
 
 const listProfiles = `-- name: ListProfiles :many
-SELECT p.id, p.slug, p.kind, p.custom_domain, p.profile_picture_uri, p.pronouns, p.properties, p.created_at, p.updated_at, p.deleted_at, pt.profile_id, pt.locale_code, pt.title, pt.description, pt.properties
+SELECT p.id, p.slug, p.kind, p.custom_domain, p.profile_picture_uri, p.pronouns, p.properties, p.created_at, p.updated_at, p.deleted_at, p.approved_at, pt.profile_id, pt.locale_code, pt.title, pt.description, pt.properties
 FROM "profile" p
   INNER JOIN "profile_tx" pt ON pt.profile_id = p.id
   AND pt.locale_code = $1
 WHERE ($2::TEXT IS NULL OR p.kind = ANY(string_to_array($2::TEXT, ',')))
+  AND p.approved_at IS NOT NULL
   AND p.deleted_at IS NULL
 `
 
@@ -738,11 +1344,12 @@ type ListProfilesRow struct {
 
 // ListProfiles
 //
-//	SELECT p.id, p.slug, p.kind, p.custom_domain, p.profile_picture_uri, p.pronouns, p.properties, p.created_at, p.updated_at, p.deleted_at, pt.profile_id, pt.locale_code, pt.title, pt.description, pt.properties
+//	SELECT p.id, p.slug, p.kind, p.custom_domain, p.profile_picture_uri, p.pronouns, p.properties, p.created_at, p.updated_at, p.deleted_at, p.approved_at, pt.profile_id, pt.locale_code, pt.title, pt.description, pt.properties
 //	FROM "profile" p
 //	  INNER JOIN "profile_tx" pt ON pt.profile_id = p.id
 //	  AND pt.locale_code = $1
 //	WHERE ($2::TEXT IS NULL OR p.kind = ANY(string_to_array($2::TEXT, ',')))
+//	  AND p.approved_at IS NOT NULL
 //	  AND p.deleted_at IS NULL
 func (q *Queries) ListProfiles(ctx context.Context, arg ListProfilesParams) ([]*ListProfilesRow, error) {
 	rows, err := q.db.QueryContext(ctx, listProfiles, arg.LocaleCode, arg.FilterKind)
@@ -764,6 +1371,7 @@ func (q *Queries) ListProfiles(ctx context.Context, arg ListProfilesParams) ([]*
 			&i.Profile.CreatedAt,
 			&i.Profile.UpdatedAt,
 			&i.Profile.DeletedAt,
+			&i.Profile.ApprovedAt,
 			&i.ProfileTx.ProfileID,
 			&i.ProfileTx.LocaleCode,
 			&i.ProfileTx.Title,
@@ -810,26 +1418,311 @@ func (q *Queries) RemoveProfile(ctx context.Context, arg RemoveProfileParams) (i
 
 const updateProfile = `-- name: UpdateProfile :execrows
 UPDATE "profile"
-SET slug = $1
-WHERE id = $2
+SET
+  profile_picture_uri = $1,
+  pronouns = $2,
+  properties = $3,
+  updated_at = NOW()
+WHERE id = $4
   AND deleted_at IS NULL
 `
 
 type UpdateProfileParams struct {
-	Slug string `db:"slug" json:"slug"`
-	ID   string `db:"id" json:"id"`
+	ProfilePictureURI sql.NullString        `db:"profile_picture_uri" json:"profile_picture_uri"`
+	Pronouns          sql.NullString        `db:"pronouns" json:"pronouns"`
+	Properties        pqtype.NullRawMessage `db:"properties" json:"properties"`
+	ID                string                `db:"id" json:"id"`
 }
 
 // UpdateProfile
 //
 //	UPDATE "profile"
-//	SET slug = $1
-//	WHERE id = $2
+//	SET
+//	  profile_picture_uri = $1,
+//	  pronouns = $2,
+//	  properties = $3,
+//	  updated_at = NOW()
+//	WHERE id = $4
 //	  AND deleted_at IS NULL
 func (q *Queries) UpdateProfile(ctx context.Context, arg UpdateProfileParams) (int64, error) {
-	result, err := q.db.ExecContext(ctx, updateProfile, arg.Slug, arg.ID)
+	result, err := q.db.ExecContext(ctx, updateProfile,
+		arg.ProfilePictureURI,
+		arg.Pronouns,
+		arg.Properties,
+		arg.ID,
+	)
 	if err != nil {
 		return 0, err
 	}
 	return result.RowsAffected()
+}
+
+const updateProfileLink = `-- name: UpdateProfileLink :execrows
+UPDATE "profile_link"
+SET
+  kind = $1,
+  "order" = $2,
+  uri = $3,
+  title = $4,
+  is_hidden = $5,
+  updated_at = NOW()
+WHERE id = $6
+  AND deleted_at IS NULL
+`
+
+type UpdateProfileLinkParams struct {
+	Kind      string         `db:"kind" json:"kind"`
+	LinkOrder int32          `db:"link_order" json:"link_order"`
+	URI       sql.NullString `db:"uri" json:"uri"`
+	Title     string         `db:"title" json:"title"`
+	IsHidden  bool           `db:"is_hidden" json:"is_hidden"`
+	ID        string         `db:"id" json:"id"`
+}
+
+// UpdateProfileLink
+//
+//	UPDATE "profile_link"
+//	SET
+//	  kind = $1,
+//	  "order" = $2,
+//	  uri = $3,
+//	  title = $4,
+//	  is_hidden = $5,
+//	  updated_at = NOW()
+//	WHERE id = $6
+//	  AND deleted_at IS NULL
+func (q *Queries) UpdateProfileLink(ctx context.Context, arg UpdateProfileLinkParams) (int64, error) {
+	result, err := q.db.ExecContext(ctx, updateProfileLink,
+		arg.Kind,
+		arg.LinkOrder,
+		arg.URI,
+		arg.Title,
+		arg.IsHidden,
+		arg.ID,
+	)
+	if err != nil {
+		return 0, err
+	}
+	return result.RowsAffected()
+}
+
+const updateProfilePage = `-- name: UpdateProfilePage :execrows
+UPDATE "profile_page"
+SET
+  slug = $1,
+  "order" = $2,
+  cover_picture_uri = $3,
+  published_at = $4,
+  updated_at = NOW()
+WHERE id = $5
+  AND deleted_at IS NULL
+`
+
+type UpdateProfilePageParams struct {
+	Slug            string         `db:"slug" json:"slug"`
+	PageOrder       int32          `db:"page_order" json:"page_order"`
+	CoverPictureURI sql.NullString `db:"cover_picture_uri" json:"cover_picture_uri"`
+	PublishedAt     sql.NullTime   `db:"published_at" json:"published_at"`
+	ID              string         `db:"id" json:"id"`
+}
+
+// UpdateProfilePage
+//
+//	UPDATE "profile_page"
+//	SET
+//	  slug = $1,
+//	  "order" = $2,
+//	  cover_picture_uri = $3,
+//	  published_at = $4,
+//	  updated_at = NOW()
+//	WHERE id = $5
+//	  AND deleted_at IS NULL
+func (q *Queries) UpdateProfilePage(ctx context.Context, arg UpdateProfilePageParams) (int64, error) {
+	result, err := q.db.ExecContext(ctx, updateProfilePage,
+		arg.Slug,
+		arg.PageOrder,
+		arg.CoverPictureURI,
+		arg.PublishedAt,
+		arg.ID,
+	)
+	if err != nil {
+		return 0, err
+	}
+	return result.RowsAffected()
+}
+
+const updateProfilePageTx = `-- name: UpdateProfilePageTx :execrows
+UPDATE "profile_page_tx"
+SET
+  title = $1,
+  summary = $2,
+  content = $3
+WHERE profile_page_id = $4
+  AND locale_code = $5
+`
+
+type UpdateProfilePageTxParams struct {
+	Title         string `db:"title" json:"title"`
+	Summary       string `db:"summary" json:"summary"`
+	Content       string `db:"content" json:"content"`
+	ProfilePageID string `db:"profile_page_id" json:"profile_page_id"`
+	LocaleCode    string `db:"locale_code" json:"locale_code"`
+}
+
+// UpdateProfilePageTx
+//
+//	UPDATE "profile_page_tx"
+//	SET
+//	  title = $1,
+//	  summary = $2,
+//	  content = $3
+//	WHERE profile_page_id = $4
+//	  AND locale_code = $5
+func (q *Queries) UpdateProfilePageTx(ctx context.Context, arg UpdateProfilePageTxParams) (int64, error) {
+	result, err := q.db.ExecContext(ctx, updateProfilePageTx,
+		arg.Title,
+		arg.Summary,
+		arg.Content,
+		arg.ProfilePageID,
+		arg.LocaleCode,
+	)
+	if err != nil {
+		return 0, err
+	}
+	return result.RowsAffected()
+}
+
+const updateProfileTx = `-- name: UpdateProfileTx :execrows
+UPDATE "profile_tx"
+SET
+  title = $1,
+  description = $2,
+  properties = $3
+WHERE profile_id = $4
+  AND locale_code = $5
+`
+
+type UpdateProfileTxParams struct {
+	Title       string                `db:"title" json:"title"`
+	Description string                `db:"description" json:"description"`
+	Properties  pqtype.NullRawMessage `db:"properties" json:"properties"`
+	ProfileID   string                `db:"profile_id" json:"profile_id"`
+	LocaleCode  string                `db:"locale_code" json:"locale_code"`
+}
+
+// UpdateProfileTx
+//
+//	UPDATE "profile_tx"
+//	SET
+//	  title = $1,
+//	  description = $2,
+//	  properties = $3
+//	WHERE profile_id = $4
+//	  AND locale_code = $5
+func (q *Queries) UpdateProfileTx(ctx context.Context, arg UpdateProfileTxParams) (int64, error) {
+	result, err := q.db.ExecContext(ctx, updateProfileTx,
+		arg.Title,
+		arg.Description,
+		arg.Properties,
+		arg.ProfileID,
+		arg.LocaleCode,
+	)
+	if err != nil {
+		return 0, err
+	}
+	return result.RowsAffected()
+}
+
+const upsertProfilePageTx = `-- name: UpsertProfilePageTx :exec
+INSERT INTO "profile_page_tx" (
+  profile_page_id,
+  locale_code,
+  title,
+  summary,
+  content
+) VALUES (
+  $1,
+  $2,
+  $3,
+  $4,
+  $5
+) ON CONFLICT (profile_page_id, locale_code) DO UPDATE SET
+  title = EXCLUDED.title,
+  summary = EXCLUDED.summary,
+  content = EXCLUDED.content
+`
+
+type UpsertProfilePageTxParams struct {
+	ProfilePageID string `db:"profile_page_id" json:"profile_page_id"`
+	LocaleCode    string `db:"locale_code" json:"locale_code"`
+	Title         string `db:"title" json:"title"`
+	Summary       string `db:"summary" json:"summary"`
+	Content       string `db:"content" json:"content"`
+}
+
+// UpsertProfilePageTx
+//
+//	INSERT INTO "profile_page_tx" (
+//	  profile_page_id,
+//	  locale_code,
+//	  title,
+//	  summary,
+//	  content
+//	) VALUES (
+//	  $1,
+//	  $2,
+//	  $3,
+//	  $4,
+//	  $5
+//	) ON CONFLICT (profile_page_id, locale_code) DO UPDATE SET
+//	  title = EXCLUDED.title,
+//	  summary = EXCLUDED.summary,
+//	  content = EXCLUDED.content
+func (q *Queries) UpsertProfilePageTx(ctx context.Context, arg UpsertProfilePageTxParams) error {
+	_, err := q.db.ExecContext(ctx, upsertProfilePageTx,
+		arg.ProfilePageID,
+		arg.LocaleCode,
+		arg.Title,
+		arg.Summary,
+		arg.Content,
+	)
+	return err
+}
+
+const upsertProfileTx = `-- name: UpsertProfileTx :exec
+INSERT INTO "profile_tx" (profile_id, locale_code, title, description, properties)
+VALUES ($1, $2, $3, $4, $5)
+ON CONFLICT (profile_id, locale_code)
+DO UPDATE SET
+  title = EXCLUDED.title,
+  description = EXCLUDED.description,
+  properties = EXCLUDED.properties
+`
+
+type UpsertProfileTxParams struct {
+	ProfileID   string                `db:"profile_id" json:"profile_id"`
+	LocaleCode  string                `db:"locale_code" json:"locale_code"`
+	Title       string                `db:"title" json:"title"`
+	Description string                `db:"description" json:"description"`
+	Properties  pqtype.NullRawMessage `db:"properties" json:"properties"`
+}
+
+// UpsertProfileTx
+//
+//	INSERT INTO "profile_tx" (profile_id, locale_code, title, description, properties)
+//	VALUES ($1, $2, $3, $4, $5)
+//	ON CONFLICT (profile_id, locale_code)
+//	DO UPDATE SET
+//	  title = EXCLUDED.title,
+//	  description = EXCLUDED.description,
+//	  properties = EXCLUDED.properties
+func (q *Queries) UpsertProfileTx(ctx context.Context, arg UpsertProfileTxParams) error {
+	_, err := q.db.ExecContext(ctx, upsertProfileTx,
+		arg.ProfileID,
+		arg.LocaleCode,
+		arg.Title,
+		arg.Description,
+		arg.Properties,
+	)
+	return err
 }

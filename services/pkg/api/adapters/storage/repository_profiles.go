@@ -487,3 +487,439 @@ func (r *Repository) CreateProfileTx(
 
 	return r.queries.CreateProfileTx(ctx, params)
 }
+
+func (r *Repository) UpdateProfile(
+	ctx context.Context,
+	id string,
+	profilePictureURI *string,
+	pronouns *string,
+	properties map[string]any,
+) error {
+	params := UpdateProfileParams{
+		ID:                id,
+		ProfilePictureURI: vars.ToSQLNullString(profilePictureURI),
+		Pronouns:          vars.ToSQLNullString(pronouns),
+		Properties:        vars.ToSQLNullRawMessage(properties),
+	}
+
+	_, err := r.queries.UpdateProfile(ctx, params)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *Repository) UpdateProfileTx(
+	ctx context.Context,
+	profileID string,
+	localeCode string,
+	title string,
+	description string,
+	properties map[string]any,
+) error {
+	params := UpdateProfileTxParams{
+		ProfileID:   profileID,
+		LocaleCode:  localeCode,
+		Title:       title,
+		Description: description,
+		Properties:  vars.ToSQLNullRawMessage(properties),
+	}
+
+	_, err := r.queries.UpdateProfileTx(ctx, params)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *Repository) UpsertProfileTx(
+	ctx context.Context,
+	profileID string,
+	localeCode string,
+	title string,
+	description string,
+	properties map[string]any,
+) error {
+	params := UpsertProfileTxParams{
+		ProfileID:   profileID,
+		LocaleCode:  localeCode,
+		Title:       title,
+		Description: description,
+		Properties:  vars.ToSQLNullRawMessage(properties),
+	}
+
+	err := r.queries.UpsertProfileTx(ctx, params)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *Repository) GetProfileOwnershipForUser(
+	ctx context.Context,
+	userID string,
+	profileSlug string,
+) (*profiles.ProfileOwnership, error) {
+	row, err := r.queries.GetProfileOwnershipForUser(
+		ctx,
+		GetProfileOwnershipForUserParams{
+			UserID:      userID,
+			ProfileSlug: profileSlug,
+		},
+	)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, nil //nolint:nilnil
+		}
+
+		return nil, err
+	}
+
+	userKind := ""
+	if row.UserKind.Valid {
+		userKind = row.UserKind.String
+	}
+
+	result := &profiles.ProfileOwnership{
+		ProfileID:   row.ID,
+		ProfileSlug: row.Slug,
+		ProfileKind: row.ProfileKind,
+		UserKind:    userKind,
+		CanEdit:     row.CanEdit,
+	}
+
+	return result, nil
+}
+
+func (r *Repository) GetUserProfilePermissions(
+	ctx context.Context,
+	userID string,
+) ([]*profiles.ProfilePermission, error) {
+	rows, err := r.queries.GetUserProfilePermissions(
+		ctx,
+		GetUserProfilePermissionsParams{UserID: userID},
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	permissions := make([]*profiles.ProfilePermission, len(rows))
+
+	for i, row := range rows {
+		userKind := ""
+		if row.UserKind.Valid {
+			userKind = row.UserKind.String
+		}
+
+		permissions[i] = &profiles.ProfilePermission{
+			ProfileID:      row.ID,
+			ProfileSlug:    row.Slug,
+			ProfileKind:    row.ProfileKind,
+			MembershipKind: row.MembershipKind,
+			UserKind:       userKind,
+		}
+	}
+
+	return permissions, nil
+}
+
+func (r *Repository) GetProfileTxByID(
+	ctx context.Context,
+	profileID string,
+) ([]*profiles.ProfileTx, error) {
+	rows, err := r.queries.GetProfileTxByID(ctx, GetProfileTxByIDParams{ID: profileID})
+	if err != nil {
+		return nil, err
+	}
+
+	translations := make([]*profiles.ProfileTx, len(rows))
+	for i, row := range rows {
+		translations[i] = &profiles.ProfileTx{
+			ProfileID:   row.ProfileTx.ProfileID,
+			LocaleCode:  row.ProfileTx.LocaleCode,
+			Title:       row.ProfileTx.Title,
+			Description: row.ProfileTx.Description,
+			Properties:  vars.ToObject(row.ProfileTx.Properties),
+		}
+	}
+
+	return translations, nil
+}
+
+func (r *Repository) GetProfileLink(
+	ctx context.Context,
+	id string,
+) (*profiles.ProfileLink, error) {
+	row, err := r.queries.GetProfileLink(ctx, GetProfileLinkParams{ID: id})
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, nil //nolint:nilnil
+		}
+
+		return nil, err
+	}
+
+	result := &profiles.ProfileLink{
+		ID:         row.ID,
+		Kind:       row.Kind,
+		ProfileID:  row.ProfileID,
+		Order:      int(row.Order),
+		IsManaged:  row.IsManaged,
+		IsVerified: row.IsVerified,
+		IsHidden:   row.IsHidden,
+		RemoteID:   vars.ToStringPtr(row.RemoteID),
+		PublicID:   vars.ToStringPtr(row.PublicID),
+		URI:        vars.ToStringPtr(row.URI),
+		Title:      row.Title,
+		CreatedAt:  row.CreatedAt,
+		UpdatedAt:  vars.ToTimePtr(row.UpdatedAt),
+		DeletedAt:  vars.ToTimePtr(row.DeletedAt),
+	}
+
+	return result, nil
+}
+
+func (r *Repository) CreateProfileLink(
+	ctx context.Context,
+	id string,
+	kind string,
+	profileID string,
+	order int,
+	uri *string,
+	title string,
+	isHidden bool,
+) (*profiles.ProfileLink, error) {
+	row, err := r.queries.CreateProfileLink(ctx, CreateProfileLinkParams{
+		ID:                        id,
+		Kind:                      kind,
+		ProfileID:                 profileID,
+		LinkOrder:                 int32(order),
+		IsManaged:                 false, // For manually added links
+		IsVerified:                false, // Will be verified later if needed
+		IsHidden:                  isHidden,
+		RemoteID:                  sql.NullString{Valid: false},
+		PublicID:                  sql.NullString{Valid: false},
+		URI:                       vars.ToSQLNullString(uri),
+		Title:                     title,
+		AuthProvider:              sql.NullString{Valid: false},
+		AuthAccessTokenScope:      sql.NullString{Valid: false},
+		AuthAccessToken:           sql.NullString{Valid: false},
+		AuthAccessTokenExpiresAt:  sql.NullTime{Valid: false},
+		AuthRefreshToken:          sql.NullString{Valid: false},
+		AuthRefreshTokenExpiresAt: sql.NullTime{Valid: false},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	result := &profiles.ProfileLink{
+		ID:         row.ID,
+		Kind:       row.Kind,
+		ProfileID:  row.ProfileID,
+		Order:      int(row.Order),
+		IsManaged:  row.IsManaged,
+		IsVerified: row.IsVerified,
+		IsHidden:   row.IsHidden,
+		RemoteID:   vars.ToStringPtr(row.RemoteID),
+		PublicID:   vars.ToStringPtr(row.PublicID),
+		URI:        vars.ToStringPtr(row.URI),
+		Title:      row.Title,
+		CreatedAt:  row.CreatedAt,
+		UpdatedAt:  vars.ToTimePtr(row.UpdatedAt),
+		DeletedAt:  vars.ToTimePtr(row.DeletedAt),
+	}
+
+	return result, nil
+}
+
+func (r *Repository) UpdateProfileLink(
+	ctx context.Context,
+	id string,
+	kind string,
+	order int,
+	uri *string,
+	title string,
+	isHidden bool,
+) error {
+	params := UpdateProfileLinkParams{
+		ID:        id,
+		Kind:      kind,
+		LinkOrder: int32(order),
+		URI:       vars.ToSQLNullString(uri),
+		Title:     title,
+		IsHidden:  isHidden,
+	}
+
+	_, err := r.queries.UpdateProfileLink(ctx, params)
+
+	return err
+}
+
+func (r *Repository) DeleteProfileLink(
+	ctx context.Context,
+	id string,
+) error {
+	_, err := r.queries.DeleteProfileLink(ctx, DeleteProfileLinkParams{ID: id})
+
+	return err
+}
+
+func (r *Repository) GetProfilePage(
+	ctx context.Context,
+	id string,
+) (*profiles.ProfilePage, error) {
+	row, err := r.queries.GetProfilePage(ctx, GetProfilePageParams{ID: id})
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, nil //nolint:nilnil
+		}
+
+		return nil, err
+	}
+
+	result := &profiles.ProfilePage{
+		ID:              row.ID,
+		Slug:            row.Slug,
+		CoverPictureURI: vars.ToStringPtr(row.CoverPictureURI),
+		PublishedAt:     vars.ToTimePtr(row.PublishedAt),
+		// Note: Title, Summary, Content need to be fetched from profile_page_tx table
+	}
+
+	return result, nil
+}
+
+func (r *Repository) CreateProfilePage(
+	ctx context.Context,
+	id string,
+	slug string,
+	profileID string,
+	order int,
+	coverPictureURI *string,
+	publishedAt *string,
+) (*profiles.ProfilePage, error) {
+	var publishedAtTime sql.NullTime
+	if publishedAt != nil {
+		// Convert string to time if needed
+		publishedAtTime = sql.NullTime{Valid: false}
+	}
+
+	row, err := r.queries.CreateProfilePage(ctx, CreateProfilePageParams{
+		ID:              id,
+		Slug:            slug,
+		ProfileID:       profileID,
+		PageOrder:       int32(order),
+		CoverPictureURI: vars.ToSQLNullString(coverPictureURI),
+		PublishedAt:     publishedAtTime,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	result := &profiles.ProfilePage{
+		ID:              row.ID,
+		Slug:            row.Slug,
+		CoverPictureURI: vars.ToStringPtr(row.CoverPictureURI),
+		PublishedAt:     vars.ToTimePtr(row.PublishedAt),
+		// Note: Title, Summary, Content need to be fetched from profile_page_tx table
+	}
+
+	return result, nil
+}
+
+func (r *Repository) CreateProfilePageTx(
+	ctx context.Context,
+	profilePageID string,
+	localeCode string,
+	title string,
+	summary string,
+	content string,
+) error {
+	params := CreateProfilePageTxParams{
+		ProfilePageID: profilePageID,
+		LocaleCode:    localeCode,
+		Title:         title,
+		Summary:       summary,
+		Content:       content,
+	}
+
+	return r.queries.CreateProfilePageTx(ctx, params)
+}
+
+func (r *Repository) UpdateProfilePage(
+	ctx context.Context,
+	id string,
+	slug string,
+	order int,
+	coverPictureURI *string,
+	publishedAt *string,
+) error {
+	var publishedAtTime sql.NullTime
+	if publishedAt != nil {
+		// Convert string to time if needed
+		publishedAtTime = sql.NullTime{Valid: false}
+	}
+
+	params := UpdateProfilePageParams{
+		ID:              id,
+		Slug:            slug,
+		PageOrder:       int32(order),
+		CoverPictureURI: vars.ToSQLNullString(coverPictureURI),
+		PublishedAt:     publishedAtTime,
+	}
+
+	_, err := r.queries.UpdateProfilePage(ctx, params)
+
+	return err
+}
+
+func (r *Repository) UpdateProfilePageTx(
+	ctx context.Context,
+	profilePageID string,
+	localeCode string,
+	title string,
+	summary string,
+	content string,
+) error {
+	params := UpdateProfilePageTxParams{
+		ProfilePageID: profilePageID,
+		LocaleCode:    localeCode,
+		Title:         title,
+		Summary:       summary,
+		Content:       content,
+	}
+
+	_, err := r.queries.UpdateProfilePageTx(ctx, params)
+
+	return err
+}
+
+func (r *Repository) UpsertProfilePageTx(
+	ctx context.Context,
+	profilePageID string,
+	localeCode string,
+	title string,
+	summary string,
+	content string,
+) error {
+	params := UpsertProfilePageTxParams{
+		ProfilePageID: profilePageID,
+		LocaleCode:    localeCode,
+		Title:         title,
+		Summary:       summary,
+		Content:       content,
+	}
+
+	return r.queries.UpsertProfilePageTx(ctx, params)
+}
+
+func (r *Repository) DeleteProfilePage(
+	ctx context.Context,
+	id string,
+) error {
+	_, err := r.queries.DeleteProfilePage(ctx, DeleteProfilePageParams{ID: id})
+
+	return err
+}

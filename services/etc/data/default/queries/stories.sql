@@ -16,6 +16,7 @@ FROM "story" s
   INNER JOIN "story_tx" st ON st.story_id = s.id
   AND st.locale_code = sqlc.arg(locale_code)
   LEFT JOIN "profile" p ON p.id = s.author_profile_id
+  AND p.approved_at IS NOT NULL
   AND p.deleted_at IS NULL
   INNER JOIN "profile_tx" pt ON pt.profile_id = p.id
   AND pt.locale_code = sqlc.arg(locale_code)
@@ -60,6 +61,7 @@ FROM "story" s
   INNER JOIN "story_tx" st ON st.story_id = s.id
   AND st.locale_code = sqlc.arg(locale_code)
   LEFT JOIN "profile" p1 ON p1.id = s.author_profile_id
+  AND p1.approved_at IS NOT NULL
   AND p1.deleted_at IS NULL
   INNER JOIN "profile_tx" p1t ON p1t.profile_id = p1.id
   AND p1t.locale_code = sqlc.arg(locale_code)
@@ -69,6 +71,7 @@ FROM "story" s
     ) AS "publications"
     FROM story_publication sp
       INNER JOIN "profile" p2 ON p2.id = sp.profile_id
+      AND p2.approved_at IS NOT NULL
       AND p2.deleted_at IS NULL
       INNER JOIN "profile_tx" p2t ON p2t.profile_id = p2.id
       AND p2t.locale_code = sqlc.arg(locale_code)

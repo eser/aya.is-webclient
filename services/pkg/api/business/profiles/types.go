@@ -54,6 +54,23 @@ type ProfilePageBrief struct {
 	Summary         string  `json:"summary"`
 }
 
+type ProfileLink struct {
+	ID         string     `json:"id"`
+	Kind       string     `json:"kind"`
+	ProfileID  string     `json:"profile_id"`
+	Order      int        `json:"order"`
+	IsManaged  bool       `json:"is_managed"`
+	IsVerified bool       `json:"is_verified"`
+	IsHidden   bool       `json:"is_hidden"`
+	RemoteID   *string    `json:"remote_id"`
+	PublicID   *string    `json:"public_id"`
+	URI        *string    `json:"uri"`
+	Title      string     `json:"title"`
+	CreatedAt  time.Time  `json:"created_at"`
+	UpdatedAt  *time.Time `json:"updated_at"`
+	DeletedAt  *time.Time `json:"deleted_at"`
+}
+
 type ProfileLinkBrief struct {
 	ID         string `json:"id"`
 	Kind       string `json:"kind"`
@@ -78,4 +95,28 @@ type ExternalPost struct {
 	ID        string     `json:"id"`
 	Content   string     `json:"content"`
 	Permalink string     `json:"permalink"`
+}
+
+type ProfileOwnership struct {
+	ProfileID   string `json:"profile_id"`
+	ProfileSlug string `json:"profile_slug"`
+	ProfileKind string `json:"profile_kind"`
+	UserKind    string `json:"user_kind"`
+	CanEdit     bool   `json:"can_edit"`
+}
+
+type ProfilePermission struct {
+	ProfileID      string `json:"profile_id"`
+	ProfileSlug    string `json:"profile_slug"`
+	ProfileKind    string `json:"profile_kind"`
+	MembershipKind string `json:"membership_kind"`
+	UserKind       string `json:"user_kind"`
+}
+
+type ProfileTx struct {
+	ProfileID   string `json:"profile_id"`
+	LocaleCode  string `json:"locale_code"`
+	Title       string `json:"title"`
+	Description string `json:"description"`
+	Properties  any    `json:"properties"`
 }

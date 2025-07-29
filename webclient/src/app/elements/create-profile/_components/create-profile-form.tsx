@@ -404,15 +404,7 @@ export function CreateProfileForm() {
               )}
             />
 
-            <div className="flex gap-4">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => router.back()}
-                disabled={isSubmitting}
-              >
-                Cancel
-              </Button>
+            <div className="flex gap-4 justify-end">
               <Button
                 type="submit"
                 disabled={
