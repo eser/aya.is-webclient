@@ -3,8 +3,8 @@ import { fetcher } from "../fetcher.ts";
 export type UpdateProfilePageParams = {
   slug: string;
   order: number;
-  cover_picture_uri?: string;
-  published_at?: string;
+  cover_picture_uri: string | null;
+  published_at: string | null;
 };
 
 export async function updateProfilePage(
@@ -13,13 +13,8 @@ export async function updateProfilePage(
   pageId: string,
   params: UpdateProfilePageParams,
 ) {
-  const url = `/${locale}/profiles/${profileSlug}/_pages/${pageId}`;
-
-  const response = await fetcher(url, {
+  const response = await fetcher(`/${locale}/profiles/${profileSlug}/_pages/${pageId}`, {
     method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-    },
     body: JSON.stringify(params),
   });
 

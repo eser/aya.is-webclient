@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -9,20 +9,30 @@ import { backend } from "@/shared/modules/backend/backend.ts";
 import { useTranslations } from "@/shared/modules/i18n/use-translations.tsx";
 import { useAuth } from "@/shared/modules/auth/auth-context.tsx";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/shared/components/ui/card.tsx";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/shared/components/ui/form.tsx";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/shared/components/ui/form.tsx";
 import { Input } from "@/shared/components/ui/input.tsx";
 import { Textarea } from "@/shared/components/ui/textarea.tsx";
 import { Button } from "@/shared/components/ui/button.tsx";
 import { Alert, AlertDescription } from "@/shared/components/ui/alert.tsx";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/components/ui/select.tsx";
 import { Badge } from "@/shared/components/ui/badge.tsx";
-import type { Profile } from "@/shared/modules/backend/profiles/types.ts";
+import type { GetProfileData } from "@/shared/modules/backend/profiles/get-profile.ts";
 import type { ProfileTranslation } from "@/shared/modules/backend/profiles/get-profile-translations.ts";
 import styles from "./page.module.css";
 
 const translationSchema = z.object({
   title: z.string().min(2, "Title must be at least 2 characters").max(100, "Title must be no more than 100 characters"),
-  description: z.string().min(10, "Description must be at least 10 characters").max(500, "Description must be no more than 500 characters"),
+  description: z.string().min(10, "Description must be at least 10 characters").max(
+    500,
+    "Description must be no more than 500 characters",
+  ),
 });
 
 type TranslationFormData = z.infer<typeof translationSchema>;
@@ -48,7 +58,7 @@ export default function ProfileTranslationsPage() {
   const params = useParams();
   const { t, localeCode } = useTranslations();
   const { isAuthenticated } = useAuth();
-  const [profile, setProfile] = useState<Profile | null>(null);
+  const [profile, setProfile] = useState<GetProfileData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -78,9 +88,9 @@ export default function ProfileTranslationsPage() {
           if (isAuthenticated) {
             // Load all translations at once using the new endpoint
             const translationsResponse = await backend.getProfileTranslations(localeCode, slug);
-            if (translationsResponse?.data) {
+            if (translationsResponse) {
               const translationsMap = new Map<string, ProfileTranslation>();
-              translationsResponse.data.forEach((translation: ProfileTranslation) => {
+              translationsResponse.forEach((translation: ProfileTranslation) => {
                 translationsMap.set(translation.locale_code, translation);
               });
               setAllTranslations(translationsMap);
@@ -89,7 +99,7 @@ export default function ProfileTranslationsPage() {
         }
       } catch (error) {
         console.error("Failed to load profile data:", error);
-        setError(t("Profile", "Failed to load profile data") || "Failed to load profile data");
+        setError(t("Profile", "Failed to load profile data") ?? "Failed to load profile data");
       } finally {
         setIsLoading(false);
       }
@@ -132,10 +142,10 @@ export default function ProfileTranslationsPage() {
       });
 
       // Update local cache with the new translation
-      setAllTranslations(prev => {
+      setAllTranslations((prev) => {
         const newMap = new Map(prev);
         newMap.set(selectedLocale, {
-          profile_id: profile?.id || "",
+          profile_id: profile?.id ?? "",
           locale_code: selectedLocale,
           title: data.title,
           description: data.description,
@@ -144,14 +154,14 @@ export default function ProfileTranslationsPage() {
         return newMap;
       });
 
-      const localeName = SUPPORTED_LOCALES.find(l => l.code === selectedLocale)?.name || selectedLocale;
+      const localeName = SUPPORTED_LOCALES.find((l) => l.code === selectedLocale)?.name ?? selectedLocale;
       setSuccessMessage(
-        t("Profile", `Translation for ${localeName} updated successfully`) ||
-        `Translation for ${localeName} updated successfully`
+        t("Profile", `Translation for ${localeName} updated successfully`) ??
+          `Translation for ${localeName} updated successfully`,
       );
     } catch (error) {
       console.error("Failed to update translation:", error);
-      setError(t("Profile", "Failed to update translation") || "Failed to update translation");
+      setError(t("Profile", "Failed to update translation") ?? "Failed to update translation");
     } finally {
       setIsSubmitting(false);
     }
@@ -165,10 +175,10 @@ export default function ProfileTranslationsPage() {
         description: sourceTranslation.description || "",
       });
 
-      const sourceName = SUPPORTED_LOCALES.find(l => l.code === sourceLocale)?.name || sourceLocale;
+      const sourceName = SUPPORTED_LOCALES.find((l) => l.code === sourceLocale)?.name ?? sourceLocale;
       setSuccessMessage(
-        t("Profile", `Content copied from ${sourceName}`) ||
-        `Content copied from ${sourceName}`
+        t("Profile", `Content copied from ${sourceName}`) ??
+          `Content copied from ${sourceName}`,
       );
     } else {
       setError(t("Profile", "Failed to copy content") || "Failed to copy content");
@@ -195,8 +205,8 @@ export default function ProfileTranslationsPage() {
     );
   }
 
-  const currentLocaleInfo = SUPPORTED_LOCALES.find(l => l.code === selectedLocale);
-  const availableSourceLocales = SUPPORTED_LOCALES.filter(l =>
+  const currentLocaleInfo = SUPPORTED_LOCALES.find((l) => l.code === selectedLocale);
+  const availableSourceLocales = SUPPORTED_LOCALES.filter((l) =>
     l.code !== selectedLocale && allTranslations.has(l.code)
   );
 
@@ -207,7 +217,8 @@ export default function ProfileTranslationsPage() {
           {t("Profile", "Translations") || "Translations"}
         </h1>
         <p className={styles.description}>
-          {t("Profile", "Manage translations for your profile in different languages.") || "Manage translations for your profile in different languages."}
+          {t("Profile", "Manage translations for your profile in different languages.") ||
+            "Manage translations for your profile in different languages."}
         </p>
       </div>
 
@@ -228,7 +239,8 @@ export default function ProfileTranslationsPage() {
         <CardHeader>
           <CardTitle>{t("Profile", "Available Languages") || "Available Languages"}</CardTitle>
           <CardDescription>
-            {t("Profile", "Languages with existing translations are highlighted.") || "Languages with existing translations are highlighted."}
+            {t("Profile", "Languages with existing translations are highlighted.") ||
+              "Languages with existing translations are highlighted."}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -266,7 +278,8 @@ export default function ProfileTranslationsPage() {
             {t("Profile", "Edit Translation") || "Edit Translation"} - {currentLocaleInfo?.name || selectedLocale}
           </CardTitle>
           <CardDescription>
-            {t("Profile", "Update the title and description for this language.") || "Update the title and description for this language."}
+            {t("Profile", "Update the title and description for this language.") ||
+              "Update the title and description for this language."}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -307,7 +320,8 @@ export default function ProfileTranslationsPage() {
                       />
                     </FormControl>
                     <FormDescription>
-                      {t("Profile", "The display name for your profile in this language.") || "The display name for your profile in this language."}
+                      {t("Profile", "The display name for your profile in this language.") ||
+                        "The display name for your profile in this language."}
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -322,13 +336,15 @@ export default function ProfileTranslationsPage() {
                     <FormLabel>{t("Profile", "Description") || "Description"} *</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder={t("Profile", "Profile description in this language...") || "Profile description in this language..."}
+                        placeholder={t("Profile", "Profile description in this language...") ||
+                          "Profile description in this language..."}
                         rows={4}
                         {...field}
                       />
                     </FormControl>
                     <FormDescription>
-                      {t("Profile", "A brief description that will appear on your profile page in this language.") || "A brief description that will appear on your profile page in this language."}
+                      {t("Profile", "A brief description that will appear on your profile page in this language.") ||
+                        "A brief description that will appear on your profile page in this language."}
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -339,8 +355,7 @@ export default function ProfileTranslationsPage() {
                 <Button type="submit" disabled={isSubmitting}>
                   {isSubmitting
                     ? (t("Profile", "Saving...") || "Saving...")
-                    : (t("Profile", "Save Translation") || "Save Translation")
-                  }
+                    : (t("Profile", "Save Translation") || "Save Translation")}
                 </Button>
               </div>
             </form>

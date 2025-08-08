@@ -57,7 +57,8 @@ export const siteConfig: SiteConfig = {
   // deno-lint-ignore no-process-global
   host: process.env.NEXT_PUBLIC_HOST ?? "https://aya.is",
   // deno-lint-ignore no-process-global
-  backendUriProduction: process.env.BACKEND_URI_PRODUCTION ?? process.env.NEXT_PUBLIC_BACKEND_URI_PRODUCTION ?? "https://api.aya.is",
+  backendUriProduction: process.env.BACKEND_URI_PRODUCTION ?? process.env.NEXT_PUBLIC_BACKEND_URI_PRODUCTION ??
+    "https://api.aya.is",
   // deno-lint-ignore no-process-global
   backendUri: process.env.BACKEND_URI ?? process.env.NEXT_PUBLIC_BACKEND_URI ?? "https://api.aya.is",
 

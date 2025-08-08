@@ -15,6 +15,9 @@ export { uploadProfilePicture } from "./upload-profile-picture.ts";
 
 export type * from "./types.ts";
 export type { UpdateProfileRequest } from "./update-profile.ts";
-export type { UpdateProfileTranslationRequest, UpdateProfileTranslationResponse } from "./update-profile-translation.ts";
+export type {
+  UpdateProfileTranslationRequest,
+  UpdateProfileTranslationResponse,
+} from "./update-profile-translation.ts";
 export type { ProfilePermissions } from "./get-profile-permissions.ts";
 export type { UploadProfilePictureResponse } from "./upload-profile-picture.ts";

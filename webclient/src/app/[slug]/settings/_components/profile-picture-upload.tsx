@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useRef, useState } from "react";
 import { backend } from "@/shared/modules/backend/backend.ts";
 import { useTranslations } from "@/shared/modules/i18n/use-translations.tsx";
 import { Button } from "@/shared/components/ui/button.tsx";
@@ -24,13 +24,13 @@ export function ProfilePictureUpload(props: ProfilePictureUploadProps) {
   const handleFileSelect = async (file: File) => {
     // Validate file type
     if (!file.type.startsWith("image/")) {
-      setError(t("Profile", "Please select an image file") || "Please select an image file");
+      setError(t("Profile", "Please select an image file") ?? "Please select an image file");
       return;
     }
 
     // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
-      setError(t("Profile", "File size must be less than 5MB") || "File size must be less than 5MB");
+      setError(t("Profile", "File size must be less than 5MB") ?? "File size must be less than 5MB");
       return;
     }
 
@@ -44,7 +44,7 @@ export function ProfilePictureUpload(props: ProfilePictureUploadProps) {
 
       // TODO: Upload file to server
       // For now, we'll simulate the upload process
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
 
       // This would be the actual upload:
       // const response = await backend.uploadProfilePicture(props.locale, props.slug, file);
@@ -55,10 +55,9 @@ export function ProfilePictureUpload(props: ProfilePictureUploadProps) {
       // Simulated success
       const simulatedURI = previewUrl; // In real implementation, this would be the server-returned URI
       props.onUploadComplete(simulatedURI);
-
     } catch (error) {
       console.error("Upload failed:", error);
-      setError(t("Profile", "Failed to upload image") || "Failed to upload image");
+      setError(t("Profile", "Failed to upload image") ?? "Failed to upload image");
       setPreview(null);
     } finally {
       setIsUploading(false);
@@ -86,7 +85,7 @@ export function ProfilePictureUpload(props: ProfilePictureUploadProps) {
       setPreview(null);
     } catch (error) {
       console.error("Failed to remove profile picture:", error);
-      setError(t("Profile", "Failed to remove profile picture") || "Failed to remove profile picture");
+      setError(t("Profile", "Failed to remove profile picture") ?? "Failed to remove profile picture");
     } finally {
       setIsUploading(false);
     }
@@ -111,70 +110,74 @@ export function ProfilePictureUpload(props: ProfilePictureUploadProps) {
       )}
 
       <div className={styles.uploadArea}>
-        {currentImage ? (
-          <div className={styles.imagePreview}>
-            <img
-              src={currentImage}
-              alt={t("Profile", "Profile picture") || "Profile picture"}
-              className={styles.image}
-            />
-            {isUploading && (
-              <div className={styles.uploadingOverlay}>
-                <div className={styles.spinner} />
-                <span className={styles.uploadingText}>
-                  {t("Profile", "Uploading...") || "Uploading..."}
-                </span>
-              </div>
-            )}
-          </div>
-        ) : (
-          <div
-            className={`${styles.placeholder} ${isUploading ? styles.placeholderDisabled : ""}`}
-            onClick={handleUploadClick}
-          >
-            <div className={styles.placeholderContent}>
-              <div className={styles.uploadIcon}>📷</div>
-              <p className={styles.placeholderText}>
-                {t("Profile", "Click to upload an image") || "Click to upload an image"}
-              </p>
-              <p className={styles.placeholderHint}>
-                {t("Profile", "Supports: JPG, PNG, GIF, WebP (max 5MB)") || "Supports: JPG, PNG, GIF, WebP (max 5MB)"}
-              </p>
+        {currentImage
+          ? (
+            <div className={styles.imagePreview}>
+              <img
+                src={currentImage}
+                alt={t("Profile", "Profile picture") ?? "Profile picture"}
+                className={styles.image}
+              />
+              {isUploading && (
+                <div className={styles.uploadingOverlay}>
+                  <div className={styles.spinner} />
+                  <span className={styles.uploadingText}>
+                    {t("Profile", "Uploading...") ?? "Uploading..."}
+                  </span>
+                </div>
+              )}
             </div>
-          </div>
-        )}
+          )
+          : (
+            <div
+              className={`${styles.placeholder} ${isUploading ? styles.placeholderDisabled : ""}`}
+              onClick={handleUploadClick}
+            >
+              <div className={styles.placeholderContent}>
+                <div className={styles.uploadIcon}>📷</div>
+                <p className={styles.placeholderText}>
+                  {t("Profile", "Click to upload an image") ?? "Click to upload an image"}
+                </p>
+                <p className={styles.placeholderHint}>
+                  {t("Profile", "Supports: JPG, PNG, GIF, WebP (max 5MB)") ?? "Supports: JPG, PNG, GIF, WebP (max 5MB)"}
+                </p>
+              </div>
+            </div>
+          )}
       </div>
 
       <div className={styles.actions}>
-        {currentImage ? (
-          <>
+        {currentImage
+          ? (
+            <>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleUploadClick}
+                disabled={isUploading}
+              >
+                {t("Profile", "Change Image") ?? "Change Image"}
+              </Button>
+
+              <Button
+                type="button"
+                variant="destructive"
+                onClick={handleRemove}
+                disabled={isUploading}
+              >
+                {t("Profile", "Remove") ?? "Remove"}
+              </Button>
+            </>
+          )
+          : (
             <Button
               type="button"
-              variant="outline"
               onClick={handleUploadClick}
               disabled={isUploading}
             >
-              {t("Profile", "Change Image") || "Change Image"}
+              {t("Profile", "Upload Image") ?? "Upload Image"}
             </Button>
-
-            <Button
-              type="button"
-              variant="destructive"
-              onClick={handleRemove}
-              disabled={isUploading}
-            >
-              {t("Profile", "Remove") || "Remove"}
-            </Button>
-          </>
-        ) : (
-          <Button
-            type="button"
-            onClick={handleUploadClick}
-            disabled={isUploading}
-          >
-            {t("Profile", "Upload Image") || "Upload Image"}
-          </Button>
-        )}
+          )}
       </div>
     </div>
   );

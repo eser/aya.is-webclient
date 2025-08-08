@@ -1,10 +1,8 @@
-
-
 "use client";
 
 import * as React from "react";
 import type { Profile } from "@/shared/components/userland/profile-card/profile-card.tsx";
-import { FilterBar } from "./filter-bar.tsx";
+import { FilterBar, type ProductStatusFilter } from "./filter-bar.tsx";
 import { ProductListDisplay } from "./product-list-display.tsx";
 export type ProductsContentProps = {
   initialProfiles: Profile[];

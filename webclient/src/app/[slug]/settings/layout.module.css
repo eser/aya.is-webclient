@@ -109,7 +109,8 @@
 
 /* Enhanced Navigation Links */
 .navLink {
-  @apply relative block p-4 rounded-lg border-2 border-transparent transition-all duration-200 hover:border-muted hover:bg-muted/30;
+  @apply relative block p-4 rounded-lg border-2 border-transparent transition-all duration-200 hover:border-muted
+    hover:bg-muted/30;
 }
 
 .navLinkActive {

@@ -13,6 +13,8 @@ export type Profile = {
   created_at: string;
   updated_at: string | null;
   deleted_at: string | null;
+
+  properties: Record<string, unknown> | null;
 };
 
 export type ProfileLinkKind = "website" | "github" | "bsky" | "x";

@@ -2,7 +2,7 @@ import { getBackendUri } from "@/shared/config.ts";
 import { isTokenExpiringSoon, refreshToken } from "@/shared/modules/auth/token-refresh.ts";
 import type { Result } from "./types.ts";
 
-export async function fetcher<T>(relativePath: string): Promise<T | null> {
+export async function fetcher<T>(relativePath: string, requestInit: RequestInit = {}): Promise<T | null> {
   const targetUrl = `${getBackendUri()}${relativePath}`;
   console.log("targetUrl", targetUrl);
 
@@ -30,7 +30,11 @@ export async function fetcher<T>(relativePath: string): Promise<T | null> {
   }
 
   const request = await fetch(targetUrl, {
-    headers,
+    ...requestInit,
+    headers: {
+      ...headers,
+      ...(requestInit.headers ?? {}),
+    },
   });
 
   // Handle authentication errors

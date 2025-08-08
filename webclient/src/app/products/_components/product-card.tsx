@@ -12,15 +12,23 @@ import { type ProductStatusFilter } from "./filter-bar.tsx";
 
 export type ProductCardProps = {
   product: Profile; // Assuming products also use the Profile type structure
-
 };
 export function ProductCard(props: ProductCardProps) {
   const { t } = useTranslations();
   const { product } = props;
   return (
-    <Card key={product.slug} className="pt-0 pb-4 group hover:shadow-lg transition-all duration-300 border-0 shadow-md gap-3">
+    <Card
+      key={product.slug}
+      className="pt-0 pb-4 group hover:shadow-lg transition-all duration-300 border-0 shadow-md gap-3"
+    >
       <div className="relative overflow-hidden">
-        <Image src={product.profile_picture_uri || "/assets/site-logo.svg"} alt={product.title} width={300} height={200} className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" />
+        <Image
+          src={product.profile_picture_uri ?? "/assets/site-logo.svg"}
+          alt={product.title}
+          width={300}
+          height={200}
+          className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+        />
         <div className="absolute top-4 left-4">
           <Badge variant="secondary" className="bg-white/90 text-slate-700">
             {product.kind}
@@ -40,11 +48,13 @@ export function ProductCard(props: ProductCardProps) {
 
         <div className="flex flex-wrap gap-2 mb-2">
           {/* TODO(@sameterkanboz): implement filtering by tags when available instead of kind */}
-          {/* {product.tags.map((tag) => (
+          {
+            /* {product.tags.map((tag) => (
                 <Badge key={tag} className="text-xs">
                   {tag}
                 </Badge>
-              ))} */}
+              ))} */
+          }
         </div>
       </CardHeader>
 
@@ -55,13 +65,15 @@ export function ProductCard(props: ProductCardProps) {
           </Button>
 
           {/* // TODO(@sameterkanboz) ensure external links usage purpose and add this component if needed */}
-          {/* {product.slug !== "#" && (
+          {
+            /* {product.slug !== "#" && (
                 <Button variant="outline" size="icon" asChild>
                   <Link href={product.slug}>
                     <ExternalLink className="w-4 h-4" />
                   </Link>
                 </Button>
-              )} */}
+              )} */
+          }
         </div>
       </CardContent>
     </Card>

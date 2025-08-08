@@ -53,9 +53,17 @@ func (f *SQLConnectionFactory) CreateConnection( //nolint:ireturn
 		)
 	}
 
-	// Configure connection pool if timeout is specified
-	if config.Timeout > 0 {
-		db.SetConnMaxLifetime(config.Timeout)
+	// Configure connection pool settings
+	if config.MaxOpenConns > 0 {
+		db.SetMaxOpenConns(config.MaxOpenConns)
+	}
+
+	if config.MaxIdleConns > 0 {
+		db.SetMaxIdleConns(config.MaxIdleConns)
+	}
+
+	if config.MaxConnLifetime > 0 {
+		db.SetConnMaxLifetime(config.MaxConnLifetime)
 	}
 
 	// Initial ping to verify connection

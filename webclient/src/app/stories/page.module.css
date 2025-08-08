@@ -1,3 +1,5 @@
+@reference "../../shared/globals.css";
+
 .story-group {
   @apply mb-8;
 }
@@ -8,4 +10,4 @@
 
 .pagination-container {
   @apply mt-8 flex justify-center;
-} 
+}

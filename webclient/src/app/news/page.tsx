@@ -21,16 +21,18 @@ async function IndexPage() {
       <div className="content">
         <h2>{t("Layout", "News")}</h2>
 
-        {news !== null && news.length > 0 ? (
-          <div className="divide-y divide-border">
-            <StoriesPageClient initialStories={news} />
-          </div>
-        ) : (
-          <article>
-            {/* TODO(@eser) Add a specific translation key e.g., t("NewsPage", "NoNewsFound") */}
-            {t("Layout", "Content not yet available.")}
-          </article>
-        )}
+        {news !== null && news.length > 0
+          ? (
+            <div className="divide-y divide-border">
+              <StoriesPageClient initialStories={news} />
+            </div>
+          )
+          : (
+            <article>
+              {/* TODO(@eser) Add a specific translation key e.g., t("NewsPage", "NoNewsFound") */}
+              {t("Layout", "Content not yet available.")}
+            </article>
+          )}
       </div>
     </section>
   );

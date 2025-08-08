@@ -26,9 +26,7 @@ export async function refreshToken(): Promise<string | null> {
 
 async function performTokenRefresh(): Promise<string | null> {
   try {
-    const currentToken = globalThis.localStorage === undefined
-      ? null
-      : localStorage.getItem("auth_token");
+    const currentToken = globalThis.localStorage === undefined ? null : localStorage.getItem("auth_token");
 
     if (!currentToken) {
       return null;
@@ -76,7 +74,7 @@ export function isTokenExpiringSoon(): boolean {
     return true; // If no expiration is stored, consider it expiring
   }
 
-  const expirationTime = parseInt(expiresAt)
+  const expirationTime = parseInt(expiresAt);
   const now = Date.now();
   const fiveMinutes = 5 * 60 * 1000;
 

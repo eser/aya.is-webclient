@@ -47,7 +47,7 @@ export function SearchBar(props: SearchBarProps) {
     }
 
     localStorage.setItem("backendUri", newBackendUri);
-  }
+  };
 
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {

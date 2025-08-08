@@ -20,22 +20,22 @@ export type ProfileLink = {
 
 export async function listProfileLinks(
   locale: string,
-  slug: string
+  slug: string,
 ): Promise<ProfileLink[] | null> {
   const backendUri = getBackendUri();
   const token = getToken();
 
   const response = await fetch(`${backendUri}/${locale}/profiles/${slug}/_links`, {
-    method: 'GET',
+    method: "GET",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       ...(token !== null ? { Authorization: `Bearer ${token}` } : {}),
     },
   });
 
   if (!response.ok) {
-    const errorText = await response.text().catch(() => '');
-    throw new Error(errorText !== '' ? errorText : `Failed to list profile links: ${response.status}`);
+    const errorText = await response.text().catch(() => "");
+    throw new Error(errorText !== "" ? errorText : `Failed to list profile links: ${response.status}`);
   }
 
   const result = await response.json();

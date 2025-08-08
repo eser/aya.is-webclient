@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,11 +8,11 @@ import { z } from "zod";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-  FormDescription,
 } from "@/shared/components/ui/form.tsx";
 import { Input } from "@/shared/components/ui/input.tsx";
 import { Textarea } from "@/shared/components/ui/textarea.tsx";
@@ -20,7 +20,7 @@ import { Button } from "@/shared/components/ui/button.tsx";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/components/ui/select.tsx";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/shared/components/ui/card.tsx";
 import { Alert, AlertDescription } from "@/shared/components/ui/alert.tsx";
-import { supportedLocales, forbiddenSlugs } from "@/shared/config.ts";
+import { forbiddenSlugs, supportedLocales } from "@/shared/config.ts";
 import { useAuth } from "@/shared/modules/auth/auth-context.tsx";
 import { useTranslations } from "@/shared/modules/i18n/use-translations.tsx";
 import { backend } from "@/shared/modules/backend/backend.ts";
@@ -103,7 +103,7 @@ export function CreateProfileForm() {
   }, [session, hasIndividualProfile, currentLocale, form]);
 
   const checkSlugAvailability = useCallback(async (slug: string) => {
-    if (slug === '' || slug.length < 3) {
+    if (slug === "" || slug.length < 3) {
       setSlugAvailability({ isChecking: false, isAvailable: null, error: null });
       return;
     }
@@ -179,7 +179,7 @@ export function CreateProfileForm() {
       });
 
       if (profileData === null) {
-        throw new Error('Failed to create profile: No data returned');
+        throw new Error("Failed to create profile: No data returned");
       }
 
       // Redirect to the created profile page
@@ -227,10 +227,13 @@ export function CreateProfileForm() {
                   <strong>Notes:</strong>
                   <ul className="list-disc list-inside">
                     <li>
-                       You already have an individual profile. You can create additional organization or product profiles, but each user can only have one individual profile.
+                      You already have an individual profile. You can create additional organization or product
+                      profiles, but each user can only have one individual profile.
                     </li>
                     <li>
-                      Profile will be created in the selected locale ({supportedLocales[form.watch("locale")]?.name}). After creation, you can add translations for additional languages through created profile settings.
+                      Profile will be created in the selected locale ({supportedLocales[form.watch("locale")]?.name}).
+                      After creation, you can add translations for additional languages through created profile
+                      settings.
                     </li>
                   </ul>
                 </AlertDescription>
@@ -318,18 +321,16 @@ export function CreateProfileForm() {
                         {...field}
                         onChange={(e) => {
                           // Convert to lowercase and replace invalid characters
-                          const value = e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-');
+                          const value = e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-");
                           field.onChange(value);
                         }}
-                        className={
-                          watchedSlug.length >= 3
-                            ? slugAvailability.isAvailable === true
-                              ? "border-green-500 focus:border-green-500"
-                              : slugAvailability.isAvailable === false
-                              ? "border-red-500 focus:border-red-500"
-                              : ""
+                        className={watchedSlug.length >= 3
+                          ? slugAvailability.isAvailable === true
+                            ? "border-green-500 focus:border-green-500"
+                            : slugAvailability.isAvailable === false
+                            ? "border-red-500 focus:border-red-500"
                             : ""
-                        }
+                          : ""}
                       />
                       {watchedSlug.length >= 3 && (
                         <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
@@ -350,15 +351,15 @@ export function CreateProfileForm() {
                     {watchedSlug.length >= 3 && slugAvailability.isChecking && (
                       <span className="text-blue-600">Checking availability...</span>
                     )}
-                    {watchedSlug.length >= 3 && !slugAvailability.isChecking && slugAvailability.isAvailable === true && (
-                      <span className="text-green-600">✓ Available! Your profile will be at: aya.is/{watchedSlug}</span>
+                    {watchedSlug.length >= 3 && !slugAvailability.isChecking && slugAvailability.isAvailable === true &&
+                      <span className="text-green-600">✓ Available! Your profile will be at: aya.is/{watchedSlug}
+                      </span>}
+                    {watchedSlug.length >= 3 && !slugAvailability.isChecking &&
+                      slugAvailability.isAvailable === false && (
+                      <span className="text-red-600">✗ {slugAvailability.error ?? "This slug is not available"}</span>
                     )}
-                    {watchedSlug.length >= 3 && !slugAvailability.isChecking && slugAvailability.isAvailable === false && (
-                      <span className="text-red-600">✗ {slugAvailability.error || "This slug is not available"}</span>
-                    )}
-                    {watchedSlug.length >= 3 && !slugAvailability.isChecking && slugAvailability.isAvailable === null && (
-                      <span className="text-gray-600">Your profile will be available at: aya.is/{watchedSlug}</span>
-                    )}
+                    {watchedSlug.length >= 3 && !slugAvailability.isChecking && slugAvailability.isAvailable === null &&
+                      <span className="text-gray-600">Your profile will be available at: aya.is/{watchedSlug}</span>}
                     {watchedSlug.length < 3 && "This will be used in your profile URL (e.g., aya.is/your-profile-name)"}
                   </FormDescription>
                   <FormMessage />
@@ -407,12 +408,10 @@ export function CreateProfileForm() {
             <div className="flex gap-4 justify-end">
               <Button
                 type="submit"
-                disabled={
-                  isSubmitting ||
+                disabled={isSubmitting ||
                   slugAvailability.isChecking ||
                   slugAvailability.isAvailable === false ||
-                  (watchedSlug.length >= 3 && slugAvailability.isAvailable === null)
-                }
+                  (watchedSlug.length >= 3 && slugAvailability.isAvailable === null)}
               >
                 {isSubmitting ? "Creating Profile..." : "Create Profile"}
               </Button>

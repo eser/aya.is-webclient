@@ -3,10 +3,17 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import * as React from "react";
 
-import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/shared/components/ui/pagination.tsx";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/shared/components/ui/pagination.tsx";
 import { Story } from "@/shared/components/userland/story/story.tsx";
 import { formatMonthYear, parseDateFromSlug } from "@/shared/lib/date.ts";
-import type { StoryEx, Story as StoryType } from "@/shared/modules/backend/stories/types.ts";
+import type { Story as StoryType, StoryEx } from "@/shared/modules/backend/stories/types.ts";
 import { useTranslations } from "@/shared/modules/i18n/use-translations.tsx";
 
 import styles from "../page.module.css";
@@ -31,10 +38,8 @@ export function StoriesPageClient(props: StoriesPageClientProps) {
 
   const currentPage = parseInt(searchParams.get("page") || "1", 10);
 
-
   const groupedStories = React.useMemo(() => {
     if (!props.initialStories) return [];
-
 
     const storiesWithDates = props.initialStories
       .map((story) => ({
@@ -43,9 +48,7 @@ export function StoriesPageClient(props: StoriesPageClientProps) {
       }))
       .filter((item): item is { story: StoryType | StoryEx; date: Date } => item.date !== null);
 
-
     storiesWithDates.sort((a, b) => b.date.getTime() - a.date.getTime());
-
 
     const groups = new Map<string, GroupedStories>();
 
@@ -63,20 +66,18 @@ export function StoriesPageClient(props: StoriesPageClientProps) {
       groups.get(monthYear)!.stories.push(story);
     });
 
-
     return Array.from(groups.values()).sort((a, b) => b.date.getTime() - a.date.getTime());
   }, [props.initialStories, locale.code]);
-
 
   const totalStories = props.initialStories?.length || 0;
   const totalPages = Math.ceil(totalStories / STORIES_PER_PAGE);
   const startIndex = (currentPage - 1) * STORIES_PER_PAGE;
   const endIndex = startIndex + STORIES_PER_PAGE;
 
-
-  const allStoriesFlat = groupedStories.flatMap((group) => group.stories.map((story) => ({ ...story, groupMonthYear: group.monthYear, groupDate: group.date })));
+  const allStoriesFlat = groupedStories.flatMap((group) =>
+    group.stories.map((story) => ({ ...story, groupMonthYear: group.monthYear, groupDate: group.date }))
+  );
   const currentPageStories = allStoriesFlat.slice(startIndex, endIndex);
-
 
   const currentPageGrouped = React.useMemo(() => {
     const groups = new Map<string, GroupedStories>();
@@ -116,7 +117,7 @@ export function StoriesPageClient(props: StoriesPageClientProps) {
       <section className="container px-4 py-8 mx-auto">
         <div className="content">
           <h2>{t("Layout", "Articles")}</h2>
-           {/* TODO(@eser) Add a specific translation key e.g., t("NewsPage", "NoNewsFound") */}
+          {/* TODO(@eser) Add a specific translation key e.g., t("NewsPage", "NoNewsFound") */}
           <article>{t("Layout", "Content not yet available.")}</article>
         </div>
       </section>
@@ -132,9 +133,7 @@ export function StoriesPageClient(props: StoriesPageClientProps) {
           <div key={group.monthYear} className={styles["story-group"]}>
             <h3 className={styles["group-header"]}>{formatMonthYear(group.date, locale.code)}</h3>
             <div className="divide-y divide-border">
-              {group.stories.map((story) => (
-                <Story key={story.id} story={story} />
-              ))}
+              {group.stories.map((story) => <Story key={story.id} story={story} />)}
             </div>
           </div>
         ))}

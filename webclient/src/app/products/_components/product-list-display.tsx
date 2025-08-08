@@ -3,7 +3,8 @@
 import * as React from "react";
 import { useTranslations } from "@/shared/modules/i18n/use-translations.tsx";
 import { type Profile } from "@/shared/components/userland/profile-card/profile-card.tsx";
-import { ProductCard } from "./product-card";
+import { ProductCard } from "./product-card.tsx";
+import { type ProductStatusFilter } from "./filter-bar.tsx";
 
 export type ProductListDisplayProps = {
   allProducts: Profile[]; // Assuming products also use the Profile type structure
@@ -20,7 +21,10 @@ export function ProductListDisplay(props: ProductListDisplayProps) {
 
     if (searchText.trim() !== "") {
       const lowerSearchText = searchText.toLowerCase();
-      products = products.filter((product) => product.title?.toLowerCase().includes(lowerSearchText) || product.description?.toLowerCase().includes(lowerSearchText));
+      products = products.filter((product) =>
+        product.title?.toLowerCase().includes(lowerSearchText) ||
+        product.description?.toLowerCase().includes(lowerSearchText)
+      );
     }
 
     //TODO(@sameterkanboz): implement filtering by tags when available instead of kind
@@ -47,7 +51,6 @@ export function ProductListDisplay(props: ProductListDisplayProps) {
       </div>
     );
   }
-
 
   return (
     <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

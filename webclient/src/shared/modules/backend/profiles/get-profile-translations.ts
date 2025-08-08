@@ -5,13 +5,13 @@ export type ProfileTranslation = {
   locale_code: string;
   title: string;
   description: string;
-  properties?: any;
+  properties: Record<string, unknown> | null;
 };
 
 export async function getProfileTranslations(locale: string, profileSlug: string) {
   const url = `/${locale}/profiles/${profileSlug}/_tx`;
 
-  const response = await fetcher(url, {
+  const response = await fetcher<ProfileTranslation[]>(url, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

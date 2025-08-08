@@ -9,7 +9,7 @@ export async function getProfilePermissions(
   slug: string,
 ): Promise<ProfilePermissions | null> {
   const response = await fetcher<ProfilePermissions>(
-    `/${locale}/profiles/${slug}/_permissions`
+    `/${locale}/profiles/${slug}/_permissions`,
   );
 
   return response;

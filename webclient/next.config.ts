@@ -16,7 +16,6 @@ const nextConfig: NextConfig = {
   experimental: {
     reactCompiler: { compilationMode: "all" },
     ppr: true, // 'incremental',
-    nodeMiddleware: true, // Enable Node.js middleware
   },
 
   images: {

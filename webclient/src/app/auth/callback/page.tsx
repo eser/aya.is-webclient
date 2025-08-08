@@ -38,7 +38,7 @@ export default function AuthCallbackPage() {
 
         console.log("Auth callback successful, received data:", {
           hasToken: !!authData?.token,
-          hasSession: !!authData?.session
+          hasSession: !!authData?.session,
         });
 
         if (authData === null) {
@@ -70,7 +70,7 @@ export default function AuthCallbackPage() {
           message: error instanceof Error ? error.message : "Unknown error",
           stack: error instanceof Error ? error.stack : undefined,
           searchParams: Object.fromEntries(searchParams.entries()),
-          currentUrl: globalThis.location?.href
+          currentUrl: globalThis.location?.href,
         });
         setStatus("error");
         setErrorMessage(error instanceof Error ? error.message : "Authentication failed");
@@ -103,9 +103,7 @@ export default function AuthCallbackPage() {
               </div>
             )}
 
-            {status === "success" && (
-              <div className="text-green-600 text-4xl">✓</div>
-            )}
+            {status === "success" && <div className="text-green-600 text-4xl">✓</div>}
 
             {status === "error" && (
               <>

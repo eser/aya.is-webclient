@@ -15,7 +15,13 @@ type PageLayoutProps = {
 };
 
 export async function PageLayout(props: PageLayoutProps) {
-  const spotlight = await backend.getSpotlight() ?? [];
+  let spotlight = [];
+  try {
+    spotlight = await backend.getSpotlight() ?? [];
+  } catch (error) {
+    // Silently handle backend errors - spotlight is optional
+    console.error("Failed to fetch spotlight:", error);
+  }
 
   return (
     <>

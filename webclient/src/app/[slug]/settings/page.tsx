@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,18 +8,29 @@ import { z } from "zod";
 import { backend } from "@/shared/modules/backend/backend.ts";
 import { useTranslations } from "@/shared/modules/i18n/use-translations.tsx";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/shared/components/ui/card.tsx";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/shared/components/ui/form.tsx";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/shared/components/ui/form.tsx";
 import { Input } from "@/shared/components/ui/input.tsx";
 import { Textarea } from "@/shared/components/ui/textarea.tsx";
 import { Button } from "@/shared/components/ui/button.tsx";
 import { Alert, AlertDescription } from "@/shared/components/ui/alert.tsx";
 import { ProfilePictureUpload } from "./_components/profile-picture-upload.tsx";
-import type { Profile } from "@/shared/modules/backend/profiles/types.ts";
+import type { GetProfileData } from "@/shared/modules/backend/profiles/get-profile.ts";
 import styles from "./page.module.css";
 
 const generalSettingsSchema = z.object({
   title: z.string().min(2, "Title must be at least 2 characters").max(100, "Title must be no more than 100 characters"),
-  description: z.string().min(10, "Description must be at least 10 characters").max(500, "Description must be no more than 500 characters"),
+  description: z.string().min(10, "Description must be at least 10 characters").max(
+    500,
+    "Description must be no more than 500 characters",
+  ),
   pronouns: z.string().max(50, "Pronouns must be no more than 50 characters").optional(),
 });
 
@@ -28,7 +39,7 @@ type GeneralSettingsFormData = z.infer<typeof generalSettingsSchema>;
 export default function ProfileSettingsPage() {
   const params = useParams();
   const { t, localeCode } = useTranslations();
-  const [profile, setProfile] = useState<Profile | null>(null);
+  const [profile, setProfile] = useState<GetProfileData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -60,7 +71,7 @@ export default function ProfileSettingsPage() {
         }
       } catch (error) {
         console.error("Failed to load profile:", error);
-        setError(t("Profile", "Failed to load profile data") || "Failed to load profile data");
+        setError(t("Profile", "Failed to load profile data") ?? "Failed to load profile data");
       } finally {
         setIsLoading(false);
       }
@@ -91,7 +102,7 @@ export default function ProfileSettingsPage() {
         properties: null,
       });
 
-      setSuccessMessage(t("Profile", "Profile updated successfully") || "Profile updated successfully");
+      setSuccessMessage(t("Profile", "Profile updated successfully") ?? "Profile updated successfully");
 
       // Refresh profile data
       const updatedProfile = await backend.getProfile(localeCode, slug);
@@ -100,7 +111,7 @@ export default function ProfileSettingsPage() {
       }
     } catch (error) {
       console.error("Failed to update profile:", error);
-      setError(t("Profile", "Failed to update profile") || "Failed to update profile");
+      setError(t("Profile", "Failed to update profile") ?? "Failed to update profile");
     } finally {
       setIsSubmitting(false);
     }
@@ -120,20 +131,24 @@ export default function ProfileSettingsPage() {
       }
 
       if (newProfilePictureURI === "") {
-        setSuccessMessage(t("Profile", "Profile picture removed successfully") || "Profile picture removed successfully");
+        setSuccessMessage(
+          t("Profile", "Profile picture removed successfully") ?? "Profile picture removed successfully",
+        );
       } else {
-        setSuccessMessage(t("Profile", "Profile picture updated successfully") || "Profile picture updated successfully");
+        setSuccessMessage(
+          t("Profile", "Profile picture updated successfully") ?? "Profile picture updated successfully",
+        );
       }
     } catch (error) {
       console.error("Failed to update profile picture:", error);
-      setError(t("Profile", "Failed to update profile picture") || "Failed to update profile picture");
+      setError(t("Profile", "Failed to update profile picture") ?? "Failed to update profile picture");
     }
   };
 
   if (isLoading) {
     return (
       <div className={styles.loading}>
-        {t("Loading", "Loading...") || "Loading..."}
+        {t("Loading", "Loading...") ?? "Loading..."}
       </div>
     );
   }
@@ -143,7 +158,7 @@ export default function ProfileSettingsPage() {
       <div className={styles.error}>
         <Alert variant="destructive">
           <AlertDescription>
-            {t("Profile", "Profile not found") || "Profile not found"}
+            {t("Profile", "Profile not found") ?? "Profile not found"}
           </AlertDescription>
         </Alert>
       </div>
@@ -154,10 +169,11 @@ export default function ProfileSettingsPage() {
     <div className={styles.container}>
       <div className={styles.header}>
         <h1 className={styles.title}>
-          {t("Profile", "General Settings") || "General Settings"}
+          {t("Profile", "General Settings") ?? "General Settings"}
         </h1>
         <p className={styles.description}>
-          {t("Profile", "Update your profile information and preferences.") || "Update your profile information and preferences."}
+          {t("Profile", "Update your profile information and preferences.") ??
+            "Update your profile information and preferences."}
         </p>
       </div>
 
@@ -177,9 +193,10 @@ export default function ProfileSettingsPage() {
         {/* Profile Picture Section */}
         <Card>
           <CardHeader>
-            <CardTitle>{t("Profile", "Profile Picture") || "Profile Picture"}</CardTitle>
+            <CardTitle>{t("Profile", "Profile Picture") ?? "Profile Picture"}</CardTitle>
             <CardDescription>
-              {t("Profile", "Upload a profile picture to personalize your profile.") || "Upload a profile picture to personalize your profile."}
+              {t("Profile", "Upload a profile picture to personalize your profile.") ??
+                "Upload a profile picture to personalize your profile."}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -195,9 +212,10 @@ export default function ProfileSettingsPage() {
         {/* Basic Information Section */}
         <Card>
           <CardHeader>
-            <CardTitle>{t("Profile", "Basic Information") || "Basic Information"}</CardTitle>
+            <CardTitle>{t("Profile", "Basic Information") ?? "Basic Information"}</CardTitle>
             <CardDescription>
-              {t("Profile", "Update your profile title, description and other basic details.") || "Update your profile title, description and other basic details."}
+              {t("Profile", "Update your profile title, description and other basic details.") ||
+                "Update your profile title, description and other basic details."}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -211,12 +229,14 @@ export default function ProfileSettingsPage() {
                       <FormLabel>{t("Profile", "Title") || "Title"} *</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder={t("Profile", "Your name or organization title") || "Your name or organization title"}
+                          placeholder={t("Profile", "Your name or organization title") ||
+                            "Your name or organization title"}
                           {...field}
                         />
                       </FormControl>
                       <FormDescription>
-                        {t("Profile", "This is the display name for your profile.") || "This is the display name for your profile."}
+                        {t("Profile", "This is the display name for your profile.") ||
+                          "This is the display name for your profile."}
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -231,13 +251,17 @@ export default function ProfileSettingsPage() {
                       <FormLabel>{t("Profile", "Description") || "Description"} *</FormLabel>
                       <FormControl>
                         <Textarea
-                          placeholder={t("Profile", "Tell people about yourself, your organization, or your product...") || "Tell people about yourself, your organization, or your product..."}
+                          placeholder={t(
+                            "Profile",
+                            "Tell people about yourself, your organization, or your product...",
+                          ) || "Tell people about yourself, your organization, or your product..."}
                           rows={4}
                           {...field}
                         />
                       </FormControl>
                       <FormDescription>
-                        {t("Profile", "A brief description that will appear on your profile page.") || "A brief description that will appear on your profile page."}
+                        {t("Profile", "A brief description that will appear on your profile page.") ||
+                          "A brief description that will appear on your profile page."}
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -252,12 +276,14 @@ export default function ProfileSettingsPage() {
                       <FormLabel>{t("Profile", "Pronouns") || "Pronouns"}</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder={t("Profile", "e.g., they/them, she/her, he/him") || "e.g., they/them, she/her, he/him"}
+                          placeholder={t("Profile", "e.g., they/them, she/her, he/him") ||
+                            "e.g., they/them, she/her, he/him"}
                           {...field}
                         />
                       </FormControl>
                       <FormDescription>
-                        {t("Profile", "Optional pronouns to help others address you correctly.") || "Optional pronouns to help others address you correctly."}
+                        {t("Profile", "Optional pronouns to help others address you correctly.") ||
+                          "Optional pronouns to help others address you correctly."}
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -268,8 +294,7 @@ export default function ProfileSettingsPage() {
                   <Button type="submit" disabled={isSubmitting}>
                     {isSubmitting
                       ? (t("Profile", "Saving...") || "Saving...")
-                      : (t("Profile", "Save Changes") || "Save Changes")
-                    }
+                      : (t("Profile", "Save Changes") || "Save Changes")}
                   </Button>
                 </div>
               </form>
@@ -282,7 +307,8 @@ export default function ProfileSettingsPage() {
           <CardHeader>
             <CardTitle>{t("Profile", "Profile Information") || "Profile Information"}</CardTitle>
             <CardDescription>
-              {t("Profile", "Information about your profile that cannot be changed.") || "Information about your profile that cannot be changed."}
+              {t("Profile", "Information about your profile that cannot be changed.") ||
+                "Information about your profile that cannot be changed."}
             </CardDescription>
           </CardHeader>
           <CardContent className={styles.readOnlySection}>

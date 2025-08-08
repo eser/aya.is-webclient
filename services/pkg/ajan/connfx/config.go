@@ -31,8 +31,10 @@ type ConfigTarget struct {
 	CAFile   string `conf:"ca_file"`
 
 	// External credential management
-	Port    int           `conf:"port"`
-	Timeout time.Duration `conf:"timeout"`
+	Port            int           `conf:"port"`
+	MaxOpenConns    int           `conf:"max_open_conns"    default:"10"`
+	MaxIdleConns    int           `conf:"max_idle_conns"    default:"5"`
+	MaxConnLifetime time.Duration `conf:"max_conn_lifetime" default:"1h"`
 
 	// Authentication and security
 	TLS           bool `conf:"tls"`

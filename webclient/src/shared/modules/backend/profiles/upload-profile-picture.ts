@@ -18,7 +18,7 @@ export async function uploadProfilePicture(
     {
       method: "POST",
       body: formData,
-    }
+    },
   );
 
   return response;

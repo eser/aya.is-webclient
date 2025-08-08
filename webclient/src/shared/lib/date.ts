@@ -39,13 +39,11 @@ export function parseDateFromSlug(slug: string | null): Date | null {
   const month = parseInt(dateStr.substring(4, 6), 10) - 1;
   const day = parseInt(dateStr.substring(6, 8), 10);
 
-
   if (year < 1900 || year > 2100 || month < 0 || month > 11 || day < 1 || day > 31) {
     return null;
   }
 
   const date = new Date(year, month, day);
-
 
   if (date.getFullYear() !== year || date.getMonth() !== month || date.getDate() !== day) {
     return null;
@@ -56,7 +54,7 @@ export function parseDateFromSlug(slug: string | null): Date | null {
 
 export function formatMonthYear(date: Date, locale: string): string {
   return date.toLocaleDateString(locale, {
-    year: 'numeric',
-    month: 'long'
+    year: "numeric",
+    month: "long",
   });
 }

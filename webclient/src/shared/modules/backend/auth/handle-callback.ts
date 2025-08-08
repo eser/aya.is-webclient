@@ -12,7 +12,7 @@ export interface AuthCallbackResponse {
 
 export async function handleAuthCallback(
   locale: string,
-  { code, state }: AuthCallbackRequest
+  { code, state }: AuthCallbackRequest,
 ): Promise<AuthCallbackResponse | null> {
   const backendUri = getBackendUri();
 
@@ -23,7 +23,7 @@ export async function handleAuthCallback(
       headers: {
         "Content-Type": "application/json",
       },
-    }
+    },
   );
 
   if (!response.ok) {

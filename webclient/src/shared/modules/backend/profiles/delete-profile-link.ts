@@ -9,22 +9,22 @@ export type DeleteProfileLinkResponse = {
 export async function deleteProfileLink(
   locale: string,
   slug: string,
-  linkId: string
+  linkId: string,
 ): Promise<DeleteProfileLinkResponse | null> {
   const backendUri = getBackendUri();
   const token = getToken();
 
   const response = await fetch(`${backendUri}/${locale}/profiles/${slug}/_links/${linkId}`, {
-    method: 'DELETE',
+    method: "DELETE",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       ...(token !== null ? { Authorization: `Bearer ${token}` } : {}),
     },
   });
 
   if (!response.ok) {
-    const errorText = await response.text().catch(() => '');
-    throw new Error(errorText !== '' ? errorText : `Failed to delete profile link: ${response.status}`);
+    const errorText = await response.text().catch(() => "");
+    throw new Error(errorText !== "" ? errorText : `Failed to delete profile link: ${response.status}`);
   }
 
   const result = await response.json();

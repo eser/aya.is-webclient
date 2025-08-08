@@ -33,7 +33,8 @@
 }
 
 .placeholder {
-  @apply border-2 border-dashed border-muted-foreground/25 rounded-lg p-8 text-center cursor-pointer transition-colors hover:border-muted-foreground/50 hover:bg-muted/50;
+  @apply border-2 border-dashed border-muted-foreground/25 rounded-lg p-8 text-center cursor-pointer transition-colors
+    hover:border-muted-foreground/50 hover:bg-muted/50;
 }
 
 .placeholderDisabled {

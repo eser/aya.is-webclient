@@ -5,8 +5,8 @@ export type CreateProfilePageParams = {
   title: string;
   summary: string;
   content: string;
-  cover_picture_uri?: string;
-  published_at?: string;
+  cover_picture_uri: string | null;
+  published_at: string | null;
 };
 
 export async function createProfilePage(

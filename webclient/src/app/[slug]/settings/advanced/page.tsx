@@ -11,25 +11,30 @@ export default function ProfileAdvancedPage() {
     <div className={styles.container}>
       <div className={styles.header}>
         <h1 className={styles.title}>
-          {t("Profile", "Advanced Settings") || "Advanced Settings"}
+          {t("Profile", "Advanced Settings") ?? "Advanced Settings"}
         </h1>
         <p className={styles.description}>
-          {t("Profile", "Advanced configuration and developer options for your profile.") || "Advanced configuration and developer options for your profile."}
+          {t("Profile", "Advanced configuration and developer options for your profile.") ??
+            "Advanced configuration and developer options for your profile."}
         </p>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>{t("Profile", "Coming Soon") || "Coming Soon"}</CardTitle>
+          <CardTitle>{t("Profile", "Coming Soon") ?? "Coming Soon"}</CardTitle>
           <CardDescription>
-            {t("Profile", "Advanced settings and configuration options are under development.") || "Advanced settings and configuration options are under development."}
+            {t("Profile", "Advanced settings and configuration options are under development.") ??
+              "Advanced settings and configuration options are under development."}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className={styles.comingSoon}>
             <span className={styles.icon}>🔧</span>
             <p className={styles.message}>
-              {t("Profile", "Soon you'll have access to advanced features like API keys, webhooks, and custom integrations.") || "Soon you'll have access to advanced features like API keys, webhooks, and custom integrations."}
+              {t(
+                "Profile",
+                "Soon you'll have access to advanced features like API keys, webhooks, and custom integrations.",
+              ) || "Soon you'll have access to advanced features like API keys, webhooks, and custom integrations."}
             </p>
           </div>
         </CardContent>

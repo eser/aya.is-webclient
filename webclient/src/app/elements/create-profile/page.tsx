@@ -44,7 +44,10 @@ export default function CreateProfilePage() {
         <div className="text-center">
           <h1 className="text-3xl font-bold">{t("Profile", "Create Profile")}</h1>
           <p className="text-muted-foreground mt-2">
-            {t("Profile", "Create your new profile. The profile will be created in the selected locale, and you can add additional locales later.")}
+            {t(
+              "Profile",
+              "Create your new profile. The profile will be created in the selected locale, and you can add additional locales later.",
+            )}
           </p>
         </div>
 

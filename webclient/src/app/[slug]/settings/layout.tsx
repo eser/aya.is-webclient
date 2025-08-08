@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter, useParams, usePathname } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { backend } from "@/shared/modules/backend/backend.ts";
 import { useAuth } from "@/shared/modules/auth/auth-context.tsx";
 import { useTranslations } from "@/shared/modules/i18n/use-translations.tsx";
@@ -98,7 +98,7 @@ export default function SettingsLayout(props: SettingsLayoutProps) {
     return (
       <div className={styles.container}>
         <div className={styles.loading}>
-          {t("Loading", "Loading...") || "Loading..."}
+          {t("Loading", "Loading...") ?? "Loading..."}
         </div>
       </div>
     );
@@ -113,11 +113,14 @@ export default function SettingsLayout(props: SettingsLayoutProps) {
       <div className={styles.container}>
         <Card>
           <CardContent className={styles.unauthorized}>
-            <h1>{t("Profile", "Access Denied") || "Access Denied"}</h1>
-            <p>{t("Profile", "You do not have permission to edit this profile.") || "You do not have permission to edit this profile."}</p>
+            <h1>{t("Profile", "Access Denied") ?? "Access Denied"}</h1>
+            <p>
+              {t("Profile", "You do not have permission to edit this profile.") ??
+                "You do not have permission to edit this profile."}
+            </p>
             <Link href={`/${slug}`}>
               <Button variant="outline">
-                {t("Profile", "Back to Profile") || "Back to Profile"}
+                {t("Profile", "Back to Profile") ?? "Back to Profile"}
               </Button>
             </Link>
           </CardContent>
@@ -130,7 +133,7 @@ export default function SettingsLayout(props: SettingsLayoutProps) {
     return (
       <div className={styles.container}>
         <div className={styles.loading}>
-          {t("Profile", "Checking permissions...") || "Checking permissions..."}
+          {t("Profile", "Checking permissions...") ?? "Checking permissions..."}
         </div>
       </div>
     );
@@ -160,12 +163,12 @@ export default function SettingsLayout(props: SettingsLayoutProps) {
             </Link>
             <span className={styles.breadcrumbSeparator}>•</span>
             <span className={styles.breadcrumbCurrent}>
-              {t("Profile", "Settings") || "Settings"}
+              {t("Profile", "Settings") ?? "Settings"}
             </span>
           </div>
           <Link href={`/${slug}`}>
             <Button variant="outline" size="sm" className={styles.backButton}>
-              ← {t("Profile", "Back to Profile") || "Back to Profile"}
+              ← {t("Profile", "Back to Profile") ?? "Back to Profile"}
             </Button>
           </Link>
         </div>
@@ -174,10 +177,11 @@ export default function SettingsLayout(props: SettingsLayoutProps) {
           <div className={styles.titleSection}>
             <h1 className={styles.title}>
               <span className={styles.titleIcon}>⚙️</span>
-              {t("Profile", "Profile Settings") || "Profile Settings"}
+              {t("Profile", "Profile Settings") ?? "Profile Settings"}
             </h1>
             <p className={styles.subtitle}>
-              {t("Profile", "Manage your profile information, links, and preferences.") || "Manage your profile information, links, and preferences."}
+              {t("Profile", "Manage your profile information, links, and preferences.") ??
+                "Manage your profile information, links, and preferences."}
             </p>
           </div>
         </div>
@@ -193,7 +197,7 @@ export default function SettingsLayout(props: SettingsLayoutProps) {
                   {sectionIndex > 0 && <Separator className={styles.sectionSeparator} />}
 
                   <h3 className={styles.navSectionTitle}>
-                    {t("Profile", section.section) || section.section}
+                    {t("Profile", section.section) ?? section.section}
                   </h3>
 
                   <nav className={styles.navList}>
@@ -210,11 +214,11 @@ export default function SettingsLayout(props: SettingsLayoutProps) {
                             <div className={styles.navLinkMain}>
                               <span className={styles.navLinkIcon}>{item.icon}</span>
                               <span className={styles.navLinkTitle}>
-                                {t("Profile", item.titleKey) || item.titleKey}
+                                {t("Profile", item.titleKey) ?? item.titleKey}
                               </span>
                             </div>
                             <p className={styles.navLinkDesc}>
-                              {t("Profile", item.descKey) || item.descKey}
+                              {t("Profile", item.descKey) ?? item.descKey}
                             </p>
                           </div>
                           {isActive && <div className={styles.navLinkIndicator} />}

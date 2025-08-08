@@ -14,23 +14,23 @@ export async function updateProfileLink(
   locale: string,
   slug: string,
   linkId: string,
-  data: UpdateProfileLinkRequest
+  data: UpdateProfileLinkRequest,
 ): Promise<ProfileLink | null> {
   const backendUri = getBackendUri();
   const token = getToken();
 
   const response = await fetch(`${backendUri}/${locale}/profiles/${slug}/_links/${linkId}`, {
-    method: 'PATCH',
+    method: "PATCH",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       ...(token !== null ? { Authorization: `Bearer ${token}` } : {}),
     },
     body: JSON.stringify(data),
   });
 
   if (!response.ok) {
-    const errorText = await response.text().catch(() => '');
-    throw new Error(errorText !== '' ? errorText : `Failed to update profile link: ${response.status}`);
+    const errorText = await response.text().catch(() => "");
+    throw new Error(errorText !== "" ? errorText : `Failed to update profile link: ${response.status}`);
   }
 
   const result = await response.json();
