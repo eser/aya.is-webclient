@@ -26,10 +26,10 @@ CREATE TABLE IF NOT EXISTS "user" (
   "id" CHAR(26) NOT NULL PRIMARY KEY,
   "kind" TEXT NOT NULL,
   "name" TEXT NOT NULL,
-  "email" TEXT CONSTRAINT "user_email_unique" UNIQUE,
+  "email" TEXT,
   "phone" TEXT,
   "github_handle" TEXT,
-  "github_remote_id" TEXT CONSTRAINT "user_github_remote_id_unique" UNIQUE,
+  "github_remote_id" TEXT,
   "bsky_handle" TEXT,
   "bsky_remote_id" TEXT,
   "x_handle" TEXT,
@@ -41,19 +41,24 @@ CREATE TABLE IF NOT EXISTS "user" (
   "deleted_at" TIMESTAMP WITH TIME ZONE
 );
 
+CREATE UNIQUE INDEX IF NOT EXISTS "user_email_unique" ON "user" ("email") WHERE "email" IS NOT NULL;
+
+CREATE UNIQUE INDEX IF NOT EXISTS "user_github_remote_id_unique" ON "user" ("github_remote_id") WHERE "github_remote_id" IS NOT NULL;
+
 CREATE TABLE IF NOT EXISTS "profile_membership" (
   "id" CHAR(26) NOT NULL PRIMARY KEY,
   "profile_id" CHAR(26) NOT NULL CONSTRAINT "profile_membership_profile_id_fk" REFERENCES "profile",
-  "member_profile_id" CHAR(26) NOT NULL CONSTRAINT "profile_membership_member_profile_id_fk" REFERENCES "profile",
+  "member_profile_id" CHAR(26) CONSTRAINT "profile_membership_member_profile_id_fk" REFERENCES "profile",
   "kind" TEXT NOT NULL,
   "properties" JSONB,
   "started_at" TIMESTAMP WITH TIME ZONE,
   "finished_at" TIMESTAMP WITH TIME ZONE,
   "created_at" TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
   "updated_at" TIMESTAMP WITH TIME ZONE,
-  "deleted_at" TIMESTAMP WITH TIME ZONE,
-  CONSTRAINT "profile_membership_profile_id_member_profile_id_unique" UNIQUE ("profile_id", "member_profile_id")
+  "deleted_at" TIMESTAMP WITH TIME ZONE
 );
+
+CREATE UNIQUE INDEX IF NOT EXISTS "profile_membership_profile_id_member_profile_id_unique" ON "profile_membership" ("profile_id", "member_profile_id") WHERE "member_profile_id" IS NOT NULL;
 
 CREATE TABLE IF NOT EXISTS "profile_link" (
   "id" CHAR(26) NOT NULL PRIMARY KEY,
@@ -76,9 +81,10 @@ CREATE TABLE IF NOT EXISTS "profile_link" (
   "properties" JSONB,
   "created_at" TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
   "updated_at" TIMESTAMP WITH TIME ZONE,
-  "deleted_at" TIMESTAMP WITH TIME ZONE,
-  CONSTRAINT "profile_link_profile_id_kind_remote_id_unique" UNIQUE ("profile_id", "kind", "remote_id")
+  "deleted_at" TIMESTAMP WITH TIME ZONE
 );
+
+CREATE UNIQUE INDEX IF NOT EXISTS "profile_link_profile_id_kind_remote_id_unique" ON "profile_link" ("profile_id", "kind", "remote_id") WHERE "remote_id" IS NOT NULL;
 
 CREATE TABLE IF NOT EXISTS "profile_link_import" (
   "id" CHAR(26) NOT NULL PRIMARY KEY,
@@ -87,9 +93,11 @@ CREATE TABLE IF NOT EXISTS "profile_link_import" (
   "properties" JSONB,
   "created_at" TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
   "updated_at" TIMESTAMP WITH TIME ZONE,
-  "deleted_at" TIMESTAMP WITH TIME ZONE,
-  CONSTRAINT "profile_link_import_profile_link_id_remote_id_unique" UNIQUE ("profile_link_id", "remote_id")
+  "deleted_at" TIMESTAMP WITH TIME ZONE
 );
+
+CREATE UNIQUE INDEX IF NOT EXISTS "profile_link_import_profile_link_id_remote_id_unique" ON "profile_link_import" ("profile_link_id", "remote_id") WHERE "remote_id" IS NOT NULL;
+
 
 CREATE TABLE IF NOT EXISTS "profile_page" (
   "id" CHAR(26) NOT NULL PRIMARY KEY,
