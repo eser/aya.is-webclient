@@ -2,6 +2,7 @@ import * as React from "react";
 
 import { ThemeProvider } from "@/shared/modules/themes/theme-provider.tsx";
 import { backend } from "@/shared/modules/backend/backend.ts";
+import type { Profile } from "@/shared/modules/backend/profiles/types.ts";
 
 import { Header } from "./header.tsx";
 import { Footer } from "./footer.tsx";
@@ -15,7 +16,7 @@ type PageLayoutProps = {
 };
 
 export async function PageLayout(props: PageLayoutProps) {
-  let spotlight = [];
+  let spotlight: Profile[] = [];
   try {
     spotlight = await backend.getSpotlight() ?? [];
   } catch (error) {
