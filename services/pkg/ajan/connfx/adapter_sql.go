@@ -58,12 +58,16 @@ func (f *SQLConnectionFactory) CreateConnection( //nolint:ireturn
 		db.SetMaxOpenConns(config.MaxOpenConns)
 	}
 
+	if config.MaxConnLifetime > 0 {
+		db.SetConnMaxLifetime(config.MaxConnLifetime)
+	}
+
 	if config.MaxIdleConns > 0 {
 		db.SetMaxIdleConns(config.MaxIdleConns)
 	}
 
-	if config.MaxConnLifetime > 0 {
-		db.SetConnMaxLifetime(config.MaxConnLifetime)
+	if config.MaxConnIdleTime > 0 {
+		db.SetConnMaxIdleTime(config.MaxConnIdleTime)
 	}
 
 	// Initial ping to verify connection

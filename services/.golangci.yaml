@@ -38,6 +38,7 @@ linters:
             - github.com/go-faker/faker/v4
             - github.com/go-rod/rod
             - github.com/golang-jwt/jwt/v5
+            - github.com/jackc/pgx/v5
             - github.com/lib/pq
             - github.com/oklog/ulid/v2
             - github.com/pressly/goose/v3

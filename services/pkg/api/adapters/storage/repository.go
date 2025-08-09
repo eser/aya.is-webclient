@@ -15,6 +15,7 @@ import (
 	"github.com/eser/aya.is/services/pkg/ajan/logfx"
 	"github.com/eser/aya.is/services/pkg/lib/caching"
 	"github.com/eser/aya.is/services/pkg/lib/cursors"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/pressly/goose/v3"
 )
 
@@ -30,7 +31,8 @@ var (
 )
 
 type Repository struct {
-	db       *sql.DB
+	db       *sql.DB // For migrations and other tools that require *sql.DB
+	dbtx     DBTX    // For queries (can be *sql.DB or PgxAdapter)
 	queries  *Queries
 	cache    *caching.Cache
 	logger   *logfx.Logger
@@ -49,16 +51,50 @@ func NewRepositoryFromNamed(
 	dataRegistry *connfx.Registry,
 	name string,
 ) (*Repository, error) {
-	sqlDB, err := connfx.GetTypedConnection[*sql.DB](dataRegistry, name)
-	if err != nil {
-		return nil, err
+	// Get the connection from registry
+	conn := dataRegistry.GetNamed(name)
+	if conn == nil {
+		return nil, fmt.Errorf("%w: %s", connfx.ErrConnectionNotFound, name)
 	}
 
-	repository := &Repository{ //nolint:exhaustruct
-		db:       sqlDB,
-		queries:  &Queries{db: sqlDB},
-		cacheTTL: DefaultCacheTTL,
-		logger:   logger,
+	var repository *Repository
+
+	// Check the protocol to determine how to handle the connection
+	protocol := conn.GetProtocol()
+	raw := conn.GetRawConnection()
+
+	switch protocol {
+	case "pgx":
+		// Handle pgx connection
+		pool, ok := raw.(*pgxpool.Pool)
+		if !ok {
+			return nil, fmt.Errorf("expected *pgxpool.Pool for pgx protocol, got %T", raw)
+		}
+
+		adapter := NewPgxAdapter(pool)
+		repository = &Repository{ //nolint:exhaustruct
+			db:       adapter.GetStdlibDB(), // For migrations
+			dbtx:     adapter,               // For queries
+			queries:  &Queries{db: adapter},
+			cacheTTL: DefaultCacheTTL,
+			logger:   logger,
+		}
+	case "postgres", "mysql", "sqlite":
+		// Handle standard sql.DB connection
+		sqlDB, ok := raw.(*sql.DB)
+		if !ok {
+			return nil, fmt.Errorf("expected *sql.DB for %s protocol, got %T", protocol, raw)
+		}
+
+		repository = &Repository{ //nolint:exhaustruct
+			db:       sqlDB,
+			dbtx:     sqlDB,
+			queries:  &Queries{db: sqlDB},
+			cacheTTL: DefaultCacheTTL,
+			logger:   logger,
+		}
+	default:
+		return nil, fmt.Errorf("unsupported database protocol: %s", protocol)
 	}
 
 	repository.cache = caching.NewCache(

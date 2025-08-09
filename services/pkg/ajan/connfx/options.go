@@ -17,6 +17,9 @@ func WithDefaultFactories() NewRegistryOption {
 		r.RegisterFactory(NewSQLConnectionFactory("postgres"))
 		r.RegisterFactory(NewSQLConnectionFactory("mysql"))
 
+		// adapter_pgx.go
+		r.RegisterFactory(NewPgxConnectionFactory("pgx"))
+
 		// adapter_http.go
 		r.RegisterFactory(NewHTTPConnectionFactory("http"))
 		r.RegisterFactory(NewHTTPConnectionFactory("https"))
